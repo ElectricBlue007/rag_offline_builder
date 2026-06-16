@@ -1,0 +1,34 @@
+core (models, contracts, exceptions)
+   ├── extractors (depends on core)
+   │     ├── metadata
+   │     ├── content (depends on styles)
+   │     ├── tables
+   │     ├── images
+   │     ├── equations
+   │     ├── footnotes
+   │     └── comments
+   ├── layout (depends on core, may call extractors for raw data)
+   │     ├── reading_order
+   │     ├── textboxes
+   │     ├── columns
+   │     └── sidebars
+   ├── vision (depends on core, layout)
+   │     ├── ocr
+   │     ├── chart_analysis
+   │     └── diagram_analysis
+   ├── enrichment (depends on core, markdown generator? No – works on intermediate model)
+   │     ├── summaries
+   │     ├── keywords
+   │     └── references
+   ├── markdown (depends on core, enrichment optional)
+   │     ├── generators
+   │     └── validators
+   ├── chunking (depends on core, markdown)
+   │     ├── splitters
+   │     └── validators
+   └── scripts/cli (depends on all layers)
+
+External libraries (implementation details – not part of dependency graph for abstraction):
+   - python‑docx, pdfplumber, PyMuPDF, pytesseract, pdf2image
+   - beautifulsoup4, ebooklib, python‑pptx
+   - opencv‑python, Pillow, langchain (for chunking reference, not mandatory)
