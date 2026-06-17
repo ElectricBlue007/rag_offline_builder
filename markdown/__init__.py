@@ -1,2 +1,0 @@
-"""Markdown generation package."""
-

@@ -1,2 +1,0 @@
-"""Executable script package."""
-
