@@ -29,6 +29,12 @@ def test_splits_ocr_glued_html_table_without_rewriting_text():
     assert result.flags_by_line == {2: ["embedded_html_table_split"]}
 
 
+def test_splits_trailing_content_after_html_table_close():
+    result = MarkdownNormalizer().normalize("</table>![img](x.webp)caption\n")
+    assert result.markdown == "</table>\n![img](x.webp)caption\n"
+    assert result.flags_by_line == {2: ["trailing_after_html_table_split"]}
+
+
 def test_fails_on_unclosed_code_fence():
     with pytest.raises(NormalizationError):
         MarkdownNormalizer().normalize("```python\nprint('x')\n")

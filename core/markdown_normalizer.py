@@ -17,6 +17,7 @@ from rag_doc_compiler.models import NormalizationResult
 _BROKEN_ATX_HEADING = re.compile(r"^(#{1,6})([^\s#].*)$")
 _EMBEDDED_ATX_HEADING = re.compile(r"^(?P<prefix>.+?)(?P<heading>#{1,6}\s*[A-Z][^#]*)$")
 _EMBEDDED_HTML_TABLE = re.compile(r"^(?P<prefix>.+?)(?P<table><table\b.*)$", re.IGNORECASE)
+_TRAILING_AFTER_HTML_TABLE = re.compile(r"^(?P<table>.*?</table>)(?P<trailing>.+)$", re.IGNORECASE)
 _FENCE = re.compile(r"^\s*(```|~~~)")
 
 
@@ -56,7 +57,13 @@ class MarkdownNormalizer:
             repaired_lines = [stripped_newline]
             embedded_heading = _EMBEDDED_ATX_HEADING.match(stripped_newline)
             embedded_table = _EMBEDDED_HTML_TABLE.match(stripped_newline)
-            if embedded_table:
+            trailing_after_table = _TRAILING_AFTER_HTML_TABLE.match(stripped_newline)
+            if trailing_after_table:
+                table = trailing_after_table.group("table").rstrip()
+                trailing = trailing_after_table.group("trailing").lstrip()
+                repaired_lines = [table, trailing]
+                flags_by_line.setdefault(len(normalized) + 2, []).append("trailing_after_html_table_split")
+            elif embedded_table:
                 prefix = embedded_table.group("prefix").rstrip()
                 table = embedded_table.group("table").lstrip()
                 repaired_lines = [prefix, table]

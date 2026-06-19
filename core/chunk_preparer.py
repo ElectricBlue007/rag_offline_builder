@@ -48,12 +48,15 @@ class ChunkPreparer:
         anchor = self._anchor(block.heading_path)
         parent_section_id = block.parent_id if block.parent_id != "doc_root" else "sec_0"
         chunk_id = f"{parent_section_id}::chunk_{ordinal}::{anchor}"
+        context_lines = set(range(block.line_range[0], block.line_range[1] + 1))
         parent = analysis.flat_map.get(block.parent_id)
-        context_start = parent.line_range[0] if parent else block.line_range[0]
+        while parent and parent.node_type == "section":
+            context_lines.add(parent.line_range[0])
+            parent = analysis.flat_map.get(parent.parent_id) if parent.parent_id else None
         flags = {
             line: values
             for line, values in normalization_flags.items()
-            if context_start <= line <= block.line_range[1]
+            if line in context_lines
         }
         return ChunkCandidate(
             chunk_id=chunk_id,

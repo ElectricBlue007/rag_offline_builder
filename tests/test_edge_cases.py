@@ -27,6 +27,7 @@ def test_cli_run_writes_outputs(tmp_path, capsys):
     input_path.write_text("# A\nRAG is useful.\n", encoding="utf-8")
     assert main(["run", str(input_path), str(output_dir)]) == 0
     assert (output_dir / "clean.md").exists()
+    assert (output_dir / "chunks.json").exists()
     index = json.loads((output_dir / "index.json").read_text(encoding="utf-8"))
     assert index["flat_chunk_view"][0]["intent"] == "definition"
     assert "json_index" in capsys.readouterr().out

@@ -65,3 +65,44 @@ class ChunkCandidate:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+@dataclass
+class FinalChunk:
+    chunk_id: str
+    chunk_kind: str
+    parent_section_id: str | None
+    source_node_id: str
+    heading_path: list[str]
+    line_range: list[int]
+    content_type: str
+    intent: str
+    semantic_tags: list[str]
+    keywords: dict[str, list[str]]
+    language: dict[str, Any]
+    importance_score: float
+    token_estimate: int
+    original_text: str
+    embedding_text: str
+    adjacency: dict[str, str | None]
+    provenance: dict[str, Any]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ChunkingResult:
+    strategy: dict[str, Any]
+    chunks: list[FinalChunk]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "strategy": self.strategy,
+            "chunks": [chunk.to_dict() for chunk in self.chunks],
+            "observability": {
+                "chunk_count": len(self.chunks),
+                "section_chunk_count": sum(1 for chunk in self.chunks if chunk.chunk_kind == "section"),
+                "semantic_chunk_count": sum(1 for chunk in self.chunks if chunk.chunk_kind == "semantic"),
+            },
+        }
