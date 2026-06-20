@@ -1,1 +1,2 @@
 sentence-transformers>=3.0
+chonkie>=1.6.0
