@@ -1,1 +1,8 @@
+# Testing
 pytest>=8.0
+
+# Embedding and chunking
+sentence-transformers>=2.2.0
+chonkie>=1.0.0
+torch>=2.0.0
+transformers>=4.30.0
