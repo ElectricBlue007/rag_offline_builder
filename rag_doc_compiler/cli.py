@@ -172,8 +172,8 @@ def run_phase_2(doc_dict: dict, verbose: bool = False) -> dict:
     raise NotImplementedError("Use run_full_pipeline for end-to-end processing.")
 
 
-def run_full_pipeline(file_path: str, output: Optional[str] = None, verbose: bool = False):
-    """Run Phase 1 and Phase 2 sequentially."""
+def run_full_pipeline(file_path: str, output: Optional[str] = None, verbose: bool = False, auto_fix: bool = False, output_md: Optional[str] = None):
+    """Run Phase 1 and Phase 2 sequentially with optional auto-fix."""
     try:
         content = load_markdown(file_path)
     except FileNotFoundError as e:
@@ -205,6 +205,48 @@ def run_full_pipeline(file_path: str, output: Optional[str] = None, verbose: boo
             print(f"   💡 Recommendations: {len(result.recommendations)}")
             for rec in result.recommendations:
                 print(f"      - {rec}")
+    
+    # Auto-fix structural issues if requested
+    if auto_fix:
+        print("\n🔧 Starting Smart Structural Fixer...")
+        from agents.smart_structure_fixer import SmartStructureFixer
+        
+        fixer = SmartStructureFixer()
+        
+        # Get issues from result or use empty list
+        issue_list = result.issues if result.issues else []
+        
+        fixed_content = fixer.fix(content, issue_list)
+        
+        # Determine output path for fixed markdown
+        if not output_md:
+            base = Path(file_path).stem
+            output_md = f"{base}_fixed.md"
+        
+        # Save fixed content
+        out_path = Path(output_md)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, 'w', encoding='utf-8') as f:
+            f.write(fixed_content)
+        
+        print(f"   ✅ Fixed markdown saved to: {output_md}")
+        
+        # Re-process the fixed content to show improved scores
+        if verbose:
+            print("\n📊 Re-evaluating fixed document...")
+            fixed_doc_dict, fixed_doc_obj = run_phase_1(fixed_content, verbose=False)
+            fixed_result = qualify_document(fixed_doc_obj)
+            
+            print(f"   🎉 New Qualification Score: {fixed_result.overall_score:.2f} (was {result.overall_score:.2f})")
+            print(f"   ✅ Chunkable: {fixed_result.is_chunkable}")
+            print(f"   ✅ Embeddable: {fixed_result.is_embeddable}")
+            print(f"   ✅ Retrievable: {fixed_result.is_retrievable}")
+            
+            # Update doc_dict and result for final output
+            doc_dict = fixed_doc_dict
+            result = fixed_result
+    
+    if verbose:
         print("="*40 + "\n")
 
     # Combine results
@@ -284,12 +326,15 @@ def cmd_process(args):
             print(f"\n[{i}/{len(files)}] Processing: {file.name}")
         
         output_file = None
+        output_md = None
         if args.output:
             # If output is a directory, construct filename
             out_path = Path(args.output)
             if out_path.is_dir() or args.output.endswith('/'):
                 out_path.mkdir(parents=True, exist_ok=True)
                 output_file = str(out_path / f"{file.stem}_qualified.json")
+                if args.auto_fix:
+                    output_md = str(out_path / f"{file.stem}_fixed.md")
             else:
                 # If single file output for multiple inputs, warn or append?
                 # Better to enforce directory for multiple files
@@ -297,8 +342,12 @@ def cmd_process(args):
                     print("⚠️  When processing multiple files, --output must be a directory.")
                     sys.exit(1)
                 output_file = args.output
+                if args.auto_fix and args.output_md:
+                    output_md = args.output_md
+        elif args.auto_fix and args.output_md:
+            output_md = args.output_md
         
-        run_full_pipeline(str(file), output=output_file, verbose=args.verbose)
+        run_full_pipeline(str(file), output=output_file, verbose=args.verbose, auto_fix=args.auto_fix, output_md=output_md)
 
 
 def cmd_stats(args):
@@ -340,6 +389,8 @@ def main():
     p_process.add_argument("input", help="Input markdown file or directory")
     p_process.add_argument("-o", "--output", help="Output JSON file or directory")
     p_process.add_argument("-v", "--verbose", action="store_true", help="Show detailed logs")
+    p_process.add_argument("--auto-fix", action="store_true", help="Auto-fix structural issues using smart fixer")
+    p_process.add_argument("--output-md", help="Output path for fixed markdown (used with --auto-fix)")
     p_process.set_defaults(func=cmd_process)
 
     # Stats Command
