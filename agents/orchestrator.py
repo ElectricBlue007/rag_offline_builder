@@ -36,18 +36,26 @@ class DocumentQualificationEngine:
         self.chunk_planning_agent = ChunkPlanningAgent()
         self.embedding_agent = EmbeddingReadinessAgent()
     
-    def qualify(self, structured_doc: Dict[str, Any]) -> DocumentQualificationResult:
+    def qualify(self, structured_doc) -> DocumentQualificationResult:
         """
         Perform complete document qualification.
         
         Args:
-            structured_doc: Structured document from Phase 1
+            structured_doc: Structured document from Phase 1 (StructureAnalysis or dict)
             
         Returns:
             DocumentQualificationResult with scores, issues, and recommendations
         """
+        # Convert StructureAnalysis to dict if needed
+        if hasattr(structured_doc, 'to_dict'):
+            doc_dict = structured_doc.to_dict()
+        elif isinstance(structured_doc, dict):
+            doc_dict = structured_doc
+        else:
+            raise ValueError(f"Unsupported document type: {type(structured_doc)}")
+        
         # Initialize result
-        doc_id = structured_doc.get('document_id', 'unknown')
+        doc_id = doc_dict.get('document_id', 'unknown')
         
         # Run all agents
         structure_issues, structure_warnings = self.structure_agent.validate(structured_doc)
