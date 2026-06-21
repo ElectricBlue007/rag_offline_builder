@@ -1,0 +1,66 @@
+(venv) C:\Users\s-bagherzade\Desktop\rag_offline_buildernew>python -m cli.main full .\OutputOCR\Testing.md ./compiled --pretty
+{
+  "phase1": {
+    "chunk_count": 11,
+    "chunk_review_path": "compiled\\chunk_review_report.json",
+    "index_path": "compiled\\index.json",
+    "markdown_path": "compiled\\clean.md",
+    "phase": 1,
+    "status": "success"
+  },
+  "phase2": {
+    "chunking_strategy": {
+      "anchoring_rules": [
+        "keep_table_with_context"
+      ],
+      "context_injection": true,
+      "custom_parameters": {
+        "entity_preservation": true,
+        "heading_path_injection": true,
+        "semantic_density_threshold": 0.3
+      },
+      "max_chunk_size": 512,
+      "merge_sparse_blocks": true,
+      "min_chunk_size": 100,
+      "parent_context_depth": 2,
+      "preferred_boundary_types": [
+        "heading_level_1",
+        "heading_level_2"
+      ],
+      "split_large_sections": true,
+      "strategy_type": "structure_preserving"
+    },
+    "is_chunkable": true,
+    "is_embeddable": true,
+    "is_retrievable": true,
+    "issue_count": 0,
+    "overall_score": 0.874,
+    "phase": 2,
+    "recommendation_count": 1,
+    "status": "success",
+    "warning_count": 33
+  },
+  "phases_completed": [
+    1,
+    2
+  ],
+  "status": "success"
+}
+
+(venv) C:\Users\s-bagherzade\Desktop\rag_offline_buildernew>python -m rag_doc_compiler.cli process .\compiled\clean.md --output .\compiled\markdown_review.json --verbose
+?? Processing 1 file(s)...
+
+========================================
+?? Starting Phase 1: Normalization & Structuring...
+   ? Normalized content length: 6842 chars
+   ? Detected 25 blocks
+   ?? Block distribution: {'paragraph': 22, 'table': 3}
+   ? Qualification Score: 0.87
+   ? Chunkable: True
+   ? Embeddable: True
+   ? Retrievable: True
+   ?? Recommendations: 1
+      - Document is well-structured and ready for advanced chunking strategies
+========================================
+
+? Results saved to: .\compiled\markdown_review.json

@@ -1,0 +1,1276 @@
+{
+  "chunk_reviews": [
+    {
+      "chunk_id": "sec_1::chunk_1::prompt-engineering",
+      "context_score": 100,
+      "decision": "REPAIR",
+      "embedding_score": 55,
+      "embedding_stability_score": 100,
+      "final_score": 87,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No strong searchable keywords found.",
+          "rule_id": 330,
+          "rule_name": "Contains Keywords",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No searchable concepts found.",
+          "rule_id": 331,
+          "rule_name": "Contains Searchable Concepts",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Boilerplate-like text detected.",
+          "rule_id": 336,
+          "rule_name": "Boilerplate Detection",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Embedding readiness is below target.",
+          "rule_id": 350,
+          "rule_name": "Embedding Readiness Score",
+          "severity": "high"
+        }
+      ],
+      "metadata": {
+        "definition_score": 100,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 60,
+        "entities": [
+          "A",
+          "Abstract",
+          "Author",
+          "Boonstra",
+          "Google",
+          "It",
+          "Lee",
+          "The"
+        ],
+        "instruction_score": 100,
+        "keywords": [],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.571,
+        "token_count": 200,
+        "token_density": 0.152
+      },
+      "recommended_action": "REPAIR: Token density is too low.",
+      "retrieval_score": 70,
+      "self_sufficiency_score": 94,
+      "semantic_score": 100,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_3::chunk_3::reviewers-and-contributors",
+      "context_score": 100,
+      "decision": "REJECT",
+      "embedding_score": 55,
+      "embedding_stability_score": 100,
+      "final_score": 49,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not definition-oriented.",
+          "rule_id": 317,
+          "rule_name": "Definition Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has few explicit instructions.",
+          "rule_id": 319,
+          "rule_name": "Instruction Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "REJECT",
+          "message": "Chunk is unlikely to answer a user query.",
+          "rule_id": 321,
+          "rule_name": "Question Answerability",
+          "severity": "critical"
+        },
+        {
+          "action": "REJECT",
+          "message": "No retrievable information found.",
+          "rule_id": 326,
+          "rule_name": "Contains Retrievable Information",
+          "severity": "critical"
+        },
+        {
+          "action": "NONE",
+          "message": "No actionable instruction found.",
+          "rule_id": 327,
+          "rule_name": "Contains Actionable Information",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit definition found.",
+          "rule_id": 328,
+          "rule_name": "Contains Definition",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No strong searchable keywords found.",
+          "rule_id": 330,
+          "rule_name": "Contains Keywords",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No searchable concepts found.",
+          "rule_id": 331,
+          "rule_name": "Contains Searchable Concepts",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Boilerplate-like text detected.",
+          "rule_id": 336,
+          "rule_name": "Boilerplate Detection",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Embedding readiness is below target.",
+          "rule_id": 350,
+          "rule_name": "Embedding Readiness Score",
+          "severity": "high"
+        }
+      ],
+      "metadata": {
+        "definition_score": 35,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 0,
+        "entities": [
+          "Anant",
+          "Antonio",
+          "Armbrust",
+          "Cammel",
+          "Cao",
+          "Contributors",
+          "Curators",
+          "Designer",
+          "Editors",
+          "Erick",
+          "Grace",
+          "Gulli",
+          "Haymaker",
+          "Joey",
+          "Lanning",
+          "Michael",
+          "Mollison",
+          "Nawalgaria",
+          "Reviewers",
+          "Sherman",
+          "Simone",
+          "Technical",
+          "Writer",
+          "Yuan"
+        ],
+        "instruction_score": 35,
+        "keywords": [],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.723,
+        "token_count": 73,
+        "token_density": 0.127
+      },
+      "recommended_action": "REPAIR: Token density is too low.",
+      "retrieval_score": 15,
+      "self_sufficiency_score": 65,
+      "semantic_score": 45,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_6::chunk_14::designer",
+      "context_score": 100,
+      "decision": "REJECT",
+      "embedding_score": 55,
+      "embedding_stability_score": 100,
+      "final_score": 49,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not definition-oriented.",
+          "rule_id": 317,
+          "rule_name": "Definition Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has few explicit instructions.",
+          "rule_id": 319,
+          "rule_name": "Instruction Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "REJECT",
+          "message": "Chunk is unlikely to answer a user query.",
+          "rule_id": 321,
+          "rule_name": "Question Answerability",
+          "severity": "critical"
+        },
+        {
+          "action": "REJECT",
+          "message": "No retrievable information found.",
+          "rule_id": 326,
+          "rule_name": "Contains Retrievable Information",
+          "severity": "critical"
+        },
+        {
+          "action": "NONE",
+          "message": "No actionable instruction found.",
+          "rule_id": 327,
+          "rule_name": "Contains Actionable Information",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit definition found.",
+          "rule_id": 328,
+          "rule_name": "Contains Definition",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No strong searchable keywords found.",
+          "rule_id": 330,
+          "rule_name": "Contains Keywords",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No searchable concepts found.",
+          "rule_id": 331,
+          "rule_name": "Contains Searchable Concepts",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Embedding readiness is below target.",
+          "rule_id": 350,
+          "rule_name": "Embedding Readiness Score",
+          "severity": "high"
+        }
+      ],
+      "metadata": {
+        "definition_score": 35,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 0,
+        "entities": [
+          "A"
+        ],
+        "instruction_score": 35,
+        "keywords": [],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.483,
+        "token_count": 95,
+        "token_density": 0.148
+      },
+      "recommended_action": "REPAIR: Token density is too low.",
+      "retrieval_score": 15,
+      "self_sufficiency_score": 80,
+      "semantic_score": 45,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_7::chunk_15::table-of-contents",
+      "context_score": 100,
+      "decision": "REJECT",
+      "embedding_score": 55,
+      "embedding_stability_score": 100,
+      "final_score": 49,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not definition-oriented.",
+          "rule_id": 317,
+          "rule_name": "Definition Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has few explicit instructions.",
+          "rule_id": 319,
+          "rule_name": "Instruction Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "REJECT",
+          "message": "Chunk is unlikely to answer a user query.",
+          "rule_id": 321,
+          "rule_name": "Question Answerability",
+          "severity": "critical"
+        },
+        {
+          "action": "REJECT",
+          "message": "No retrievable information found.",
+          "rule_id": 326,
+          "rule_name": "Contains Retrievable Information",
+          "severity": "critical"
+        },
+        {
+          "action": "NONE",
+          "message": "No actionable instruction found.",
+          "rule_id": 327,
+          "rule_name": "Contains Actionable Information",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit definition found.",
+          "rule_id": 328,
+          "rule_name": "Contains Definition",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No strong searchable keywords found.",
+          "rule_id": 330,
+          "rule_name": "Contains Keywords",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No searchable concepts found.",
+          "rule_id": 331,
+          "rule_name": "Contains Searchable Concepts",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Embedding readiness is below target.",
+          "rule_id": 350,
+          "rule_name": "Embedding Readiness Score",
+          "severity": "high"
+        }
+      ],
+      "metadata": {
+        "definition_score": 35,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 0,
+        "entities": [
+          "Contextual",
+          "General",
+          "Introduction",
+          "K",
+          "LLM",
+          "One",
+          "Output",
+          "P",
+          "Prompt",
+          "Prompting",
+          "Putting",
+          "Role",
+          "Sampling",
+          "System",
+          "Temperature",
+          "Top"
+        ],
+        "instruction_score": 35,
+        "keywords": [],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.257,
+        "token_count": 224,
+        "token_density": 0.167
+      },
+      "recommended_action": "REPAIR: Token density is too low.",
+      "retrieval_score": 15,
+      "self_sufficiency_score": 78,
+      "semantic_score": 45,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_7::chunk_16::table-of-contents",
+      "context_score": 100,
+      "decision": "REJECT",
+      "embedding_score": 55,
+      "embedding_stability_score": 100,
+      "final_score": 49,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not definition-oriented.",
+          "rule_id": 317,
+          "rule_name": "Definition Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has few explicit instructions.",
+          "rule_id": 319,
+          "rule_name": "Instruction Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "REJECT",
+          "message": "No retrievable information found.",
+          "rule_id": 326,
+          "rule_name": "Contains Retrievable Information",
+          "severity": "critical"
+        },
+        {
+          "action": "NONE",
+          "message": "No actionable instruction found.",
+          "rule_id": 327,
+          "rule_name": "Contains Actionable Information",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit definition found.",
+          "rule_id": 328,
+          "rule_name": "Contains Definition",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No strong searchable keywords found.",
+          "rule_id": 330,
+          "rule_name": "Contains Keywords",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No searchable concepts found.",
+          "rule_id": 331,
+          "rule_name": "Contains Searchable Concepts",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Boilerplate-like text detected.",
+          "rule_id": 336,
+          "rule_name": "Boilerplate Detection",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Embedding readiness is below target.",
+          "rule_id": 350,
+          "rule_name": "Embedding Readiness Score",
+          "severity": "high"
+        }
+      ],
+      "metadata": {
+        "definition_score": 35,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 25,
+        "entities": [
+          "Abstract",
+          "An",
+          "It",
+          "The",
+          "You"
+        ],
+        "instruction_score": 35,
+        "keywords": [],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.616,
+        "token_count": 116,
+        "token_density": 0.158
+      },
+      "recommended_action": "REPAIR: Token density is too low.",
+      "retrieval_score": 15,
+      "self_sufficiency_score": 99,
+      "semantic_score": 100,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_8::chunk_17::introduction",
+      "context_score": 100,
+      "decision": "APPROVE",
+      "embedding_score": 85,
+      "embedding_stability_score": 100,
+      "final_score": 96,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not definition-oriented.",
+          "rule_id": 317,
+          "rule_name": "Definition Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit definition found.",
+          "rule_id": 328,
+          "rule_name": "Contains Definition",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        }
+      ],
+      "metadata": {
+        "definition_score": 35,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 84,
+        "entities": [
+          "However",
+          "Inadequate",
+          "Many",
+          "Therefore",
+          "When",
+          "You"
+        ],
+        "instruction_score": 100,
+        "keywords": [
+          "model"
+        ],
+        "knowledge_score": 100,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.616,
+        "token_count": 184,
+        "token_density": 0.16
+      },
+      "recommended_action": null,
+      "retrieval_score": 100,
+      "self_sufficiency_score": 100,
+      "semantic_score": 100,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_8::chunk_18::introduction",
+      "context_score": 100,
+      "decision": "APPROVE",
+      "embedding_score": 85,
+      "embedding_stability_score": 100,
+      "final_score": 96,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has few explicit instructions.",
+          "rule_id": 319,
+          "rule_name": "Instruction Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No actionable instruction found.",
+          "rule_id": 327,
+          "rule_name": "Contains Actionable Information",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        }
+      ],
+      "metadata": {
+        "definition_score": 100,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 84,
+        "entities": [
+          "A",
+          "AI",
+          "Classify",
+          "Goal",
+          "Her",
+          "I",
+          "K",
+          "Limit",
+          "Model",
+          "N",
+          "NEGATIVE",
+          "NEUTRAL",
+          "Name",
+          "Output",
+          "P",
+          "POSITIVE",
+          "Prompt",
+          "Review",
+          "Sentiment",
+          "Temperature",
+          "Token",
+          "Top"
+        ],
+        "instruction_score": 35,
+        "keywords": [
+          "model"
+        ],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.364,
+        "token_count": 222,
+        "token_density": 0.171
+      },
+      "recommended_action": null,
+      "retrieval_score": 100,
+      "self_sufficiency_score": 99,
+      "semantic_score": 100,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_8::chunk_19::introduction",
+      "context_score": 100,
+      "decision": "REJECT",
+      "embedding_score": 55,
+      "embedding_stability_score": 100,
+      "final_score": 49,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not definition-oriented.",
+          "rule_id": 317,
+          "rule_name": "Definition Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has few explicit instructions.",
+          "rule_id": 319,
+          "rule_name": "Instruction Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "REJECT",
+          "message": "No retrievable information found.",
+          "rule_id": 326,
+          "rule_name": "Contains Retrievable Information",
+          "severity": "critical"
+        },
+        {
+          "action": "NONE",
+          "message": "No actionable instruction found.",
+          "rule_id": 327,
+          "rule_name": "Contains Actionable Information",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit definition found.",
+          "rule_id": 328,
+          "rule_name": "Contains Definition",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No strong searchable keywords found.",
+          "rule_id": 330,
+          "rule_name": "Contains Keywords",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "No searchable concepts found.",
+          "rule_id": 331,
+          "rule_name": "Contains Searchable Concepts",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Embedding readiness is below target.",
+          "rule_id": 350,
+          "rule_name": "Embedding Readiness Score",
+          "severity": "high"
+        }
+      ],
+      "metadata": {
+        "definition_score": 35,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 33,
+        "entities": [
+          "An",
+          "General",
+          "Table",
+          "When"
+        ],
+        "instruction_score": 35,
+        "keywords": [],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.632,
+        "token_count": 53,
+        "token_density": 0.17
+      },
+      "recommended_action": "REPAIR: Token density is too low.",
+      "retrieval_score": 15,
+      "self_sufficiency_score": 85,
+      "semantic_score": 100,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_9::chunk_21::one-shot-few-shot",
+      "context_score": 100,
+      "decision": "APPROVE",
+      "embedding_score": 85,
+      "embedding_stability_score": 100,
+      "final_score": 96,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has few explicit instructions.",
+          "rule_id": 319,
+          "rule_name": "Instruction Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No actionable instruction found.",
+          "rule_id": 327,
+          "rule_name": "Contains Actionable Information",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        }
+      ],
+      "metadata": {
+        "definition_score": 100,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 84,
+        "entities": [
+          "A",
+          "AI",
+          "Examples",
+          "The",
+          "These",
+          "When"
+        ],
+        "instruction_score": 35,
+        "keywords": [
+          "model"
+        ],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.573,
+        "token_count": 101,
+        "token_density": 0.176
+      },
+      "recommended_action": null,
+      "retrieval_score": 100,
+      "self_sufficiency_score": 97,
+      "semantic_score": 100,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_9::chunk_23::one-shot-few-shot",
+      "context_score": 100,
+      "decision": "APPROVE",
+      "embedding_score": 85,
+      "embedding_stability_score": 100,
+      "final_score": 96,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not definition-oriented.",
+          "rule_id": 317,
+          "rule_name": "Definition Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not procedure-oriented.",
+          "rule_id": 318,
+          "rule_name": "Procedure Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit definition found.",
+          "rule_id": 328,
+          "rule_name": "Contains Definition",
+          "severity": "info"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        }
+      ],
+      "metadata": {
+        "definition_score": 35,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 84,
+        "entities": [
+          "A",
+          "AI",
+          "As",
+          "However",
+          "Table",
+          "The",
+          "This"
+        ],
+        "instruction_score": 100,
+        "keywords": [
+          "model"
+        ],
+        "knowledge_score": 100,
+        "language": "latin",
+        "procedure_score": 35,
+        "semantic_density": 0.489,
+        "token_count": 234,
+        "token_density": 0.179
+      },
+      "recommended_action": null,
+      "retrieval_score": 100,
+      "self_sufficiency_score": 97,
+      "semantic_score": 100,
+      "structural_score": 100,
+      "token_score": 85
+    },
+    {
+      "chunk_id": "sec_9::chunk_25::one-shot-few-shot",
+      "context_score": 100,
+      "decision": "REJECT",
+      "embedding_score": 55,
+      "embedding_stability_score": 100,
+      "final_score": 49,
+      "issues": [
+        {
+          "action": "REPAIR",
+          "message": "Token density is too low.",
+          "rule_id": 315,
+          "rule_name": "Token Density",
+          "severity": "medium"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk is not definition-oriented.",
+          "rule_id": 317,
+          "rule_name": "Definition Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has few explicit instructions.",
+          "rule_id": 319,
+          "rule_name": "Instruction Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "Chunk has limited explanatory knowledge markers.",
+          "rule_id": 320,
+          "rule_name": "Knowledge Score",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit definition found.",
+          "rule_id": 328,
+          "rule_name": "Contains Definition",
+          "severity": "info"
+        },
+        {
+          "action": "NONE",
+          "message": "No explicit relationship statement found.",
+          "rule_id": 332,
+          "rule_name": "Contains Relationships",
+          "severity": "info"
+        },
+        {
+          "action": "REJECT",
+          "message": "Navigation text detected.",
+          "rule_id": 333,
+          "rule_name": "Navigation Detection",
+          "severity": "critical"
+        },
+        {
+          "action": "REPAIR",
+          "message": "E5 passage prefix is missing.",
+          "rule_id": 344,
+          "rule_name": "Prefix Validation",
+          "severity": "medium"
+        },
+        {
+          "action": "REPAIR",
+          "message": "Embedding readiness is below target.",
+          "rule_id": 350,
+          "rule_name": "Embedding Readiness Score",
+          "severity": "high"
+        }
+      ],
+      "metadata": {
+        "definition_score": 35,
+        "embedding_cost_score": 100,
+        "embedding_model": "e5",
+        "embedding_readiness_score": 49,
+        "entities": [
+          "A",
+          "Continues",
+          "EXAMPLE",
+          "Goal",
+          "I",
+          "JSON",
+          "K",
+          "Limit",
+          "Model",
+          "N",
+          "P",
+          "Parse",
+          "Prompt",
+          "Response",
+          "Temperature",
+          "Token",
+          "Top"
+        ],
+        "instruction_score": 35,
+        "keywords": [
+          "model"
+        ],
+        "knowledge_score": 45,
+        "language": "latin",
+        "procedure_score": 100,
+        "semantic_density": 0.362,
+        "token_count": 189,
+        "token_density": 0.186
+      },
+      "recommended_action": "REPAIR: Token density is too low.",
+      "retrieval_score": 100,
+      "self_sufficiency_score": 100,
+      "semantic_score": 100,
+      "structural_score": 100,
+      "token_score": 85
+    }
+  ],
+  "summary": {
+    "average_final_score": 69.55,
+    "chunk_count": 11,
+    "decisions": {
+      "APPROVE": 4,
+      "REJECT": 6,
+      "REPAIR": 1
+    },
+    "ready_for_embedding": false
+  }
+}
