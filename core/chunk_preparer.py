@@ -15,6 +15,7 @@ class ChunkPreparer:
 
     _ALLOWED_INTENTS = {"definition", "explanation", "list", "warning", "example"}
     _ALLOWED_TYPES = {"technical", "narrative", "procedural", "reference"}
+    _MIN_EMBEDDABLE_TOKENS = 50
 
     def __init__(self, settings: CompilerSettings = DEFAULT_SETTINGS) -> None:
         self.settings = settings
@@ -27,10 +28,84 @@ class ChunkPreparer:
             self._candidate_for_block(index, block, analysis, normalization_flags)
             for index, block in enumerate(analysis.ordered_blocks, start=1)
         ]
+        candidates = self._merge_sparse_candidates(candidates)
         for index, candidate in enumerate(candidates):
             candidate.adjacency["previous_chunk_id"] = candidates[index - 1].chunk_id if index > 0 else None
             candidate.adjacency["next_chunk_id"] = candidates[index + 1].chunk_id if index + 1 < len(candidates) else None
         return candidates
+
+    def _merge_sparse_candidates(self, candidates: list[ChunkCandidate]) -> list[ChunkCandidate]:
+        """Merge tiny adjacent text chunks so embedding candidates have semantic mass."""
+        merged: list[ChunkCandidate] = []
+        pending: ChunkCandidate | None = None
+
+        for candidate in candidates:
+            if self._can_merge_sparse(pending, candidate):
+                pending = self._merge_pair(pending, candidate)  # type: ignore[arg-type]
+                continue
+
+            if pending is not None:
+                merged.append(pending)
+            pending = candidate
+
+        if pending is not None:
+            merged.append(pending)
+
+        return merged
+
+    def _can_merge_sparse(self, left: ChunkCandidate | None, right: ChunkCandidate) -> bool:
+        if left is None:
+            return False
+        same_section = left.parent_section_id == right.parent_section_id and left.heading_path == right.heading_path
+        sibling_section = (
+            len(left.heading_path) > 1
+            and len(right.heading_path) > 1
+            and left.heading_path[:-1] == right.heading_path[:-1]
+        )
+        if not same_section and not sibling_section:
+            return False
+        if left.content_type != right.content_type:
+            return False
+        if left.content_type == "reference" or right.content_type == "reference":
+            return False
+        combined_tokens = left.token_estimate + right.token_estimate
+        return (
+            left.token_estimate < self._MIN_EMBEDDABLE_TOKENS
+            or right.token_estimate < self._MIN_EMBEDDABLE_TOKENS
+        ) and combined_tokens <= self.settings.max_candidate_tokens
+
+    def _merge_pair(self, left: ChunkCandidate, right: ChunkCandidate) -> ChunkCandidate:
+        text = self._merge_text(left, right)
+        token_estimate = self._estimate_tokens(text)
+        density = self._density(text)
+        line_range = [left.line_range[0], right.line_range[1]]
+        merged_sources = left.debug_metadata.get("merged_source_chunks", [left.chunk_id])
+        merged_sources = [*merged_sources, right.chunk_id]
+
+        left.text = text
+        left.line_range = line_range
+        left.token_estimate = token_estimate
+        left.importance_score = self._importance_text(left.content_type, density, token_estimate)
+        left.debug_metadata["source_offset"] = {"start_line": line_range[0], "end_line": line_range[1]}
+        left.debug_metadata["merged_source_chunks"] = merged_sources
+        left.debug_metadata["extraction_method"] = "chunk_preparer::sparse_merge"
+        left.evaluation_metadata["density_score"] = density
+        left.evaluation_metadata["chunk_coherence_score"] = max(
+            left.evaluation_metadata.get("chunk_coherence_score", 0.0),
+            right.evaluation_metadata.get("chunk_coherence_score", 0.0),
+        )
+        return left
+
+    def _merge_text(self, left: ChunkCandidate, right: ChunkCandidate) -> str:
+        if left.heading_path == right.heading_path:
+            return f"{left.text.rstrip()}\n\n{right.text.lstrip()}"
+
+        left_label = left.heading_path[-1] if left.heading_path else "Section"
+        right_label = right.heading_path[-1] if right.heading_path else "Section"
+        left_text = left.text.rstrip()
+        if not left_text.startswith(f"{left_label}:"):
+            left_text = f"{left_label}:\n{left_text}"
+        return f"{left_text}\n\n{right_label}:\n{right.text.lstrip()}"
 
     def _candidate_for_block(
         self,
@@ -123,8 +198,11 @@ class ChunkPreparer:
         return round(min(1.0, unique_ratio * 0.85 + symbol_ratio), 3)
 
     def _importance(self, block: DocumentNode, density: float, token_estimate: int) -> float:
+        return self._importance_text(block.node_type, density, token_estimate)
+
+    def _importance_text(self, node_type: str, density: float, token_estimate: int) -> float:
         score = 0.35 + density * 0.45
-        if block.node_type in {"table", "code_block", "list"}:
+        if node_type in {"table", "code_block", "list", "reference"}:
             score += 0.1
         if token_estimate > self.settings.max_candidate_tokens:
             score -= 0.1

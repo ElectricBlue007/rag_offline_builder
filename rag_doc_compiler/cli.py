@@ -300,7 +300,15 @@ def cmd_heal(args):
         
     print(f"🩺 Starting Self-Healing Process...")
     agent = SelfHealingAgent(model_name=args.model)
-    agent.heal(str(input_file), str(issues_file), output_file)
+    agent.heal(
+        str(input_file),
+        str(issues_file),
+        output_file,
+        mode=args.mode,
+        use_llm=not args.no_llm,
+        dry_run=args.dry_run,
+        scope=args.scope,
+    )
 
 
 def cmd_process(args):
@@ -404,6 +412,10 @@ def main():
     p_heal.add_argument("issues", help="JSON file with issues from 'process' command")
     p_heal.add_argument("-o", "--output", help="Output fixed markdown file")
     p_heal.add_argument("-m", "--model", default="qwen2.5:7b", help="Ollama model to use (default: qwen2.5:7b)")
+    p_heal.add_argument("--mode", default="issues", choices=["issues", "warnings", "all", "semantic-enhance"], help="Validation items to heal")
+    p_heal.add_argument("--dry-run", action="store_true", help="List exact fixable lines without calling an LLM or writing output")
+    p_heal.add_argument("--no-llm", action="store_true", help="List exact fixable lines without calling an LLM or writing output")
+    p_heal.add_argument("--scope", default="line", choices=["line", "context"], help="Replacement scope for LLM fixes")
     p_heal.set_defaults(func=cmd_heal)
 
     args = parser.parse_args()

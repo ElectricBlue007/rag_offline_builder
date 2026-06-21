@@ -184,6 +184,20 @@ class MarkdownNormalizer:
         """Rule 29: Normalize Unicode for consistent handling of international text."""
         # NFC normalization for consistent character representation
         normalized = unicodedata.normalize("NFC", text)
+        mojibake_replacements = {
+            "â€“": "–",
+            "â€”": "—",
+            "â€˜": "‘",
+            "â€™": "’",
+            "â€œ": "“",
+            "â€": "”",
+            "â€¦": "…",
+            "â€¢": "•",
+            "آ ": " ",
+            "آ": "",
+        }
+        for broken, repaired in mojibake_replacements.items():
+            normalized = normalized.replace(broken, repaired)
         # Replace common problematic Unicode characters
         normalized = normalized.replace("\u00a0", " ")  # Non-breaking space to regular space
         normalized = normalized.replace("\u200b", "")   # Zero-width space removal

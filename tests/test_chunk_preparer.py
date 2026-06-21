@@ -28,3 +28,37 @@ def test_empty_document_has_no_chunks():
     normalized = MarkdownNormalizer().normalize("\n")
     analysis = StructureAnalyzer().analyze(normalized)
     assert ChunkPreparer().prepare(analysis) == []
+
+
+def test_merges_sparse_adjacent_paragraphs_within_same_section():
+    prepared = chunks(
+        "# Credits\n"
+        "Alice Example\n\n"
+        "Bob Example\n\n"
+        "Carol Example\n\n"
+        "## Main Content\n"
+        "This section contains enough explanation to stand apart from the short credit lines.\n"
+    )
+
+    credit_chunks = [chunk for chunk in prepared if chunk.heading_path == ["Credits"]]
+    assert len(credit_chunks) == 1
+    assert "Alice Example" in credit_chunks[0].text
+    assert "Bob Example" in credit_chunks[0].text
+    assert "Carol Example" in credit_chunks[0].text
+    assert credit_chunks[0].debug_metadata["extraction_method"] == "chunk_preparer::sparse_merge"
+
+
+def test_merges_sparse_sibling_subsections_with_labels():
+    prepared = chunks(
+        "# Credits\n"
+        "## Reviewers\n"
+        "Alice Example\n\n"
+        "## Editors\n"
+        "Bob Example\n"
+    )
+
+    assert len(prepared) == 1
+    assert "Reviewers:" in prepared[0].text
+    assert "Editors:" in prepared[0].text
+    assert "Alice Example" in prepared[0].text
+    assert "Bob Example" in prepared[0].text

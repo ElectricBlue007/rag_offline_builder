@@ -32,3 +32,8 @@ def test_splits_ocr_glued_html_table_without_rewriting_text():
 def test_fails_on_unclosed_code_fence():
     with pytest.raises(NormalizationError):
         MarkdownNormalizer().normalize("```python\nprint('x')\n")
+
+
+def test_repairs_common_utf8_mojibake():
+    result = MarkdownNormalizer().normalize("AI â€“ promptآ engineering\n")
+    assert result.markdown == "AI – prompt engineering\n"
