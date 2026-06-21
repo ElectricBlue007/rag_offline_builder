@@ -21,6 +21,7 @@ from agents.structure_agent import StructureAgent
 from agents.semantic_agent import SemanticAgent
 from agents.retrieval_agent import RetrievalAgent
 from agents.chunk_planning_agent import ChunkPlanningAgent, EmbeddingReadinessAgent
+from agents.chunk_review_agent import ChunkReviewAgent
 from agents.orchestrator import DocumentQualificationEngine
 
 __all__ = [
@@ -38,6 +39,7 @@ __all__ = [
     "RetrievalAgent",
     "ChunkPlanningAgent",
     "EmbeddingReadinessAgent",
+    "ChunkReviewAgent",
     
     # Orchestrator
     "DocumentQualificationEngine",

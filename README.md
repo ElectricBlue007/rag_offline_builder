@@ -1,100 +1,87 @@
 # RAG Document Intelligence Compiler
 
-A local pipeline for turning OCR/PDF-generated Markdown into clean, structured, RAG-ready documentation.
+This project turns OCR or PDF extracted Markdown into a structured, validated, and reviewable RAG input pipeline.
 
-The project is designed around two guarantees:
+The workflow is:
 
-- Preserve the original document meaning. The deterministic pipeline does not summarize or rewrite content.
-- Make chunking and embedding safer by validating structure, semantic density, retrieval utility, and chunk readiness before you send content to an embedding model.
+1. Read raw Markdown.
+2. Normalize and structurally analyze it.
+3. Build chunk candidates.
+4. Plan semantic chunking.
+5. Review each chunk for embedding readiness.
+6. Optionally run LLM-based self-healing.
 
-## What It Does
+The pipeline is local and deterministic by default. LLM healing is optional.
 
-The pipeline has three layers of usage:
+## What You Get
 
-1. Deterministic compilation
-   - Normalizes Markdown safely.
-   - Repairs traceable structural problems such as broken ATX heading spacing and common OCR mojibake.
-   - Builds a heading-aware document tree.
-   - Produces chunk candidates with metadata, line ranges, heading paths, token estimates, and adjacency.
-   - Merges sparse adjacent chunks so tiny OCR fragments do not become weak embedding vectors.
-
-2. Qualification and rule validation
-   - Runs agentic validators across structure, semantic quality, retrieval utility, chunk planning, and embedding readiness.
-   - Produces issues, warnings, scores, recommendations, and a chunking strategy.
-
-3. Optional self-healing
-   - Lists exact issue lines without editing by default when used with `--dry-run` or `--no-llm`.
-   - Can call a local Ollama model only when the user chooses to run LLM healing.
-   - Supports safer line-only fixes or wider context-window fixes.
+- `clean.md`: normalized Markdown after Phase 1.
+- `index.json`: structured chunk candidate index.
+- `chunk_review_report.json`: automated review of each chunk before embedding.
+- `result.json`: qualification report from the validation engine.
 
 ## Requirements
 
 - Python `>=3.10`
 - `pytest` for tests
-- Optional: Ollama for LLM-based healing
+- Optional: Ollama for LLM healing
 
-On this Windows workspace, prefer a real Python 3.10+ executable. Example:
+On this workspace, use a Python 3.10+ executable explicitly if needed:
 
 ```powershell
 & 'C:\Program Files\Python312\python.exe' -m pytest -q
 ```
 
-If your `python` command already points to Python 3.10+, you can use `python` in all commands below.
+## End To End Flow
 
-## Quick Start
+### Step 1. Start from the raw Markdown
 
-Run the full deterministic compiler and write clean Markdown plus chunk index:
+Example input:
+
+```text
+output_Testing_pdf2markdown\Testing\Testing.md
+```
+
+This file is the source Markdown produced by OCR or PDF-to-Markdown tooling.
+
+### Step 2. Build the compiled output
+
+Run the full compiler:
 
 ```powershell
 python -m cli.main full output_Testing_pdf2markdown\Testing\Testing.md output_Testing_pdf2markdown\Testing\compiled --pretty
 ```
 
-Outputs:
+This creates:
 
-- `compiled\clean.md`: normalized Markdown
-- `compiled\index.json`: chunk candidate index
+```text
+compiled\
+  clean.md
+  index.json
+  chunk_review_report.json
+```
 
-Run qualification and save the validation report:
+`clean.md` is the normalized Markdown.
+
+`index.json` contains:
+
+- `flat_chunk_view`
+- `hierarchical_structure_view`
+- `semantic_chunk_plan`
+- `chunk_review`
+- `observability`
+
+`chunk_review_report.json` is the same `chunk_review` section written as a separate file for easier inspection.
+
+### Step 3. Validate the document
+
+Run the qualification engine:
 
 ```powershell
 python -m rag_doc_compiler.cli process output_Testing_pdf2markdown\Testing\Testing.md --output result.json --verbose
 ```
 
-Check exact fixable issue lines without calling an LLM:
-
-```powershell
-python -m rag_doc_compiler.cli heal output_Testing_pdf2markdown\Testing\Testing.md result.json --mode semantic-enhance --dry-run
-```
-
-## Recommended Workflow
-
-### 1. Compile the document
-
-Use this when you want the final Markdown and chunk candidate index:
-
-```powershell
-python -m cli.main full input.md output_dir --pretty
-```
-
-This creates:
-
-```text
-output_dir/
-  clean.md
-  index.json
-```
-
-Use `index.json -> flat_chunk_view` as the main input for downstream chunk review, embedding, or vector DB ingestion.
-
-### 2. Validate the document
-
-Use this when you want a quality report:
-
-```powershell
-python -m rag_doc_compiler.cli process input.md --output result.json --verbose
-```
-
-The report includes:
+This reports:
 
 - `is_chunkable`
 - `is_embeddable`
@@ -109,73 +96,79 @@ The report includes:
 - `recommendations`
 - `chunking_strategy`
 
-### 3. Review exact issue lines
+### Step 4. Review chunks before embedding
 
-Before using any LLM, run dry-run healing:
+The compiler automatically reviews every chunk and scores it for embedding readiness.
+
+To inspect the report:
 
 ```powershell
-python -m rag_doc_compiler.cli heal input.md result.json --mode semantic-enhance --dry-run
+Get-Content output_Testing_pdf2markdown\Testing\compiled\chunk_review_report.json
 ```
 
-This prints exact source lines that can be fixed. No model is called and no file is written.
-
-Equivalent no-LLM mode:
+Or look at the embedded review inside `index.json`:
 
 ```powershell
-python -m rag_doc_compiler.cli heal input.md result.json --mode semantic-enhance --no-llm
+Get-Content output_Testing_pdf2markdown\Testing\compiled\index.json
 ```
 
-### 4. Optional LLM healing
+The review uses operator-style decisions:
 
-Install and run Ollama only if you want automatic issue repair:
+- `APPROVE`
+- `REPAIR`
+- `RECHUNK`
+- `REJECT`
+
+### Step 5. Optional self-healing
+
+Before using an LLM, you can do a no-edit dry run:
 
 ```powershell
-ollama pull qwen2.5:7b
+python -m rag_doc_compiler.cli heal output_Testing_pdf2markdown\Testing\Testing.md result.json --mode semantic-enhance --dry-run
 ```
 
-Safer line-only healing:
+If you want actual LLM repair, run:
 
 ```powershell
-python -m rag_doc_compiler.cli heal input.md result.json --output fixed.md --mode semantic-enhance --scope line
+python -m rag_doc_compiler.cli heal output_Testing_pdf2markdown\Testing\Testing.md result.json --output fixed.md --mode semantic-enhance --scope line
 ```
 
-Use wider context only for issues that genuinely need multiple lines, such as broken tables or code fences:
+Use `--scope context` only when the issue needs multiple lines, such as tables or fences:
 
 ```powershell
-python -m rag_doc_compiler.cli heal input.md result.json --output fixed.md --mode all --scope context
+python -m rag_doc_compiler.cli heal output_Testing_pdf2markdown\Testing\Testing.md result.json --output fixed.md --mode all --scope context
 ```
 
-### 5. Re-run validation
-
-Always validate the fixed file:
+Then run the full compiler again on the fixed file:
 
 ```powershell
-python -m rag_doc_compiler.cli process fixed.md --output final_result.json --verbose
 python -m cli.main full fixed.md final_compiled --pretty
 ```
 
 ## Command Reference
 
-### Compile
+### Full pipeline
+
+```powershell
+python -m cli.main full input.md output_dir --pretty
+```
+
+### Phase 1 only
 
 ```powershell
 python -m cli.main run input.md output_dir --pretty
-python -m cli.main full input.md output_dir --pretty
 python -m cli.main validate input.md --pretty
 python -m cli.main debug input.md --pretty
 ```
 
-Use `full` for normal end-to-end compilation.
-
-### Qualify
+### Phase 2 qualification
 
 ```powershell
 python -m rag_doc_compiler.cli process input.md --output result.json --verbose
-python -m rag_doc_compiler.cli process docs_dir --output results_dir --verbose
 python -m rag_doc_compiler.cli stats input.md
 ```
 
-### Optional Healing
+### Optional healing
 
 ```powershell
 python -m rag_doc_compiler.cli heal input.md result.json --dry-run
@@ -184,122 +177,84 @@ python -m rag_doc_compiler.cli heal input.md result.json --output fixed.md --sco
 python -m rag_doc_compiler.cli heal input.md result.json --output fixed.md --scope context --model qwen2.5:7b
 ```
 
-Healing options:
-
-| Option | Meaning |
-| --- | --- |
-| `--mode issues` | Use only hard issues. Default. |
-| `--mode warnings` | Use warnings only. |
-| `--mode all` | Use issues and warnings. |
-| `--mode semantic-enhance` | Use issues and warnings for quality improvement. |
-| `--dry-run` | Print exact fixable lines; do not call LLM; do not write a file. |
-| `--no-llm` | Same safety behavior as dry-run listing. |
-| `--scope line` | Replace only the resolved source line. Recommended first. |
-| `--scope context` | Replace the extracted context window. Use for complex multi-line repairs. |
-| `--model` | Ollama model name. Default: `qwen2.5:7b`. |
-
 ## Output Files
 
 ### `clean.md`
 
-The normalized Markdown. It preserves original meaning and applies only deterministic, traceable repairs.
+The normalized Markdown produced by Phase 1. It keeps meaning intact and applies only traceable repairs.
 
 ### `index.json`
 
-The chunk candidate index. Important fields:
+The chunk index. Important fields:
 
-- `flat_chunk_view`: list of chunk candidates for review and embedding preparation
-- `hierarchical_structure_view`: tree representation for debugging and visualization
-- `heading_path`: full section path for context injection
-- `line_range`: original source line range
-- `token_estimate`: estimated chunk size
-- `content_type`: narrative, technical, procedural, or reference
-- `intent`: explanation, definition, list, warning, or example
-- `debug_metadata`: source offsets, normalization flags, merge metadata
-- `evaluation_metadata`: density and coherence signals
+- `flat_chunk_view`: chunk candidates after sparse merging
+- `heading_path`: hierarchical context for each chunk
+- `line_range`: source line coverage
+- `token_estimate`: approximate size
+- `semantic_tags`: extraction tags
+- `debug_metadata`: offsets, merge history, normalization flags
+- `evaluation_metadata`: coherence and density signals
+- `semantic_chunk_plan`: Phase 3 planning output
+- `chunk_review`: automated review output
 
-### `result.json`
+### `chunk_review_report.json`
 
-The qualification report from `rag_doc_compiler.cli process`.
+The chunk review summary written as a standalone file. It contains:
 
-Use:
-
-```powershell
-python -m rag_doc_compiler.cli process input.md --output result.json --verbose
-```
+- per-chunk scores
+- rule-level issues
+- final decision
+- recommended action
+- overall summary
 
 ## Readiness Checklist
 
-A document is ready for chunking/embedding when:
+A chunk is ready for embedding when it is not rejected by the review layer and has:
 
-- `is_chunkable` is `true`
-- `is_embeddable` is `true`
-- `is_retrievable` is `true`
-- `issues` is empty or intentionally accepted
-- Remaining warnings are understood
-- `index.json -> flat_chunk_view` has no very small standalone chunks
-- Chunks preserve heading paths and line ranges
-- Tables and code blocks are kept with useful context
+- a valid heading path
+- parent context
+- reasonable token size
+- semantic cohesion
+- retrievable information
+- no major noise artifacts
+- stable embedding metadata
 
-For the sample file:
-
-```powershell
-python -m cli.main full output_Testing_pdf2markdown\Testing\Testing.md output_Testing_pdf2markdown\Testing\compiled_final --pretty
-```
-
-Expected healthy chunk audit:
-
-- Chunk count: `11`
-- Chunks under 50 estimated tokens: `0`
-- Chunks over 350 estimated tokens: `0`
+A compiled document is ready when the review summary does not show widespread `REJECT` or `RECHUNK` decisions.
 
 ## Architecture
 
 ```text
 adapters/
-  file_loader.py                 Load Markdown input
+  file_loader.py               Load input Markdown
 
 core/
-  markdown_normalizer.py         Safe normalization and OCR repair
-  structure_analyzer.py          Heading tree and typed block detection
-  chunk_preparer.py              Chunk candidate preparation and sparse merge
+  markdown_normalizer.py       Normalize and repair OCR artifacts
+  structure_analyzer.py        Build hierarchical document structure
+  chunk_preparer.py            Prepare chunk candidates
+  semantic_chunk_planner.py    Plan semantic regions before chunking
 
 agents/
-  structure_agent.py             Rules 101-110
-  semantic_agent.py              Rules 111-120
-  retrieval_agent.py             Rules 121-130
-  chunk_planning_agent.py        Rules 131-150
-  orchestrator.py                Qualification engine
-  self_healing_agent.py          Optional LLM-assisted issue repair
+  structure_agent.py           Structural validation rules
+  semantic_agent.py            Semantic validation rules
+  retrieval_agent.py           Retrieval utility rules
+  chunk_planning_agent.py      Chunk planning and embedding readiness
+  chunk_review_agent.py        Automated chunk review for embedding
+  self_healing_agent.py        Optional LLM repair
 
 output/
-  markdown_writer.py             Writes clean.md
-  metadata_exporter.py           Writes index.json
+  markdown_writer.py           Write clean.md
+  metadata_exporter.py         Write index.json
 
 cli/
-  main.py                        Deterministic compiler CLI
+  main.py                      Full pipeline CLI
 
 rag_doc_compiler/
-  cli.py                         Qualification and optional healing CLI
+  cli.py                       Validation and healing CLI
 ```
 
-## Rule Coverage
+## Test Coverage
 
-Phase 1, deterministic document preparation:
-
-- Rules 1-30: preservation, headings, code, tables, lists, links, images, noise handling, whitespace, stable IDs, UTF-8 normalization
-
-Phase 2, qualification:
-
-- Rules 101-110: structural validation
-- Rules 111-120: semantic validation
-- Rules 121-130: retrieval utility
-- Rules 131-140: chunk planning
-- Rules 141-150: embedding readiness
-
-## Testing
-
-Run all tests:
+Run everything:
 
 ```powershell
 python -m pytest -q
@@ -310,84 +265,37 @@ Run focused suites:
 ```powershell
 python -m pytest tests\test_normalizer.py -q
 python -m pytest tests\test_chunk_preparer.py -q
-python -m pytest tests\test_phase2_qualification.py -q
+python -m pytest tests\test_semantic_chunk_planner.py -q
+python -m pytest tests\test_chunk_review_agent.py -q
+python -m pytest tests\test_phase3_pipeline_integration.py -q
 python -m pytest tests\test_self_healing_agent.py -q
 ```
 
 Current verified status:
 
 ```text
-117 passed
+171 passed
 ```
 
-## Troubleshooting
-
-### Python version errors
-
-The project requires Python 3.10 or newer. If `python --version` shows Python 3.8, use a newer executable:
-
-```powershell
-& 'C:\Program Files\Python312\python.exe' -m pytest -q
-```
-
-### Windows console Unicode errors
-
-Set UTF-8 output before running verbose commands:
-
-```powershell
-$env:PYTHONIOENCODING='utf-8'
-python -m rag_doc_compiler.cli process input.md --output result.json --verbose
-```
-
-### Dry-run shows many warnings
-
-Warnings do not always mean the emitted chunk candidates are bad. Some warnings are raw-block warnings, while `chunk_preparer.py` may merge those sparse blocks into healthy chunk candidates.
-
-Always inspect:
-
-```text
-compiled/index.json -> flat_chunk_view
-```
-
-### Ollama errors
-
-Use dry-run first:
-
-```powershell
-python -m rag_doc_compiler.cli heal input.md result.json --dry-run
-```
-
-If you choose LLM healing, verify Ollama:
-
-```powershell
-ollama list
-ollama run qwen2.5:7b "hello"
-```
-
-## Best Practices
-
-- Run deterministic compilation first.
-- Run qualification second.
-- Use `heal --dry-run` before any LLM edit.
-- Prefer `--scope line` before `--scope context`.
-- Re-run validation after every fix.
-- Use `index.json -> flat_chunk_view`, not raw Markdown alone, to judge embedding readiness.
-- Keep `result.json` and `index.json` as audit artifacts for every processed document.
-
-## Minimal End-To-End Example
+## Practical Example
 
 ```powershell
 $env:PYTHONIOENCODING='utf-8'
 
-python -m cli.main full input.md compiled --pretty
+python -m cli.main full output_Testing_pdf2markdown\Testing\Testing.md output_Testing_pdf2markdown\Testing\compiled --pretty
 
-python -m rag_doc_compiler.cli process input.md --output result.json --verbose
+python -m rag_doc_compiler.cli process output_Testing_pdf2markdown\Testing\Testing.md --output result.json --verbose
 
-python -m rag_doc_compiler.cli heal input.md result.json --mode semantic-enhance --dry-run
+python -m rag_doc_compiler.cli heal output_Testing_pdf2markdown\Testing\Testing.md result.json --mode semantic-enhance --dry-run
 
-python -m rag_doc_compiler.cli heal input.md result.json --output fixed.md --mode semantic-enhance --scope line
+python -m rag_doc_compiler.cli heal output_Testing_pdf2markdown\Testing\Testing.md result.json --output fixed.md --mode semantic-enhance --scope line
 
-python -m cli.main full fixed.md compiled_fixed --pretty
-
-python -m rag_doc_compiler.cli process fixed.md --output final_result.json --verbose
+python -m cli.main full fixed.md output_Testing_pdf2markdown\Testing\compiled_fixed --pretty
 ```
+
+## Notes
+
+- Use `--dry-run` before any LLM healing.
+- Prefer `--scope line` first.
+- Use `chunk_review_report.json` to decide whether a chunk set is actually safe for embedding.
+- The pipeline is designed to keep deterministic processing separate from optional agentic repair.

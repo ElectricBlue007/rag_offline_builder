@@ -66,6 +66,7 @@ def run_phase1(compiler: DocumentCompiler, input_path: Path, output_dir: Path | 
             "status": "success",
             "markdown_path": str(result["markdown_path"]),
             "index_path": str(result["index_path"]),
+            "chunk_review_path": str(result["chunk_review_path"]),
             "chunk_count": len(result["chunks"]),
         }
     else:
