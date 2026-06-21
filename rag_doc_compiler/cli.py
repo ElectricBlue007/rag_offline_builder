@@ -3,12 +3,13 @@
 RAG Document Compiler CLI
 
 A command-line interface for the RAG ingestion pipeline.
-Supports Phase 1 (Structuring) and Phase 2 (Qualification).
+Supports Phase 1 (Structuring), Phase 2 (Qualification), and Self-Healing.
 
 Usage:
     python -m rag_doc_compiler.cli process input.md --output result.json
     python -m rag_doc_compiler.cli validate input.md
     python -m rag_doc_compiler.cli stats input.md
+    python -m rag_doc_compiler.cli heal input.md issues.json --output fixed.md
 """
 
 import argparse
@@ -26,6 +27,7 @@ try:
     from core.structure_analyzer import StructureAnalyzer
     from agents.orchestrator import DocumentQualificationEngine
     from agents.models import DocumentQualificationResult
+    from agents.self_healing_agent import SelfHealingAgent
     
     # Create global instances for convenience
     _normalizer = MarkdownNormalizer()
@@ -237,6 +239,28 @@ def run_full_pipeline(file_path: str, output: Optional[str] = None, verbose: boo
         }, indent=2))
 
 
+def cmd_heal(args):
+    """Handle the 'heal' command - Auto-fix issues using local LLM."""
+    input_file = Path(args.input)
+    issues_file = Path(args.issues)
+    
+    if not input_file.exists():
+        print(f"❌ Input file not found: {input_file}")
+        sys.exit(1)
+    if not issues_file.exists():
+        print(f"❌ Issues file not found: {issues_file}")
+        sys.exit(1)
+        
+    output_file = args.output
+    if not output_file:
+        base, ext = input_file.stem, input_file.suffix
+        output_file = f"{base}_fixed{ext}"
+        
+    print(f"🩺 Starting Self-Healing Process...")
+    agent = SelfHealingAgent(model_name=args.model)
+    agent.heal(str(input_file), str(issues_file), output_file)
+
+
 def cmd_process(args):
     """Handle the 'process' command."""
     files = []
@@ -322,6 +346,14 @@ def main():
     p_stats = subparsers.add_parser("stats", help="Show document statistics")
     p_stats.add_argument("input", help="Input markdown file")
     p_stats.set_defaults(func=cmd_stats)
+
+    # Heal Command
+    p_heal = subparsers.add_parser("heal", help="Auto-fix issues using local LLM")
+    p_heal.add_argument("input", help="Input markdown file to fix")
+    p_heal.add_argument("issues", help="JSON file with issues from 'process' command")
+    p_heal.add_argument("-o", "--output", help="Output fixed markdown file")
+    p_heal.add_argument("-m", "--model", default="qwen2.5:7b", help="Ollama model to use (default: qwen2.5:7b)")
+    p_heal.set_defaults(func=cmd_heal)
 
     args = parser.parse_args()
 

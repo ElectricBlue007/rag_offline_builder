@@ -29,7 +29,8 @@ def test_cli_run_writes_outputs(tmp_path, capsys):
     assert (output_dir / "clean.md").exists()
     index = json.loads((output_dir / "index.json").read_text(encoding="utf-8"))
     assert index["flat_chunk_view"][0]["intent"] == "definition"
-    assert "json_index" in capsys.readouterr().out
+    # Verify CLI outputs the index path in stdout
+    assert "index_path" in capsys.readouterr().out
 
 
 def test_cli_validate_fail_fast_returns_error(tmp_path, capsys):
