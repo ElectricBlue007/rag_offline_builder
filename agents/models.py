@@ -98,6 +98,20 @@ class ChunkingStrategy:
     split_large_sections: bool
     custom_parameters: Dict[str, Any] = field(default_factory=dict)
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "strategy_type": self.strategy_type,
+            "min_chunk_size": self.min_chunk_size,
+            "max_chunk_size": self.max_chunk_size,
+            "preferred_boundary_types": self.preferred_boundary_types,
+            "anchoring_rules": self.anchoring_rules,
+            "context_injection": self.context_injection,
+            "parent_context_depth": self.parent_context_depth,
+            "merge_sparse_blocks": self.merge_sparse_blocks,
+            "split_large_sections": self.split_large_sections,
+            "custom_parameters": self.custom_parameters
+        }
+
 
 @dataclass
 class DocumentQualificationResult:
@@ -135,7 +149,7 @@ class DocumentQualificationResult:
             "issues": [i.to_dict() for i in self.issues],
             "warnings": [w.to_dict() for w in self.warnings],
             "recommendations": self.recommendations,
-            "chunking_strategy": self.chunking_strategy.__dict__ if self.chunking_strategy else None,
+            "chunking_strategy": self.chunking_strategy.to_dict() if self.chunking_strategy else None,
             "section_analyses": [s.__dict__ for s in self.section_analyses],
             "metadata": self.metadata
         }

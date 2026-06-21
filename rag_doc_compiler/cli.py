@@ -218,9 +218,9 @@ def run_full_pipeline(file_path: str, output: Optional[str] = None, verbose: boo
             "semantic_score": result.semantic_score,
             "retrieval_score": result.retrieval_score,
             "embedding_readiness_score": result.embedding_readiness_score,
-            "chunking_strategy": result.chunking_strategy.dict() if hasattr(result.chunking_strategy, 'dict') else result.chunking_strategy,
-            "issues": [i.dict() for i in result.issues],
-            "warnings": [w.dict() if hasattr(w, 'dict') else w for w in result.warnings],
+            "chunking_strategy": result.chunking_strategy.to_dict() if result.chunking_strategy else None,
+            "issues": [i.to_dict() for i in result.issues],
+            "warnings": [w.to_dict() if hasattr(w, 'to_dict') else w for w in result.warnings],
             "recommendations": result.recommendations
         }
     }
