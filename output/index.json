@@ -1,0 +1,4885 @@
+{
+  "compiler": {
+    "name": "rag-document-intelligence-compiler",
+    "version": "0.1.0"
+  },
+  "flat_chunk_view": [
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_1::chunk_2::chonkie-rag-library",
+        "previous_chunk_id": null
+      },
+      "chunk_id": "sec_1::chunk_1::chonkie-rag-library",
+      "content_type": "technical",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {
+          "3": [
+            "badge_noise_removed"
+          ],
+          "4": [
+            "badge_noise_removed"
+          ]
+        },
+        "source_offset": {
+          "end_line": 4,
+          "start_line": 4
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.729,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library"
+      ],
+      "hierarchy_level": 1,
+      "importance_score": 0.678,
+      "intent": "explanation",
+      "line_range": [
+        4,
+        4
+      ],
+      "parent_section_id": "sec_1",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library"
+      ],
+      "text": "  <strong>Advanced Semantic Chunking for RAG</strong>",
+      "token_estimate": 14
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_2::chunk_3::installation",
+        "previous_chunk_id": "sec_1::chunk_1::chonkie-rag-library"
+      },
+      "chunk_id": "sec_1::chunk_2::chonkie-rag-library",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {
+          "3": [
+            "badge_noise_removed"
+          ],
+          "4": [
+            "badge_noise_removed"
+          ],
+          "6": [
+            "html_div_removed"
+          ]
+        },
+        "source_offset": {
+          "end_line": 6,
+          "start_line": 6
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.0,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library"
+      ],
+      "hierarchy_level": 1,
+      "importance_score": 0.35,
+      "intent": "explanation",
+      "line_range": [
+        6,
+        6
+      ],
+      "parent_section_id": "sec_1",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library"
+      ],
+      "text": "---",
+      "token_estimate": 1
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_2::chunk_4::installation",
+        "previous_chunk_id": "sec_1::chunk_2::chonkie-rag-library"
+      },
+      "chunk_id": "sec_2::chunk_3::installation",
+      "content_type": "procedural",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {
+          "8": [
+            "html_div_removed"
+          ]
+        },
+        "source_offset": {
+          "end_line": 10,
+          "start_line": 10
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Installation"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        10,
+        10
+      ],
+      "parent_section_id": "sec_2",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:installation"
+      ],
+      "text": "Install Chonkie using pip:",
+      "token_estimate": 7
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_2::chunk_5::installation",
+        "previous_chunk_id": "sec_2::chunk_3::installation"
+      },
+      "chunk_id": "sec_2::chunk_4::installation",
+      "content_type": "reference",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::code_block",
+        "normalization_flags": {
+          "8": [
+            "html_div_removed"
+          ]
+        },
+        "source_offset": {
+          "end_line": 14,
+          "start_line": 12
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 1.0,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Installation"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.9,
+      "intent": "example",
+      "line_range": [
+        12,
+        14
+      ],
+      "parent_section_id": "sec_2",
+      "semantic_tags": [
+        "code_block",
+        "h1:chonkie-rag-library",
+        "h2:installation"
+      ],
+      "text": "```bash\npip install chonkie\n```",
+      "token_estimate": 8
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_2::chunk_6::installation",
+        "previous_chunk_id": "sec_2::chunk_4::installation"
+      },
+      "chunk_id": "sec_2::chunk_5::installation",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {
+          "8": [
+            "html_div_removed"
+          ]
+        },
+        "source_offset": {
+          "end_line": 16,
+          "start_line": 16
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Installation"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        16,
+        16
+      ],
+      "parent_section_id": "sec_2",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:installation"
+      ],
+      "text": "Or using uv:",
+      "token_estimate": 3
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_3::chunk_7::requirements",
+        "previous_chunk_id": "sec_2::chunk_5::installation"
+      },
+      "chunk_id": "sec_2::chunk_6::installation",
+      "content_type": "reference",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::code_block",
+        "normalization_flags": {
+          "8": [
+            "html_div_removed"
+          ]
+        },
+        "source_offset": {
+          "end_line": 20,
+          "start_line": 18
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 1.0,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Installation"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.9,
+      "intent": "example",
+      "line_range": [
+        18,
+        20
+      ],
+      "parent_section_id": "sec_2",
+      "semantic_tags": [
+        "code_block",
+        "h1:chonkie-rag-library",
+        "h2:installation"
+      ],
+      "text": "```bash\nuv add chonkie\n```",
+      "token_estimate": 7
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_5::chunk_8::basic-example",
+        "previous_chunk_id": "sec_2::chunk_6::installation"
+      },
+      "chunk_id": "sec_3::chunk_7::requirements",
+      "content_type": "technical",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::list",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 26,
+          "start_line": 24
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Installation",
+        "Requirements"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.832,
+      "intent": "list",
+      "line_range": [
+        24,
+        26
+      ],
+      "parent_section_id": "sec_3",
+      "semantic_tags": [
+        "list",
+        "h1:chonkie-rag-library",
+        "h2:installation",
+        "h3:requirements"
+      ],
+      "text": "- Python 3.8+\n- numpy\n- transformers",
+      "token_estimate": 9
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_6::chunk_9::advanced-configuration",
+        "previous_chunk_id": "sec_3::chunk_7::requirements"
+      },
+      "chunk_id": "sec_5::chunk_8::basic-example",
+      "content_type": "reference",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::code_block",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 42,
+          "start_line": 32
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.753,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Usage",
+        "Basic Example"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.789,
+      "intent": "example",
+      "line_range": [
+        32,
+        42
+      ],
+      "parent_section_id": "sec_5",
+      "semantic_tags": [
+        "code_block",
+        "h1:chonkie-rag-library",
+        "h2:usage",
+        "h3:basic-example"
+      ],
+      "text": "```python\nfrom chonkie import SemanticChunker\n\nchunker = SemanticChunker(\n    embedding_model=\"intfloat/multilingual-e5-large\",\n    chunk_size=512\n)\n\ntext = \"Your long document text here...\"\nchunks = chunker.chunk(text)\n```",
+      "token_estimate": 56
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_6::chunk_10::advanced-configuration",
+        "previous_chunk_id": "sec_5::chunk_8::basic-example"
+      },
+      "chunk_id": "sec_6::chunk_9::advanced-configuration",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 46,
+          "start_line": 46
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Usage",
+        "Advanced Configuration"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        46,
+        46
+      ],
+      "parent_section_id": "sec_6",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:usage",
+        "h3:advanced-configuration"
+      ],
+      "text": "You can customize the chunking behavior:",
+      "token_estimate": 10
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_8::chunk_11::semanticchunker",
+        "previous_chunk_id": "sec_6::chunk_9::advanced-configuration"
+      },
+      "chunk_id": "sec_6::chunk_10::advanced-configuration",
+      "content_type": "reference",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::table",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 52,
+          "start_line": 48
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.773,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Usage",
+        "Advanced Configuration"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.798,
+      "intent": "explanation",
+      "line_range": [
+        48,
+        52
+      ],
+      "parent_section_id": "sec_6",
+      "semantic_tags": [
+        "table",
+        "h1:chonkie-rag-library",
+        "h2:usage",
+        "h3:advanced-configuration"
+      ],
+      "text": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| chunk_size | int | 512 | Maximum tokens per chunk |\n| similarity_threshold | float | 0.5 | Minimum semantic similarity |\n| min_chunk_size | int | 50 | Minimum tokens per chunk |",
+      "token_estimate": 68
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_10::chunk_12::chunk-text-str-list-chunk",
+        "previous_chunk_id": "sec_6::chunk_10::advanced-configuration"
+      },
+      "chunk_id": "sec_8::chunk_11::semanticchunker",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 58,
+          "start_line": 58
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.67,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "API Reference",
+        "SemanticChunker"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        58,
+        58
+      ],
+      "parent_section_id": "sec_8",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:api-reference",
+        "h3:semanticchunker"
+      ],
+      "text": "The main class for semantic chunking.",
+      "token_estimate": 10
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_10::chunk_13::chunk-text-str-list-chunk",
+        "previous_chunk_id": "sec_8::chunk_11::semanticchunker"
+      },
+      "chunk_id": "sec_10::chunk_12::chunk-text-str-list-chunk",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 64,
+          "start_line": 64
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.67,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "API Reference",
+        "SemanticChunker",
+        "Methods",
+        "`chunk(text: str) -> List[Chunk]`"
+      ],
+      "hierarchy_level": 5,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        64,
+        64
+      ],
+      "parent_section_id": "sec_10",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:api-reference",
+        "h3:semanticchunker",
+        "h4:methods",
+        "h5:`chunk(text:-str)-->-list[chunk]`"
+      ],
+      "text": "Splits text into semantic chunks.",
+      "token_estimate": 9
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_10::chunk_14::chunk-text-str-list-chunk",
+        "previous_chunk_id": "sec_10::chunk_12::chunk-text-str-list-chunk"
+      },
+      "chunk_id": "sec_10::chunk_13::chunk-text-str-list-chunk",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 66,
+          "start_line": 66
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "API Reference",
+        "SemanticChunker",
+        "Methods",
+        "`chunk(text: str) -> List[Chunk]`"
+      ],
+      "hierarchy_level": 5,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        66,
+        66
+      ],
+      "parent_section_id": "sec_10",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:api-reference",
+        "h3:semanticchunker",
+        "h4:methods",
+        "h5:`chunk(text:-str)-->-list[chunk]`"
+      ],
+      "text": "**Parameters:**",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_10::chunk_15::chunk-text-str-list-chunk",
+        "previous_chunk_id": "sec_10::chunk_13::chunk-text-str-list-chunk"
+      },
+      "chunk_id": "sec_10::chunk_14::chunk-text-str-list-chunk",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::list",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 67,
+          "start_line": 67
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.769,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "API Reference",
+        "SemanticChunker",
+        "Methods",
+        "`chunk(text: str) -> List[Chunk]`"
+      ],
+      "hierarchy_level": 5,
+      "importance_score": 0.796,
+      "intent": "list",
+      "line_range": [
+        67,
+        67
+      ],
+      "parent_section_id": "sec_10",
+      "semantic_tags": [
+        "list",
+        "h1:chonkie-rag-library",
+        "h2:api-reference",
+        "h3:semanticchunker",
+        "h4:methods",
+        "h5:`chunk(text:-str)-->-list[chunk]`"
+      ],
+      "text": "- `text`: The input text to chunk",
+      "token_estimate": 9
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_10::chunk_16::chunk-text-str-list-chunk",
+        "previous_chunk_id": "sec_10::chunk_14::chunk-text-str-list-chunk"
+      },
+      "chunk_id": "sec_10::chunk_15::chunk-text-str-list-chunk",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 69,
+          "start_line": 69
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "API Reference",
+        "SemanticChunker",
+        "Methods",
+        "`chunk(text: str) -> List[Chunk]`"
+      ],
+      "hierarchy_level": 5,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        69,
+        69
+      ],
+      "parent_section_id": "sec_10",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:api-reference",
+        "h3:semanticchunker",
+        "h4:methods",
+        "h5:`chunk(text:-str)-->-list[chunk]`"
+      ],
+      "text": "**Returns:**",
+      "token_estimate": 3
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_11::chunk_17::embed-chunks-list-chunk-np-ndarray",
+        "previous_chunk_id": "sec_10::chunk_15::chunk-text-str-list-chunk"
+      },
+      "chunk_id": "sec_10::chunk_16::chunk-text-str-list-chunk",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::list",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 70,
+          "start_line": 70
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "API Reference",
+        "SemanticChunker",
+        "Methods",
+        "`chunk(text: str) -> List[Chunk]`"
+      ],
+      "hierarchy_level": 5,
+      "importance_score": 0.832,
+      "intent": "list",
+      "line_range": [
+        70,
+        70
+      ],
+      "parent_section_id": "sec_10",
+      "semantic_tags": [
+        "list",
+        "h1:chonkie-rag-library",
+        "h2:api-reference",
+        "h3:semanticchunker",
+        "h4:methods",
+        "h5:`chunk(text:-str)-->-list[chunk]`"
+      ],
+      "text": "- List of Chunk objects",
+      "token_estimate": 6
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_12::chunk_18::contributing",
+        "previous_chunk_id": "sec_10::chunk_16::chunk-text-str-list-chunk"
+      },
+      "chunk_id": "sec_11::chunk_17::embed-chunks-list-chunk-np-ndarray",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 74,
+          "start_line": 74
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.67,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "API Reference",
+        "SemanticChunker",
+        "Methods",
+        "`embed(chunks: List[Chunk]) -> np.ndarray`"
+      ],
+      "hierarchy_level": 5,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        74,
+        74
+      ],
+      "parent_section_id": "sec_11",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:api-reference",
+        "h3:semanticchunker",
+        "h4:methods",
+        "h5:`embed(chunks:-list[chunk])-->-np.ndarray`"
+      ],
+      "text": "Generates embeddings for chunks.",
+      "token_estimate": 8
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_13::chunk_19::steps",
+        "previous_chunk_id": "sec_11::chunk_17::embed-chunks-list-chunk-np-ndarray"
+      },
+      "chunk_id": "sec_12::chunk_18::contributing",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 78,
+          "start_line": 78
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.79,
+        "density_score": 0.816,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Contributing"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.717,
+      "intent": "explanation",
+      "line_range": [
+        78,
+        78
+      ],
+      "parent_section_id": "sec_12",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:contributing"
+      ],
+      "text": "We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).",
+      "token_estimate": 20
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_14::chunk_20::license",
+        "previous_chunk_id": "sec_12::chunk_18::contributing"
+      },
+      "chunk_id": "sec_13::chunk_19::steps",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::list",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 85,
+          "start_line": 82
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.803,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "Contributing",
+        "Steps"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.811,
+      "intent": "list",
+      "line_range": [
+        82,
+        85
+      ],
+      "parent_section_id": "sec_13",
+      "semantic_tags": [
+        "list",
+        "h1:chonkie-rag-library",
+        "h2:contributing",
+        "h3:steps"
+      ],
+      "text": "1. Fork the repository\n2. Create a feature branch\n3. Make your changes\n4. Submit a pull request",
+      "token_estimate": 24
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_14::chunk_21::license",
+        "previous_chunk_id": "sec_13::chunk_19::steps"
+      },
+      "chunk_id": "sec_14::chunk_20::license",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 89,
+          "start_line": 89
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.67,
+        "density_score": 0.689,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "License"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.66,
+      "intent": "explanation",
+      "line_range": [
+        89,
+        89
+      ],
+      "parent_section_id": "sec_14",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:license"
+      ],
+      "text": "MIT License - See [LICENSE](LICENSE) for details.",
+      "token_estimate": 13
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_14::chunk_22::license",
+        "previous_chunk_id": "sec_14::chunk_20::license"
+      },
+      "chunk_id": "sec_14::chunk_21::license",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 91,
+          "start_line": 91
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.0,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "License"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.35,
+      "intent": "explanation",
+      "line_range": [
+        91,
+        91
+      ],
+      "parent_section_id": "sec_14",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:license"
+      ],
+      "text": "---",
+      "token_estimate": 1
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": null,
+        "previous_chunk_id": "sec_14::chunk_21::license"
+      },
+      "chunk_id": "sec_14::chunk_22::license",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 93,
+          "start_line": 93
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Chonkie RAG Library",
+        "License"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        93,
+        93
+      ],
+      "parent_section_id": "sec_14",
+      "semantic_tags": [
+        "paragraph",
+        "h1:chonkie-rag-library",
+        "h2:license"
+      ],
+      "text": "*Last updated: 2024*",
+      "token_estimate": 5
+    }
+  ],
+  "hierarchical_structure_view": {
+    "flat_reference_map": {
+      "block_1": {
+        "children": [],
+        "content": "  <strong>Advanced Semantic Chunking for RAG</strong>",
+        "heading_path": [
+          "Chonkie RAG Library"
+        ],
+        "level": 2,
+        "line_range": [
+          4,
+          4
+        ],
+        "metadata": {},
+        "node_id": "block_1",
+        "node_type": "paragraph",
+        "parent_id": "sec_1"
+      },
+      "block_10": {
+        "children": [],
+        "content": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| chunk_size | int | 512 | Maximum tokens per chunk |\n| similarity_threshold | float | 0.5 | Minimum semantic similarity |\n| min_chunk_size | int | 50 | Minimum tokens per chunk |",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage",
+          "Advanced Configuration"
+        ],
+        "level": 4,
+        "line_range": [
+          48,
+          52
+        ],
+        "metadata": {},
+        "node_id": "block_10",
+        "node_type": "table",
+        "parent_id": "sec_6"
+      },
+      "block_11": {
+        "children": [],
+        "content": "The main class for semantic chunking.",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker"
+        ],
+        "level": 4,
+        "line_range": [
+          58,
+          58
+        ],
+        "metadata": {},
+        "node_id": "block_11",
+        "node_type": "paragraph",
+        "parent_id": "sec_8"
+      },
+      "block_12": {
+        "children": [],
+        "content": "Splits text into semantic chunks.",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "level": 6,
+        "line_range": [
+          64,
+          64
+        ],
+        "metadata": {},
+        "node_id": "block_12",
+        "node_type": "paragraph",
+        "parent_id": "sec_10"
+      },
+      "block_13": {
+        "children": [],
+        "content": "**Parameters:**",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "level": 6,
+        "line_range": [
+          66,
+          66
+        ],
+        "metadata": {},
+        "node_id": "block_13",
+        "node_type": "paragraph",
+        "parent_id": "sec_10"
+      },
+      "block_14": {
+        "children": [],
+        "content": "- `text`: The input text to chunk",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "level": 6,
+        "line_range": [
+          67,
+          67
+        ],
+        "metadata": {},
+        "node_id": "block_14",
+        "node_type": "list",
+        "parent_id": "sec_10"
+      },
+      "block_15": {
+        "children": [],
+        "content": "**Returns:**",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "level": 6,
+        "line_range": [
+          69,
+          69
+        ],
+        "metadata": {},
+        "node_id": "block_15",
+        "node_type": "paragraph",
+        "parent_id": "sec_10"
+      },
+      "block_16": {
+        "children": [],
+        "content": "- List of Chunk objects",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "level": 6,
+        "line_range": [
+          70,
+          70
+        ],
+        "metadata": {},
+        "node_id": "block_16",
+        "node_type": "list",
+        "parent_id": "sec_10"
+      },
+      "block_17": {
+        "children": [],
+        "content": "Generates embeddings for chunks.",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`embed(chunks: List[Chunk]) -> np.ndarray`"
+        ],
+        "level": 6,
+        "line_range": [
+          74,
+          74
+        ],
+        "metadata": {},
+        "node_id": "block_17",
+        "node_type": "paragraph",
+        "parent_id": "sec_11"
+      },
+      "block_18": {
+        "children": [],
+        "content": "We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Contributing"
+        ],
+        "level": 3,
+        "line_range": [
+          78,
+          78
+        ],
+        "metadata": {},
+        "node_id": "block_18",
+        "node_type": "paragraph",
+        "parent_id": "sec_12"
+      },
+      "block_19": {
+        "children": [],
+        "content": "1. Fork the repository\n2. Create a feature branch\n3. Make your changes\n4. Submit a pull request",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Contributing",
+          "Steps"
+        ],
+        "level": 4,
+        "line_range": [
+          82,
+          85
+        ],
+        "metadata": {},
+        "node_id": "block_19",
+        "node_type": "list",
+        "parent_id": "sec_13"
+      },
+      "block_2": {
+        "children": [],
+        "content": "---",
+        "heading_path": [
+          "Chonkie RAG Library"
+        ],
+        "level": 2,
+        "line_range": [
+          6,
+          6
+        ],
+        "metadata": {},
+        "node_id": "block_2",
+        "node_type": "paragraph",
+        "parent_id": "sec_1"
+      },
+      "block_20": {
+        "children": [],
+        "content": "MIT License - See [LICENSE](LICENSE) for details.",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "License"
+        ],
+        "level": 3,
+        "line_range": [
+          89,
+          89
+        ],
+        "metadata": {},
+        "node_id": "block_20",
+        "node_type": "paragraph",
+        "parent_id": "sec_14"
+      },
+      "block_21": {
+        "children": [],
+        "content": "---",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "License"
+        ],
+        "level": 3,
+        "line_range": [
+          91,
+          91
+        ],
+        "metadata": {},
+        "node_id": "block_21",
+        "node_type": "paragraph",
+        "parent_id": "sec_14"
+      },
+      "block_22": {
+        "children": [],
+        "content": "*Last updated: 2024*",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "License"
+        ],
+        "level": 3,
+        "line_range": [
+          93,
+          93
+        ],
+        "metadata": {},
+        "node_id": "block_22",
+        "node_type": "paragraph",
+        "parent_id": "sec_14"
+      },
+      "block_3": {
+        "children": [],
+        "content": "Install Chonkie using pip:",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "level": 3,
+        "line_range": [
+          10,
+          10
+        ],
+        "metadata": {},
+        "node_id": "block_3",
+        "node_type": "paragraph",
+        "parent_id": "sec_2"
+      },
+      "block_4": {
+        "children": [],
+        "content": "```bash\npip install chonkie\n```",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "level": 3,
+        "line_range": [
+          12,
+          14
+        ],
+        "metadata": {},
+        "node_id": "block_4",
+        "node_type": "code_block",
+        "parent_id": "sec_2"
+      },
+      "block_5": {
+        "children": [],
+        "content": "Or using uv:",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "level": 3,
+        "line_range": [
+          16,
+          16
+        ],
+        "metadata": {},
+        "node_id": "block_5",
+        "node_type": "paragraph",
+        "parent_id": "sec_2"
+      },
+      "block_6": {
+        "children": [],
+        "content": "```bash\nuv add chonkie\n```",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "level": 3,
+        "line_range": [
+          18,
+          20
+        ],
+        "metadata": {},
+        "node_id": "block_6",
+        "node_type": "code_block",
+        "parent_id": "sec_2"
+      },
+      "block_7": {
+        "children": [],
+        "content": "- Python 3.8+\n- numpy\n- transformers",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation",
+          "Requirements"
+        ],
+        "level": 4,
+        "line_range": [
+          24,
+          26
+        ],
+        "metadata": {},
+        "node_id": "block_7",
+        "node_type": "list",
+        "parent_id": "sec_3"
+      },
+      "block_8": {
+        "children": [],
+        "content": "```python\nfrom chonkie import SemanticChunker\n\nchunker = SemanticChunker(\n    embedding_model=\"intfloat/multilingual-e5-large\",\n    chunk_size=512\n)\n\ntext = \"Your long document text here...\"\nchunks = chunker.chunk(text)\n```",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage",
+          "Basic Example"
+        ],
+        "level": 4,
+        "line_range": [
+          32,
+          42
+        ],
+        "metadata": {},
+        "node_id": "block_8",
+        "node_type": "code_block",
+        "parent_id": "sec_5"
+      },
+      "block_9": {
+        "children": [],
+        "content": "You can customize the chunking behavior:",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage",
+          "Advanced Configuration"
+        ],
+        "level": 4,
+        "line_range": [
+          46,
+          46
+        ],
+        "metadata": {},
+        "node_id": "block_9",
+        "node_type": "paragraph",
+        "parent_id": "sec_6"
+      },
+      "doc_root": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "  <strong>Advanced Semantic Chunking for RAG</strong>",
+                "heading_path": [
+                  "Chonkie RAG Library"
+                ],
+                "level": 2,
+                "line_range": [
+                  4,
+                  4
+                ],
+                "metadata": {},
+                "node_id": "block_1",
+                "node_type": "paragraph",
+                "parent_id": "sec_1"
+              },
+              {
+                "children": [],
+                "content": "---",
+                "heading_path": [
+                  "Chonkie RAG Library"
+                ],
+                "level": 2,
+                "line_range": [
+                  6,
+                  6
+                ],
+                "metadata": {},
+                "node_id": "block_2",
+                "node_type": "paragraph",
+                "parent_id": "sec_1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "Install Chonkie using pip:",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Installation"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      10,
+                      10
+                    ],
+                    "metadata": {},
+                    "node_id": "block_3",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_2"
+                  },
+                  {
+                    "children": [],
+                    "content": "```bash\npip install chonkie\n```",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Installation"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      12,
+                      14
+                    ],
+                    "metadata": {},
+                    "node_id": "block_4",
+                    "node_type": "code_block",
+                    "parent_id": "sec_2"
+                  },
+                  {
+                    "children": [],
+                    "content": "Or using uv:",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Installation"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      16,
+                      16
+                    ],
+                    "metadata": {},
+                    "node_id": "block_5",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_2"
+                  },
+                  {
+                    "children": [],
+                    "content": "```bash\nuv add chonkie\n```",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Installation"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      18,
+                      20
+                    ],
+                    "metadata": {},
+                    "node_id": "block_6",
+                    "node_type": "code_block",
+                    "parent_id": "sec_2"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "- Python 3.8+\n- numpy\n- transformers",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "Installation",
+                          "Requirements"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          24,
+                          26
+                        ],
+                        "metadata": {},
+                        "node_id": "block_7",
+                        "node_type": "list",
+                        "parent_id": "sec_3"
+                      }
+                    ],
+                    "content": "### Requirements",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Installation",
+                      "Requirements"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      22,
+                      26
+                    ],
+                    "metadata": {
+                      "title": "Requirements"
+                    },
+                    "node_id": "sec_3",
+                    "node_type": "section",
+                    "parent_id": "sec_2"
+                  }
+                ],
+                "content": "## Installation",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Installation"
+                ],
+                "level": 2,
+                "line_range": [
+                  8,
+                  22
+                ],
+                "metadata": {
+                  "title": "Installation"
+                },
+                "node_id": "sec_2",
+                "node_type": "section",
+                "parent_id": "sec_1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "```python\nfrom chonkie import SemanticChunker\n\nchunker = SemanticChunker(\n    embedding_model=\"intfloat/multilingual-e5-large\",\n    chunk_size=512\n)\n\ntext = \"Your long document text here...\"\nchunks = chunker.chunk(text)\n```",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "Usage",
+                          "Basic Example"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          32,
+                          42
+                        ],
+                        "metadata": {},
+                        "node_id": "block_8",
+                        "node_type": "code_block",
+                        "parent_id": "sec_5"
+                      }
+                    ],
+                    "content": "### Basic Example",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Usage",
+                      "Basic Example"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      30,
+                      42
+                    ],
+                    "metadata": {
+                      "title": "Basic Example"
+                    },
+                    "node_id": "sec_5",
+                    "node_type": "section",
+                    "parent_id": "sec_4"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "You can customize the chunking behavior:",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "Usage",
+                          "Advanced Configuration"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          46,
+                          46
+                        ],
+                        "metadata": {},
+                        "node_id": "block_9",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_6"
+                      },
+                      {
+                        "children": [],
+                        "content": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| chunk_size | int | 512 | Maximum tokens per chunk |\n| similarity_threshold | float | 0.5 | Minimum semantic similarity |\n| min_chunk_size | int | 50 | Minimum tokens per chunk |",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "Usage",
+                          "Advanced Configuration"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          48,
+                          52
+                        ],
+                        "metadata": {},
+                        "node_id": "block_10",
+                        "node_type": "table",
+                        "parent_id": "sec_6"
+                      }
+                    ],
+                    "content": "### Advanced Configuration",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Usage",
+                      "Advanced Configuration"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      44,
+                      52
+                    ],
+                    "metadata": {
+                      "title": "Advanced Configuration"
+                    },
+                    "node_id": "sec_6",
+                    "node_type": "section",
+                    "parent_id": "sec_4"
+                  }
+                ],
+                "content": "## Usage",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Usage"
+                ],
+                "level": 2,
+                "line_range": [
+                  28,
+                  44
+                ],
+                "metadata": {
+                  "title": "Usage"
+                },
+                "node_id": "sec_4",
+                "node_type": "section",
+                "parent_id": "sec_1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "The main class for semantic chunking.",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          58,
+                          58
+                        ],
+                        "metadata": {},
+                        "node_id": "block_11",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_8"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [],
+                                "content": "Splits text into semantic chunks.",
+                                "heading_path": [
+                                  "Chonkie RAG Library",
+                                  "API Reference",
+                                  "SemanticChunker",
+                                  "Methods",
+                                  "`chunk(text: str) -> List[Chunk]`"
+                                ],
+                                "level": 6,
+                                "line_range": [
+                                  64,
+                                  64
+                                ],
+                                "metadata": {},
+                                "node_id": "block_12",
+                                "node_type": "paragraph",
+                                "parent_id": "sec_10"
+                              },
+                              {
+                                "children": [],
+                                "content": "**Parameters:**",
+                                "heading_path": [
+                                  "Chonkie RAG Library",
+                                  "API Reference",
+                                  "SemanticChunker",
+                                  "Methods",
+                                  "`chunk(text: str) -> List[Chunk]`"
+                                ],
+                                "level": 6,
+                                "line_range": [
+                                  66,
+                                  66
+                                ],
+                                "metadata": {},
+                                "node_id": "block_13",
+                                "node_type": "paragraph",
+                                "parent_id": "sec_10"
+                              },
+                              {
+                                "children": [],
+                                "content": "- `text`: The input text to chunk",
+                                "heading_path": [
+                                  "Chonkie RAG Library",
+                                  "API Reference",
+                                  "SemanticChunker",
+                                  "Methods",
+                                  "`chunk(text: str) -> List[Chunk]`"
+                                ],
+                                "level": 6,
+                                "line_range": [
+                                  67,
+                                  67
+                                ],
+                                "metadata": {},
+                                "node_id": "block_14",
+                                "node_type": "list",
+                                "parent_id": "sec_10"
+                              },
+                              {
+                                "children": [],
+                                "content": "**Returns:**",
+                                "heading_path": [
+                                  "Chonkie RAG Library",
+                                  "API Reference",
+                                  "SemanticChunker",
+                                  "Methods",
+                                  "`chunk(text: str) -> List[Chunk]`"
+                                ],
+                                "level": 6,
+                                "line_range": [
+                                  69,
+                                  69
+                                ],
+                                "metadata": {},
+                                "node_id": "block_15",
+                                "node_type": "paragraph",
+                                "parent_id": "sec_10"
+                              },
+                              {
+                                "children": [],
+                                "content": "- List of Chunk objects",
+                                "heading_path": [
+                                  "Chonkie RAG Library",
+                                  "API Reference",
+                                  "SemanticChunker",
+                                  "Methods",
+                                  "`chunk(text: str) -> List[Chunk]`"
+                                ],
+                                "level": 6,
+                                "line_range": [
+                                  70,
+                                  70
+                                ],
+                                "metadata": {},
+                                "node_id": "block_16",
+                                "node_type": "list",
+                                "parent_id": "sec_10"
+                              }
+                            ],
+                            "content": "##### `chunk(text: str) -> List[Chunk]`",
+                            "heading_path": [
+                              "Chonkie RAG Library",
+                              "API Reference",
+                              "SemanticChunker",
+                              "Methods",
+                              "`chunk(text: str) -> List[Chunk]`"
+                            ],
+                            "level": 5,
+                            "line_range": [
+                              62,
+                              70
+                            ],
+                            "metadata": {
+                              "title": "`chunk(text: str) -> List[Chunk]`"
+                            },
+                            "node_id": "sec_10",
+                            "node_type": "section",
+                            "parent_id": "sec_9"
+                          },
+                          {
+                            "children": [
+                              {
+                                "children": [],
+                                "content": "Generates embeddings for chunks.",
+                                "heading_path": [
+                                  "Chonkie RAG Library",
+                                  "API Reference",
+                                  "SemanticChunker",
+                                  "Methods",
+                                  "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                                ],
+                                "level": 6,
+                                "line_range": [
+                                  74,
+                                  74
+                                ],
+                                "metadata": {},
+                                "node_id": "block_17",
+                                "node_type": "paragraph",
+                                "parent_id": "sec_11"
+                              }
+                            ],
+                            "content": "##### `embed(chunks: List[Chunk]) -> np.ndarray`",
+                            "heading_path": [
+                              "Chonkie RAG Library",
+                              "API Reference",
+                              "SemanticChunker",
+                              "Methods",
+                              "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                            ],
+                            "level": 5,
+                            "line_range": [
+                              72,
+                              74
+                            ],
+                            "metadata": {
+                              "title": "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                            },
+                            "node_id": "sec_11",
+                            "node_type": "section",
+                            "parent_id": "sec_9"
+                          }
+                        ],
+                        "content": "#### Methods",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          60,
+                          72
+                        ],
+                        "metadata": {
+                          "title": "Methods"
+                        },
+                        "node_id": "sec_9",
+                        "node_type": "section",
+                        "parent_id": "sec_8"
+                      }
+                    ],
+                    "content": "### SemanticChunker",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      56,
+                      60
+                    ],
+                    "metadata": {
+                      "title": "SemanticChunker"
+                    },
+                    "node_id": "sec_8",
+                    "node_type": "section",
+                    "parent_id": "sec_7"
+                  }
+                ],
+                "content": "## API Reference",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference"
+                ],
+                "level": 2,
+                "line_range": [
+                  54,
+                  56
+                ],
+                "metadata": {
+                  "title": "API Reference"
+                },
+                "node_id": "sec_7",
+                "node_type": "section",
+                "parent_id": "sec_1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Contributing"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      78,
+                      78
+                    ],
+                    "metadata": {},
+                    "node_id": "block_18",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_12"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "1. Fork the repository\n2. Create a feature branch\n3. Make your changes\n4. Submit a pull request",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "Contributing",
+                          "Steps"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          82,
+                          85
+                        ],
+                        "metadata": {},
+                        "node_id": "block_19",
+                        "node_type": "list",
+                        "parent_id": "sec_13"
+                      }
+                    ],
+                    "content": "### Steps",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Contributing",
+                      "Steps"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      80,
+                      85
+                    ],
+                    "metadata": {
+                      "title": "Steps"
+                    },
+                    "node_id": "sec_13",
+                    "node_type": "section",
+                    "parent_id": "sec_12"
+                  }
+                ],
+                "content": "## Contributing",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Contributing"
+                ],
+                "level": 2,
+                "line_range": [
+                  76,
+                  80
+                ],
+                "metadata": {
+                  "title": "Contributing"
+                },
+                "node_id": "sec_12",
+                "node_type": "section",
+                "parent_id": "sec_1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "MIT License - See [LICENSE](LICENSE) for details.",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "License"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      89,
+                      89
+                    ],
+                    "metadata": {},
+                    "node_id": "block_20",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_14"
+                  },
+                  {
+                    "children": [],
+                    "content": "---",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "License"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      91,
+                      91
+                    ],
+                    "metadata": {},
+                    "node_id": "block_21",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_14"
+                  },
+                  {
+                    "children": [],
+                    "content": "*Last updated: 2024*",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "License"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      93,
+                      93
+                    ],
+                    "metadata": {},
+                    "node_id": "block_22",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_14"
+                  }
+                ],
+                "content": "## License",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "License"
+                ],
+                "level": 2,
+                "line_range": [
+                  87,
+                  93
+                ],
+                "metadata": {
+                  "title": "License"
+                },
+                "node_id": "sec_14",
+                "node_type": "section",
+                "parent_id": "sec_1"
+              }
+            ],
+            "content": "# Chonkie RAG Library",
+            "heading_path": [
+              "Chonkie RAG Library"
+            ],
+            "level": 1,
+            "line_range": [
+              1,
+              87
+            ],
+            "metadata": {
+              "title": "Chonkie RAG Library"
+            },
+            "node_id": "sec_1",
+            "node_type": "section",
+            "parent_id": "doc_root"
+          }
+        ],
+        "content": "",
+        "heading_path": [],
+        "level": 0,
+        "line_range": [
+          1,
+          93
+        ],
+        "metadata": {},
+        "node_id": "doc_root",
+        "node_type": "document",
+        "parent_id": null
+      },
+      "sec_1": {
+        "children": [
+          {
+            "children": [],
+            "content": "  <strong>Advanced Semantic Chunking for RAG</strong>",
+            "heading_path": [
+              "Chonkie RAG Library"
+            ],
+            "level": 2,
+            "line_range": [
+              4,
+              4
+            ],
+            "metadata": {},
+            "node_id": "block_1",
+            "node_type": "paragraph",
+            "parent_id": "sec_1"
+          },
+          {
+            "children": [],
+            "content": "---",
+            "heading_path": [
+              "Chonkie RAG Library"
+            ],
+            "level": 2,
+            "line_range": [
+              6,
+              6
+            ],
+            "metadata": {},
+            "node_id": "block_2",
+            "node_type": "paragraph",
+            "parent_id": "sec_1"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "Install Chonkie using pip:",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Installation"
+                ],
+                "level": 3,
+                "line_range": [
+                  10,
+                  10
+                ],
+                "metadata": {},
+                "node_id": "block_3",
+                "node_type": "paragraph",
+                "parent_id": "sec_2"
+              },
+              {
+                "children": [],
+                "content": "```bash\npip install chonkie\n```",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Installation"
+                ],
+                "level": 3,
+                "line_range": [
+                  12,
+                  14
+                ],
+                "metadata": {},
+                "node_id": "block_4",
+                "node_type": "code_block",
+                "parent_id": "sec_2"
+              },
+              {
+                "children": [],
+                "content": "Or using uv:",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Installation"
+                ],
+                "level": 3,
+                "line_range": [
+                  16,
+                  16
+                ],
+                "metadata": {},
+                "node_id": "block_5",
+                "node_type": "paragraph",
+                "parent_id": "sec_2"
+              },
+              {
+                "children": [],
+                "content": "```bash\nuv add chonkie\n```",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Installation"
+                ],
+                "level": 3,
+                "line_range": [
+                  18,
+                  20
+                ],
+                "metadata": {},
+                "node_id": "block_6",
+                "node_type": "code_block",
+                "parent_id": "sec_2"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "- Python 3.8+\n- numpy\n- transformers",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Installation",
+                      "Requirements"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      24,
+                      26
+                    ],
+                    "metadata": {},
+                    "node_id": "block_7",
+                    "node_type": "list",
+                    "parent_id": "sec_3"
+                  }
+                ],
+                "content": "### Requirements",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Installation",
+                  "Requirements"
+                ],
+                "level": 3,
+                "line_range": [
+                  22,
+                  26
+                ],
+                "metadata": {
+                  "title": "Requirements"
+                },
+                "node_id": "sec_3",
+                "node_type": "section",
+                "parent_id": "sec_2"
+              }
+            ],
+            "content": "## Installation",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Installation"
+            ],
+            "level": 2,
+            "line_range": [
+              8,
+              22
+            ],
+            "metadata": {
+              "title": "Installation"
+            },
+            "node_id": "sec_2",
+            "node_type": "section",
+            "parent_id": "sec_1"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "```python\nfrom chonkie import SemanticChunker\n\nchunker = SemanticChunker(\n    embedding_model=\"intfloat/multilingual-e5-large\",\n    chunk_size=512\n)\n\ntext = \"Your long document text here...\"\nchunks = chunker.chunk(text)\n```",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Usage",
+                      "Basic Example"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      32,
+                      42
+                    ],
+                    "metadata": {},
+                    "node_id": "block_8",
+                    "node_type": "code_block",
+                    "parent_id": "sec_5"
+                  }
+                ],
+                "content": "### Basic Example",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Usage",
+                  "Basic Example"
+                ],
+                "level": 3,
+                "line_range": [
+                  30,
+                  42
+                ],
+                "metadata": {
+                  "title": "Basic Example"
+                },
+                "node_id": "sec_5",
+                "node_type": "section",
+                "parent_id": "sec_4"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "You can customize the chunking behavior:",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Usage",
+                      "Advanced Configuration"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      46,
+                      46
+                    ],
+                    "metadata": {},
+                    "node_id": "block_9",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_6"
+                  },
+                  {
+                    "children": [],
+                    "content": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| chunk_size | int | 512 | Maximum tokens per chunk |\n| similarity_threshold | float | 0.5 | Minimum semantic similarity |\n| min_chunk_size | int | 50 | Minimum tokens per chunk |",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Usage",
+                      "Advanced Configuration"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      48,
+                      52
+                    ],
+                    "metadata": {},
+                    "node_id": "block_10",
+                    "node_type": "table",
+                    "parent_id": "sec_6"
+                  }
+                ],
+                "content": "### Advanced Configuration",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Usage",
+                  "Advanced Configuration"
+                ],
+                "level": 3,
+                "line_range": [
+                  44,
+                  52
+                ],
+                "metadata": {
+                  "title": "Advanced Configuration"
+                },
+                "node_id": "sec_6",
+                "node_type": "section",
+                "parent_id": "sec_4"
+              }
+            ],
+            "content": "## Usage",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Usage"
+            ],
+            "level": 2,
+            "line_range": [
+              28,
+              44
+            ],
+            "metadata": {
+              "title": "Usage"
+            },
+            "node_id": "sec_4",
+            "node_type": "section",
+            "parent_id": "sec_1"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "The main class for semantic chunking.",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      58,
+                      58
+                    ],
+                    "metadata": {},
+                    "node_id": "block_11",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_8"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [],
+                            "content": "Splits text into semantic chunks.",
+                            "heading_path": [
+                              "Chonkie RAG Library",
+                              "API Reference",
+                              "SemanticChunker",
+                              "Methods",
+                              "`chunk(text: str) -> List[Chunk]`"
+                            ],
+                            "level": 6,
+                            "line_range": [
+                              64,
+                              64
+                            ],
+                            "metadata": {},
+                            "node_id": "block_12",
+                            "node_type": "paragraph",
+                            "parent_id": "sec_10"
+                          },
+                          {
+                            "children": [],
+                            "content": "**Parameters:**",
+                            "heading_path": [
+                              "Chonkie RAG Library",
+                              "API Reference",
+                              "SemanticChunker",
+                              "Methods",
+                              "`chunk(text: str) -> List[Chunk]`"
+                            ],
+                            "level": 6,
+                            "line_range": [
+                              66,
+                              66
+                            ],
+                            "metadata": {},
+                            "node_id": "block_13",
+                            "node_type": "paragraph",
+                            "parent_id": "sec_10"
+                          },
+                          {
+                            "children": [],
+                            "content": "- `text`: The input text to chunk",
+                            "heading_path": [
+                              "Chonkie RAG Library",
+                              "API Reference",
+                              "SemanticChunker",
+                              "Methods",
+                              "`chunk(text: str) -> List[Chunk]`"
+                            ],
+                            "level": 6,
+                            "line_range": [
+                              67,
+                              67
+                            ],
+                            "metadata": {},
+                            "node_id": "block_14",
+                            "node_type": "list",
+                            "parent_id": "sec_10"
+                          },
+                          {
+                            "children": [],
+                            "content": "**Returns:**",
+                            "heading_path": [
+                              "Chonkie RAG Library",
+                              "API Reference",
+                              "SemanticChunker",
+                              "Methods",
+                              "`chunk(text: str) -> List[Chunk]`"
+                            ],
+                            "level": 6,
+                            "line_range": [
+                              69,
+                              69
+                            ],
+                            "metadata": {},
+                            "node_id": "block_15",
+                            "node_type": "paragraph",
+                            "parent_id": "sec_10"
+                          },
+                          {
+                            "children": [],
+                            "content": "- List of Chunk objects",
+                            "heading_path": [
+                              "Chonkie RAG Library",
+                              "API Reference",
+                              "SemanticChunker",
+                              "Methods",
+                              "`chunk(text: str) -> List[Chunk]`"
+                            ],
+                            "level": 6,
+                            "line_range": [
+                              70,
+                              70
+                            ],
+                            "metadata": {},
+                            "node_id": "block_16",
+                            "node_type": "list",
+                            "parent_id": "sec_10"
+                          }
+                        ],
+                        "content": "##### `chunk(text: str) -> List[Chunk]`",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods",
+                          "`chunk(text: str) -> List[Chunk]`"
+                        ],
+                        "level": 5,
+                        "line_range": [
+                          62,
+                          70
+                        ],
+                        "metadata": {
+                          "title": "`chunk(text: str) -> List[Chunk]`"
+                        },
+                        "node_id": "sec_10",
+                        "node_type": "section",
+                        "parent_id": "sec_9"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [],
+                            "content": "Generates embeddings for chunks.",
+                            "heading_path": [
+                              "Chonkie RAG Library",
+                              "API Reference",
+                              "SemanticChunker",
+                              "Methods",
+                              "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                            ],
+                            "level": 6,
+                            "line_range": [
+                              74,
+                              74
+                            ],
+                            "metadata": {},
+                            "node_id": "block_17",
+                            "node_type": "paragraph",
+                            "parent_id": "sec_11"
+                          }
+                        ],
+                        "content": "##### `embed(chunks: List[Chunk]) -> np.ndarray`",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods",
+                          "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                        ],
+                        "level": 5,
+                        "line_range": [
+                          72,
+                          74
+                        ],
+                        "metadata": {
+                          "title": "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                        },
+                        "node_id": "sec_11",
+                        "node_type": "section",
+                        "parent_id": "sec_9"
+                      }
+                    ],
+                    "content": "#### Methods",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      60,
+                      72
+                    ],
+                    "metadata": {
+                      "title": "Methods"
+                    },
+                    "node_id": "sec_9",
+                    "node_type": "section",
+                    "parent_id": "sec_8"
+                  }
+                ],
+                "content": "### SemanticChunker",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker"
+                ],
+                "level": 3,
+                "line_range": [
+                  56,
+                  60
+                ],
+                "metadata": {
+                  "title": "SemanticChunker"
+                },
+                "node_id": "sec_8",
+                "node_type": "section",
+                "parent_id": "sec_7"
+              }
+            ],
+            "content": "## API Reference",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference"
+            ],
+            "level": 2,
+            "line_range": [
+              54,
+              56
+            ],
+            "metadata": {
+              "title": "API Reference"
+            },
+            "node_id": "sec_7",
+            "node_type": "section",
+            "parent_id": "sec_1"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Contributing"
+                ],
+                "level": 3,
+                "line_range": [
+                  78,
+                  78
+                ],
+                "metadata": {},
+                "node_id": "block_18",
+                "node_type": "paragraph",
+                "parent_id": "sec_12"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "1. Fork the repository\n2. Create a feature branch\n3. Make your changes\n4. Submit a pull request",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "Contributing",
+                      "Steps"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      82,
+                      85
+                    ],
+                    "metadata": {},
+                    "node_id": "block_19",
+                    "node_type": "list",
+                    "parent_id": "sec_13"
+                  }
+                ],
+                "content": "### Steps",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Contributing",
+                  "Steps"
+                ],
+                "level": 3,
+                "line_range": [
+                  80,
+                  85
+                ],
+                "metadata": {
+                  "title": "Steps"
+                },
+                "node_id": "sec_13",
+                "node_type": "section",
+                "parent_id": "sec_12"
+              }
+            ],
+            "content": "## Contributing",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Contributing"
+            ],
+            "level": 2,
+            "line_range": [
+              76,
+              80
+            ],
+            "metadata": {
+              "title": "Contributing"
+            },
+            "node_id": "sec_12",
+            "node_type": "section",
+            "parent_id": "sec_1"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "MIT License - See [LICENSE](LICENSE) for details.",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "License"
+                ],
+                "level": 3,
+                "line_range": [
+                  89,
+                  89
+                ],
+                "metadata": {},
+                "node_id": "block_20",
+                "node_type": "paragraph",
+                "parent_id": "sec_14"
+              },
+              {
+                "children": [],
+                "content": "---",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "License"
+                ],
+                "level": 3,
+                "line_range": [
+                  91,
+                  91
+                ],
+                "metadata": {},
+                "node_id": "block_21",
+                "node_type": "paragraph",
+                "parent_id": "sec_14"
+              },
+              {
+                "children": [],
+                "content": "*Last updated: 2024*",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "License"
+                ],
+                "level": 3,
+                "line_range": [
+                  93,
+                  93
+                ],
+                "metadata": {},
+                "node_id": "block_22",
+                "node_type": "paragraph",
+                "parent_id": "sec_14"
+              }
+            ],
+            "content": "## License",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "License"
+            ],
+            "level": 2,
+            "line_range": [
+              87,
+              93
+            ],
+            "metadata": {
+              "title": "License"
+            },
+            "node_id": "sec_14",
+            "node_type": "section",
+            "parent_id": "sec_1"
+          }
+        ],
+        "content": "# Chonkie RAG Library",
+        "heading_path": [
+          "Chonkie RAG Library"
+        ],
+        "level": 1,
+        "line_range": [
+          1,
+          87
+        ],
+        "metadata": {
+          "title": "Chonkie RAG Library"
+        },
+        "node_id": "sec_1",
+        "node_type": "section",
+        "parent_id": "doc_root"
+      },
+      "sec_10": {
+        "children": [
+          {
+            "children": [],
+            "content": "Splits text into semantic chunks.",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods",
+              "`chunk(text: str) -> List[Chunk]`"
+            ],
+            "level": 6,
+            "line_range": [
+              64,
+              64
+            ],
+            "metadata": {},
+            "node_id": "block_12",
+            "node_type": "paragraph",
+            "parent_id": "sec_10"
+          },
+          {
+            "children": [],
+            "content": "**Parameters:**",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods",
+              "`chunk(text: str) -> List[Chunk]`"
+            ],
+            "level": 6,
+            "line_range": [
+              66,
+              66
+            ],
+            "metadata": {},
+            "node_id": "block_13",
+            "node_type": "paragraph",
+            "parent_id": "sec_10"
+          },
+          {
+            "children": [],
+            "content": "- `text`: The input text to chunk",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods",
+              "`chunk(text: str) -> List[Chunk]`"
+            ],
+            "level": 6,
+            "line_range": [
+              67,
+              67
+            ],
+            "metadata": {},
+            "node_id": "block_14",
+            "node_type": "list",
+            "parent_id": "sec_10"
+          },
+          {
+            "children": [],
+            "content": "**Returns:**",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods",
+              "`chunk(text: str) -> List[Chunk]`"
+            ],
+            "level": 6,
+            "line_range": [
+              69,
+              69
+            ],
+            "metadata": {},
+            "node_id": "block_15",
+            "node_type": "paragraph",
+            "parent_id": "sec_10"
+          },
+          {
+            "children": [],
+            "content": "- List of Chunk objects",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods",
+              "`chunk(text: str) -> List[Chunk]`"
+            ],
+            "level": 6,
+            "line_range": [
+              70,
+              70
+            ],
+            "metadata": {},
+            "node_id": "block_16",
+            "node_type": "list",
+            "parent_id": "sec_10"
+          }
+        ],
+        "content": "##### `chunk(text: str) -> List[Chunk]`",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "level": 5,
+        "line_range": [
+          62,
+          70
+        ],
+        "metadata": {
+          "title": "`chunk(text: str) -> List[Chunk]`"
+        },
+        "node_id": "sec_10",
+        "node_type": "section",
+        "parent_id": "sec_9"
+      },
+      "sec_11": {
+        "children": [
+          {
+            "children": [],
+            "content": "Generates embeddings for chunks.",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods",
+              "`embed(chunks: List[Chunk]) -> np.ndarray`"
+            ],
+            "level": 6,
+            "line_range": [
+              74,
+              74
+            ],
+            "metadata": {},
+            "node_id": "block_17",
+            "node_type": "paragraph",
+            "parent_id": "sec_11"
+          }
+        ],
+        "content": "##### `embed(chunks: List[Chunk]) -> np.ndarray`",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`embed(chunks: List[Chunk]) -> np.ndarray`"
+        ],
+        "level": 5,
+        "line_range": [
+          72,
+          74
+        ],
+        "metadata": {
+          "title": "`embed(chunks: List[Chunk]) -> np.ndarray`"
+        },
+        "node_id": "sec_11",
+        "node_type": "section",
+        "parent_id": "sec_9"
+      },
+      "sec_12": {
+        "children": [
+          {
+            "children": [],
+            "content": "We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Contributing"
+            ],
+            "level": 3,
+            "line_range": [
+              78,
+              78
+            ],
+            "metadata": {},
+            "node_id": "block_18",
+            "node_type": "paragraph",
+            "parent_id": "sec_12"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "1. Fork the repository\n2. Create a feature branch\n3. Make your changes\n4. Submit a pull request",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Contributing",
+                  "Steps"
+                ],
+                "level": 4,
+                "line_range": [
+                  82,
+                  85
+                ],
+                "metadata": {},
+                "node_id": "block_19",
+                "node_type": "list",
+                "parent_id": "sec_13"
+              }
+            ],
+            "content": "### Steps",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Contributing",
+              "Steps"
+            ],
+            "level": 3,
+            "line_range": [
+              80,
+              85
+            ],
+            "metadata": {
+              "title": "Steps"
+            },
+            "node_id": "sec_13",
+            "node_type": "section",
+            "parent_id": "sec_12"
+          }
+        ],
+        "content": "## Contributing",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Contributing"
+        ],
+        "level": 2,
+        "line_range": [
+          76,
+          80
+        ],
+        "metadata": {
+          "title": "Contributing"
+        },
+        "node_id": "sec_12",
+        "node_type": "section",
+        "parent_id": "sec_1"
+      },
+      "sec_13": {
+        "children": [
+          {
+            "children": [],
+            "content": "1. Fork the repository\n2. Create a feature branch\n3. Make your changes\n4. Submit a pull request",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Contributing",
+              "Steps"
+            ],
+            "level": 4,
+            "line_range": [
+              82,
+              85
+            ],
+            "metadata": {},
+            "node_id": "block_19",
+            "node_type": "list",
+            "parent_id": "sec_13"
+          }
+        ],
+        "content": "### Steps",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Contributing",
+          "Steps"
+        ],
+        "level": 3,
+        "line_range": [
+          80,
+          85
+        ],
+        "metadata": {
+          "title": "Steps"
+        },
+        "node_id": "sec_13",
+        "node_type": "section",
+        "parent_id": "sec_12"
+      },
+      "sec_14": {
+        "children": [
+          {
+            "children": [],
+            "content": "MIT License - See [LICENSE](LICENSE) for details.",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "License"
+            ],
+            "level": 3,
+            "line_range": [
+              89,
+              89
+            ],
+            "metadata": {},
+            "node_id": "block_20",
+            "node_type": "paragraph",
+            "parent_id": "sec_14"
+          },
+          {
+            "children": [],
+            "content": "---",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "License"
+            ],
+            "level": 3,
+            "line_range": [
+              91,
+              91
+            ],
+            "metadata": {},
+            "node_id": "block_21",
+            "node_type": "paragraph",
+            "parent_id": "sec_14"
+          },
+          {
+            "children": [],
+            "content": "*Last updated: 2024*",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "License"
+            ],
+            "level": 3,
+            "line_range": [
+              93,
+              93
+            ],
+            "metadata": {},
+            "node_id": "block_22",
+            "node_type": "paragraph",
+            "parent_id": "sec_14"
+          }
+        ],
+        "content": "## License",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "License"
+        ],
+        "level": 2,
+        "line_range": [
+          87,
+          93
+        ],
+        "metadata": {
+          "title": "License"
+        },
+        "node_id": "sec_14",
+        "node_type": "section",
+        "parent_id": "sec_1"
+      },
+      "sec_2": {
+        "children": [
+          {
+            "children": [],
+            "content": "Install Chonkie using pip:",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Installation"
+            ],
+            "level": 3,
+            "line_range": [
+              10,
+              10
+            ],
+            "metadata": {},
+            "node_id": "block_3",
+            "node_type": "paragraph",
+            "parent_id": "sec_2"
+          },
+          {
+            "children": [],
+            "content": "```bash\npip install chonkie\n```",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Installation"
+            ],
+            "level": 3,
+            "line_range": [
+              12,
+              14
+            ],
+            "metadata": {},
+            "node_id": "block_4",
+            "node_type": "code_block",
+            "parent_id": "sec_2"
+          },
+          {
+            "children": [],
+            "content": "Or using uv:",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Installation"
+            ],
+            "level": 3,
+            "line_range": [
+              16,
+              16
+            ],
+            "metadata": {},
+            "node_id": "block_5",
+            "node_type": "paragraph",
+            "parent_id": "sec_2"
+          },
+          {
+            "children": [],
+            "content": "```bash\nuv add chonkie\n```",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Installation"
+            ],
+            "level": 3,
+            "line_range": [
+              18,
+              20
+            ],
+            "metadata": {},
+            "node_id": "block_6",
+            "node_type": "code_block",
+            "parent_id": "sec_2"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "- Python 3.8+\n- numpy\n- transformers",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Installation",
+                  "Requirements"
+                ],
+                "level": 4,
+                "line_range": [
+                  24,
+                  26
+                ],
+                "metadata": {},
+                "node_id": "block_7",
+                "node_type": "list",
+                "parent_id": "sec_3"
+              }
+            ],
+            "content": "### Requirements",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Installation",
+              "Requirements"
+            ],
+            "level": 3,
+            "line_range": [
+              22,
+              26
+            ],
+            "metadata": {
+              "title": "Requirements"
+            },
+            "node_id": "sec_3",
+            "node_type": "section",
+            "parent_id": "sec_2"
+          }
+        ],
+        "content": "## Installation",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "level": 2,
+        "line_range": [
+          8,
+          22
+        ],
+        "metadata": {
+          "title": "Installation"
+        },
+        "node_id": "sec_2",
+        "node_type": "section",
+        "parent_id": "sec_1"
+      },
+      "sec_3": {
+        "children": [
+          {
+            "children": [],
+            "content": "- Python 3.8+\n- numpy\n- transformers",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Installation",
+              "Requirements"
+            ],
+            "level": 4,
+            "line_range": [
+              24,
+              26
+            ],
+            "metadata": {},
+            "node_id": "block_7",
+            "node_type": "list",
+            "parent_id": "sec_3"
+          }
+        ],
+        "content": "### Requirements",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation",
+          "Requirements"
+        ],
+        "level": 3,
+        "line_range": [
+          22,
+          26
+        ],
+        "metadata": {
+          "title": "Requirements"
+        },
+        "node_id": "sec_3",
+        "node_type": "section",
+        "parent_id": "sec_2"
+      },
+      "sec_4": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "```python\nfrom chonkie import SemanticChunker\n\nchunker = SemanticChunker(\n    embedding_model=\"intfloat/multilingual-e5-large\",\n    chunk_size=512\n)\n\ntext = \"Your long document text here...\"\nchunks = chunker.chunk(text)\n```",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Usage",
+                  "Basic Example"
+                ],
+                "level": 4,
+                "line_range": [
+                  32,
+                  42
+                ],
+                "metadata": {},
+                "node_id": "block_8",
+                "node_type": "code_block",
+                "parent_id": "sec_5"
+              }
+            ],
+            "content": "### Basic Example",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Usage",
+              "Basic Example"
+            ],
+            "level": 3,
+            "line_range": [
+              30,
+              42
+            ],
+            "metadata": {
+              "title": "Basic Example"
+            },
+            "node_id": "sec_5",
+            "node_type": "section",
+            "parent_id": "sec_4"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "You can customize the chunking behavior:",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Usage",
+                  "Advanced Configuration"
+                ],
+                "level": 4,
+                "line_range": [
+                  46,
+                  46
+                ],
+                "metadata": {},
+                "node_id": "block_9",
+                "node_type": "paragraph",
+                "parent_id": "sec_6"
+              },
+              {
+                "children": [],
+                "content": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| chunk_size | int | 512 | Maximum tokens per chunk |\n| similarity_threshold | float | 0.5 | Minimum semantic similarity |\n| min_chunk_size | int | 50 | Minimum tokens per chunk |",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "Usage",
+                  "Advanced Configuration"
+                ],
+                "level": 4,
+                "line_range": [
+                  48,
+                  52
+                ],
+                "metadata": {},
+                "node_id": "block_10",
+                "node_type": "table",
+                "parent_id": "sec_6"
+              }
+            ],
+            "content": "### Advanced Configuration",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Usage",
+              "Advanced Configuration"
+            ],
+            "level": 3,
+            "line_range": [
+              44,
+              52
+            ],
+            "metadata": {
+              "title": "Advanced Configuration"
+            },
+            "node_id": "sec_6",
+            "node_type": "section",
+            "parent_id": "sec_4"
+          }
+        ],
+        "content": "## Usage",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage"
+        ],
+        "level": 2,
+        "line_range": [
+          28,
+          44
+        ],
+        "metadata": {
+          "title": "Usage"
+        },
+        "node_id": "sec_4",
+        "node_type": "section",
+        "parent_id": "sec_1"
+      },
+      "sec_5": {
+        "children": [
+          {
+            "children": [],
+            "content": "```python\nfrom chonkie import SemanticChunker\n\nchunker = SemanticChunker(\n    embedding_model=\"intfloat/multilingual-e5-large\",\n    chunk_size=512\n)\n\ntext = \"Your long document text here...\"\nchunks = chunker.chunk(text)\n```",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Usage",
+              "Basic Example"
+            ],
+            "level": 4,
+            "line_range": [
+              32,
+              42
+            ],
+            "metadata": {},
+            "node_id": "block_8",
+            "node_type": "code_block",
+            "parent_id": "sec_5"
+          }
+        ],
+        "content": "### Basic Example",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage",
+          "Basic Example"
+        ],
+        "level": 3,
+        "line_range": [
+          30,
+          42
+        ],
+        "metadata": {
+          "title": "Basic Example"
+        },
+        "node_id": "sec_5",
+        "node_type": "section",
+        "parent_id": "sec_4"
+      },
+      "sec_6": {
+        "children": [
+          {
+            "children": [],
+            "content": "You can customize the chunking behavior:",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Usage",
+              "Advanced Configuration"
+            ],
+            "level": 4,
+            "line_range": [
+              46,
+              46
+            ],
+            "metadata": {},
+            "node_id": "block_9",
+            "node_type": "paragraph",
+            "parent_id": "sec_6"
+          },
+          {
+            "children": [],
+            "content": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| chunk_size | int | 512 | Maximum tokens per chunk |\n| similarity_threshold | float | 0.5 | Minimum semantic similarity |\n| min_chunk_size | int | 50 | Minimum tokens per chunk |",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "Usage",
+              "Advanced Configuration"
+            ],
+            "level": 4,
+            "line_range": [
+              48,
+              52
+            ],
+            "metadata": {},
+            "node_id": "block_10",
+            "node_type": "table",
+            "parent_id": "sec_6"
+          }
+        ],
+        "content": "### Advanced Configuration",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage",
+          "Advanced Configuration"
+        ],
+        "level": 3,
+        "line_range": [
+          44,
+          52
+        ],
+        "metadata": {
+          "title": "Advanced Configuration"
+        },
+        "node_id": "sec_6",
+        "node_type": "section",
+        "parent_id": "sec_4"
+      },
+      "sec_7": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "The main class for semantic chunking.",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker"
+                ],
+                "level": 4,
+                "line_range": [
+                  58,
+                  58
+                ],
+                "metadata": {},
+                "node_id": "block_11",
+                "node_type": "paragraph",
+                "parent_id": "sec_8"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "Splits text into semantic chunks.",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods",
+                          "`chunk(text: str) -> List[Chunk]`"
+                        ],
+                        "level": 6,
+                        "line_range": [
+                          64,
+                          64
+                        ],
+                        "metadata": {},
+                        "node_id": "block_12",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_10"
+                      },
+                      {
+                        "children": [],
+                        "content": "**Parameters:**",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods",
+                          "`chunk(text: str) -> List[Chunk]`"
+                        ],
+                        "level": 6,
+                        "line_range": [
+                          66,
+                          66
+                        ],
+                        "metadata": {},
+                        "node_id": "block_13",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_10"
+                      },
+                      {
+                        "children": [],
+                        "content": "- `text`: The input text to chunk",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods",
+                          "`chunk(text: str) -> List[Chunk]`"
+                        ],
+                        "level": 6,
+                        "line_range": [
+                          67,
+                          67
+                        ],
+                        "metadata": {},
+                        "node_id": "block_14",
+                        "node_type": "list",
+                        "parent_id": "sec_10"
+                      },
+                      {
+                        "children": [],
+                        "content": "**Returns:**",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods",
+                          "`chunk(text: str) -> List[Chunk]`"
+                        ],
+                        "level": 6,
+                        "line_range": [
+                          69,
+                          69
+                        ],
+                        "metadata": {},
+                        "node_id": "block_15",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_10"
+                      },
+                      {
+                        "children": [],
+                        "content": "- List of Chunk objects",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods",
+                          "`chunk(text: str) -> List[Chunk]`"
+                        ],
+                        "level": 6,
+                        "line_range": [
+                          70,
+                          70
+                        ],
+                        "metadata": {},
+                        "node_id": "block_16",
+                        "node_type": "list",
+                        "parent_id": "sec_10"
+                      }
+                    ],
+                    "content": "##### `chunk(text: str) -> List[Chunk]`",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods",
+                      "`chunk(text: str) -> List[Chunk]`"
+                    ],
+                    "level": 5,
+                    "line_range": [
+                      62,
+                      70
+                    ],
+                    "metadata": {
+                      "title": "`chunk(text: str) -> List[Chunk]`"
+                    },
+                    "node_id": "sec_10",
+                    "node_type": "section",
+                    "parent_id": "sec_9"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "Generates embeddings for chunks.",
+                        "heading_path": [
+                          "Chonkie RAG Library",
+                          "API Reference",
+                          "SemanticChunker",
+                          "Methods",
+                          "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                        ],
+                        "level": 6,
+                        "line_range": [
+                          74,
+                          74
+                        ],
+                        "metadata": {},
+                        "node_id": "block_17",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_11"
+                      }
+                    ],
+                    "content": "##### `embed(chunks: List[Chunk]) -> np.ndarray`",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods",
+                      "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                    ],
+                    "level": 5,
+                    "line_range": [
+                      72,
+                      74
+                    ],
+                    "metadata": {
+                      "title": "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                    },
+                    "node_id": "sec_11",
+                    "node_type": "section",
+                    "parent_id": "sec_9"
+                  }
+                ],
+                "content": "#### Methods",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods"
+                ],
+                "level": 4,
+                "line_range": [
+                  60,
+                  72
+                ],
+                "metadata": {
+                  "title": "Methods"
+                },
+                "node_id": "sec_9",
+                "node_type": "section",
+                "parent_id": "sec_8"
+              }
+            ],
+            "content": "### SemanticChunker",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker"
+            ],
+            "level": 3,
+            "line_range": [
+              56,
+              60
+            ],
+            "metadata": {
+              "title": "SemanticChunker"
+            },
+            "node_id": "sec_8",
+            "node_type": "section",
+            "parent_id": "sec_7"
+          }
+        ],
+        "content": "## API Reference",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference"
+        ],
+        "level": 2,
+        "line_range": [
+          54,
+          56
+        ],
+        "metadata": {
+          "title": "API Reference"
+        },
+        "node_id": "sec_7",
+        "node_type": "section",
+        "parent_id": "sec_1"
+      },
+      "sec_8": {
+        "children": [
+          {
+            "children": [],
+            "content": "The main class for semantic chunking.",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker"
+            ],
+            "level": 4,
+            "line_range": [
+              58,
+              58
+            ],
+            "metadata": {},
+            "node_id": "block_11",
+            "node_type": "paragraph",
+            "parent_id": "sec_8"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "Splits text into semantic chunks.",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods",
+                      "`chunk(text: str) -> List[Chunk]`"
+                    ],
+                    "level": 6,
+                    "line_range": [
+                      64,
+                      64
+                    ],
+                    "metadata": {},
+                    "node_id": "block_12",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_10"
+                  },
+                  {
+                    "children": [],
+                    "content": "**Parameters:**",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods",
+                      "`chunk(text: str) -> List[Chunk]`"
+                    ],
+                    "level": 6,
+                    "line_range": [
+                      66,
+                      66
+                    ],
+                    "metadata": {},
+                    "node_id": "block_13",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_10"
+                  },
+                  {
+                    "children": [],
+                    "content": "- `text`: The input text to chunk",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods",
+                      "`chunk(text: str) -> List[Chunk]`"
+                    ],
+                    "level": 6,
+                    "line_range": [
+                      67,
+                      67
+                    ],
+                    "metadata": {},
+                    "node_id": "block_14",
+                    "node_type": "list",
+                    "parent_id": "sec_10"
+                  },
+                  {
+                    "children": [],
+                    "content": "**Returns:**",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods",
+                      "`chunk(text: str) -> List[Chunk]`"
+                    ],
+                    "level": 6,
+                    "line_range": [
+                      69,
+                      69
+                    ],
+                    "metadata": {},
+                    "node_id": "block_15",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_10"
+                  },
+                  {
+                    "children": [],
+                    "content": "- List of Chunk objects",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods",
+                      "`chunk(text: str) -> List[Chunk]`"
+                    ],
+                    "level": 6,
+                    "line_range": [
+                      70,
+                      70
+                    ],
+                    "metadata": {},
+                    "node_id": "block_16",
+                    "node_type": "list",
+                    "parent_id": "sec_10"
+                  }
+                ],
+                "content": "##### `chunk(text: str) -> List[Chunk]`",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods",
+                  "`chunk(text: str) -> List[Chunk]`"
+                ],
+                "level": 5,
+                "line_range": [
+                  62,
+                  70
+                ],
+                "metadata": {
+                  "title": "`chunk(text: str) -> List[Chunk]`"
+                },
+                "node_id": "sec_10",
+                "node_type": "section",
+                "parent_id": "sec_9"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "Generates embeddings for chunks.",
+                    "heading_path": [
+                      "Chonkie RAG Library",
+                      "API Reference",
+                      "SemanticChunker",
+                      "Methods",
+                      "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                    ],
+                    "level": 6,
+                    "line_range": [
+                      74,
+                      74
+                    ],
+                    "metadata": {},
+                    "node_id": "block_17",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_11"
+                  }
+                ],
+                "content": "##### `embed(chunks: List[Chunk]) -> np.ndarray`",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods",
+                  "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                ],
+                "level": 5,
+                "line_range": [
+                  72,
+                  74
+                ],
+                "metadata": {
+                  "title": "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                },
+                "node_id": "sec_11",
+                "node_type": "section",
+                "parent_id": "sec_9"
+              }
+            ],
+            "content": "#### Methods",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods"
+            ],
+            "level": 4,
+            "line_range": [
+              60,
+              72
+            ],
+            "metadata": {
+              "title": "Methods"
+            },
+            "node_id": "sec_9",
+            "node_type": "section",
+            "parent_id": "sec_8"
+          }
+        ],
+        "content": "### SemanticChunker",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker"
+        ],
+        "level": 3,
+        "line_range": [
+          56,
+          60
+        ],
+        "metadata": {
+          "title": "SemanticChunker"
+        },
+        "node_id": "sec_8",
+        "node_type": "section",
+        "parent_id": "sec_7"
+      },
+      "sec_9": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "Splits text into semantic chunks.",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods",
+                  "`chunk(text: str) -> List[Chunk]`"
+                ],
+                "level": 6,
+                "line_range": [
+                  64,
+                  64
+                ],
+                "metadata": {},
+                "node_id": "block_12",
+                "node_type": "paragraph",
+                "parent_id": "sec_10"
+              },
+              {
+                "children": [],
+                "content": "**Parameters:**",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods",
+                  "`chunk(text: str) -> List[Chunk]`"
+                ],
+                "level": 6,
+                "line_range": [
+                  66,
+                  66
+                ],
+                "metadata": {},
+                "node_id": "block_13",
+                "node_type": "paragraph",
+                "parent_id": "sec_10"
+              },
+              {
+                "children": [],
+                "content": "- `text`: The input text to chunk",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods",
+                  "`chunk(text: str) -> List[Chunk]`"
+                ],
+                "level": 6,
+                "line_range": [
+                  67,
+                  67
+                ],
+                "metadata": {},
+                "node_id": "block_14",
+                "node_type": "list",
+                "parent_id": "sec_10"
+              },
+              {
+                "children": [],
+                "content": "**Returns:**",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods",
+                  "`chunk(text: str) -> List[Chunk]`"
+                ],
+                "level": 6,
+                "line_range": [
+                  69,
+                  69
+                ],
+                "metadata": {},
+                "node_id": "block_15",
+                "node_type": "paragraph",
+                "parent_id": "sec_10"
+              },
+              {
+                "children": [],
+                "content": "- List of Chunk objects",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods",
+                  "`chunk(text: str) -> List[Chunk]`"
+                ],
+                "level": 6,
+                "line_range": [
+                  70,
+                  70
+                ],
+                "metadata": {},
+                "node_id": "block_16",
+                "node_type": "list",
+                "parent_id": "sec_10"
+              }
+            ],
+            "content": "##### `chunk(text: str) -> List[Chunk]`",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods",
+              "`chunk(text: str) -> List[Chunk]`"
+            ],
+            "level": 5,
+            "line_range": [
+              62,
+              70
+            ],
+            "metadata": {
+              "title": "`chunk(text: str) -> List[Chunk]`"
+            },
+            "node_id": "sec_10",
+            "node_type": "section",
+            "parent_id": "sec_9"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "Generates embeddings for chunks.",
+                "heading_path": [
+                  "Chonkie RAG Library",
+                  "API Reference",
+                  "SemanticChunker",
+                  "Methods",
+                  "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                ],
+                "level": 6,
+                "line_range": [
+                  74,
+                  74
+                ],
+                "metadata": {},
+                "node_id": "block_17",
+                "node_type": "paragraph",
+                "parent_id": "sec_11"
+              }
+            ],
+            "content": "##### `embed(chunks: List[Chunk]) -> np.ndarray`",
+            "heading_path": [
+              "Chonkie RAG Library",
+              "API Reference",
+              "SemanticChunker",
+              "Methods",
+              "`embed(chunks: List[Chunk]) -> np.ndarray`"
+            ],
+            "level": 5,
+            "line_range": [
+              72,
+              74
+            ],
+            "metadata": {
+              "title": "`embed(chunks: List[Chunk]) -> np.ndarray`"
+            },
+            "node_id": "sec_11",
+            "node_type": "section",
+            "parent_id": "sec_9"
+          }
+        ],
+        "content": "#### Methods",
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods"
+        ],
+        "level": 4,
+        "line_range": [
+          60,
+          72
+        ],
+        "metadata": {
+          "title": "Methods"
+        },
+        "node_id": "sec_9",
+        "node_type": "section",
+        "parent_id": "sec_8"
+      }
+    },
+    "ordered_block_ids": [
+      "block_1",
+      "block_2",
+      "block_3",
+      "block_4",
+      "block_5",
+      "block_6",
+      "block_7",
+      "block_8",
+      "block_9",
+      "block_10",
+      "block_11",
+      "block_12",
+      "block_13",
+      "block_14",
+      "block_15",
+      "block_16",
+      "block_17",
+      "block_18",
+      "block_19",
+      "block_20",
+      "block_21",
+      "block_22"
+    ],
+    "structured_blocks": [],
+    "tree": {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "content": "  <strong>Advanced Semantic Chunking for RAG</strong>",
+              "heading_path": [
+                "Chonkie RAG Library"
+              ],
+              "level": 2,
+              "line_range": [
+                4,
+                4
+              ],
+              "metadata": {},
+              "node_id": "block_1",
+              "node_type": "paragraph",
+              "parent_id": "sec_1"
+            },
+            {
+              "children": [],
+              "content": "---",
+              "heading_path": [
+                "Chonkie RAG Library"
+              ],
+              "level": 2,
+              "line_range": [
+                6,
+                6
+              ],
+              "metadata": {},
+              "node_id": "block_2",
+              "node_type": "paragraph",
+              "parent_id": "sec_1"
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "content": "Install Chonkie using pip:",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Installation"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    10,
+                    10
+                  ],
+                  "metadata": {},
+                  "node_id": "block_3",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_2"
+                },
+                {
+                  "children": [],
+                  "content": "```bash\npip install chonkie\n```",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Installation"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    12,
+                    14
+                  ],
+                  "metadata": {},
+                  "node_id": "block_4",
+                  "node_type": "code_block",
+                  "parent_id": "sec_2"
+                },
+                {
+                  "children": [],
+                  "content": "Or using uv:",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Installation"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    16,
+                    16
+                  ],
+                  "metadata": {},
+                  "node_id": "block_5",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_2"
+                },
+                {
+                  "children": [],
+                  "content": "```bash\nuv add chonkie\n```",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Installation"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    18,
+                    20
+                  ],
+                  "metadata": {},
+                  "node_id": "block_6",
+                  "node_type": "code_block",
+                  "parent_id": "sec_2"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "- Python 3.8+\n- numpy\n- transformers",
+                      "heading_path": [
+                        "Chonkie RAG Library",
+                        "Installation",
+                        "Requirements"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        24,
+                        26
+                      ],
+                      "metadata": {},
+                      "node_id": "block_7",
+                      "node_type": "list",
+                      "parent_id": "sec_3"
+                    }
+                  ],
+                  "content": "### Requirements",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Installation",
+                    "Requirements"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    22,
+                    26
+                  ],
+                  "metadata": {
+                    "title": "Requirements"
+                  },
+                  "node_id": "sec_3",
+                  "node_type": "section",
+                  "parent_id": "sec_2"
+                }
+              ],
+              "content": "## Installation",
+              "heading_path": [
+                "Chonkie RAG Library",
+                "Installation"
+              ],
+              "level": 2,
+              "line_range": [
+                8,
+                22
+              ],
+              "metadata": {
+                "title": "Installation"
+              },
+              "node_id": "sec_2",
+              "node_type": "section",
+              "parent_id": "sec_1"
+            },
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "```python\nfrom chonkie import SemanticChunker\n\nchunker = SemanticChunker(\n    embedding_model=\"intfloat/multilingual-e5-large\",\n    chunk_size=512\n)\n\ntext = \"Your long document text here...\"\nchunks = chunker.chunk(text)\n```",
+                      "heading_path": [
+                        "Chonkie RAG Library",
+                        "Usage",
+                        "Basic Example"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        32,
+                        42
+                      ],
+                      "metadata": {},
+                      "node_id": "block_8",
+                      "node_type": "code_block",
+                      "parent_id": "sec_5"
+                    }
+                  ],
+                  "content": "### Basic Example",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Usage",
+                    "Basic Example"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    30,
+                    42
+                  ],
+                  "metadata": {
+                    "title": "Basic Example"
+                  },
+                  "node_id": "sec_5",
+                  "node_type": "section",
+                  "parent_id": "sec_4"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "You can customize the chunking behavior:",
+                      "heading_path": [
+                        "Chonkie RAG Library",
+                        "Usage",
+                        "Advanced Configuration"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        46,
+                        46
+                      ],
+                      "metadata": {},
+                      "node_id": "block_9",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_6"
+                    },
+                    {
+                      "children": [],
+                      "content": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| chunk_size | int | 512 | Maximum tokens per chunk |\n| similarity_threshold | float | 0.5 | Minimum semantic similarity |\n| min_chunk_size | int | 50 | Minimum tokens per chunk |",
+                      "heading_path": [
+                        "Chonkie RAG Library",
+                        "Usage",
+                        "Advanced Configuration"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        48,
+                        52
+                      ],
+                      "metadata": {},
+                      "node_id": "block_10",
+                      "node_type": "table",
+                      "parent_id": "sec_6"
+                    }
+                  ],
+                  "content": "### Advanced Configuration",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Usage",
+                    "Advanced Configuration"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    44,
+                    52
+                  ],
+                  "metadata": {
+                    "title": "Advanced Configuration"
+                  },
+                  "node_id": "sec_6",
+                  "node_type": "section",
+                  "parent_id": "sec_4"
+                }
+              ],
+              "content": "## Usage",
+              "heading_path": [
+                "Chonkie RAG Library",
+                "Usage"
+              ],
+              "level": 2,
+              "line_range": [
+                28,
+                44
+              ],
+              "metadata": {
+                "title": "Usage"
+              },
+              "node_id": "sec_4",
+              "node_type": "section",
+              "parent_id": "sec_1"
+            },
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "The main class for semantic chunking.",
+                      "heading_path": [
+                        "Chonkie RAG Library",
+                        "API Reference",
+                        "SemanticChunker"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        58,
+                        58
+                      ],
+                      "metadata": {},
+                      "node_id": "block_11",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_8"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [],
+                              "content": "Splits text into semantic chunks.",
+                              "heading_path": [
+                                "Chonkie RAG Library",
+                                "API Reference",
+                                "SemanticChunker",
+                                "Methods",
+                                "`chunk(text: str) -> List[Chunk]`"
+                              ],
+                              "level": 6,
+                              "line_range": [
+                                64,
+                                64
+                              ],
+                              "metadata": {},
+                              "node_id": "block_12",
+                              "node_type": "paragraph",
+                              "parent_id": "sec_10"
+                            },
+                            {
+                              "children": [],
+                              "content": "**Parameters:**",
+                              "heading_path": [
+                                "Chonkie RAG Library",
+                                "API Reference",
+                                "SemanticChunker",
+                                "Methods",
+                                "`chunk(text: str) -> List[Chunk]`"
+                              ],
+                              "level": 6,
+                              "line_range": [
+                                66,
+                                66
+                              ],
+                              "metadata": {},
+                              "node_id": "block_13",
+                              "node_type": "paragraph",
+                              "parent_id": "sec_10"
+                            },
+                            {
+                              "children": [],
+                              "content": "- `text`: The input text to chunk",
+                              "heading_path": [
+                                "Chonkie RAG Library",
+                                "API Reference",
+                                "SemanticChunker",
+                                "Methods",
+                                "`chunk(text: str) -> List[Chunk]`"
+                              ],
+                              "level": 6,
+                              "line_range": [
+                                67,
+                                67
+                              ],
+                              "metadata": {},
+                              "node_id": "block_14",
+                              "node_type": "list",
+                              "parent_id": "sec_10"
+                            },
+                            {
+                              "children": [],
+                              "content": "**Returns:**",
+                              "heading_path": [
+                                "Chonkie RAG Library",
+                                "API Reference",
+                                "SemanticChunker",
+                                "Methods",
+                                "`chunk(text: str) -> List[Chunk]`"
+                              ],
+                              "level": 6,
+                              "line_range": [
+                                69,
+                                69
+                              ],
+                              "metadata": {},
+                              "node_id": "block_15",
+                              "node_type": "paragraph",
+                              "parent_id": "sec_10"
+                            },
+                            {
+                              "children": [],
+                              "content": "- List of Chunk objects",
+                              "heading_path": [
+                                "Chonkie RAG Library",
+                                "API Reference",
+                                "SemanticChunker",
+                                "Methods",
+                                "`chunk(text: str) -> List[Chunk]`"
+                              ],
+                              "level": 6,
+                              "line_range": [
+                                70,
+                                70
+                              ],
+                              "metadata": {},
+                              "node_id": "block_16",
+                              "node_type": "list",
+                              "parent_id": "sec_10"
+                            }
+                          ],
+                          "content": "##### `chunk(text: str) -> List[Chunk]`",
+                          "heading_path": [
+                            "Chonkie RAG Library",
+                            "API Reference",
+                            "SemanticChunker",
+                            "Methods",
+                            "`chunk(text: str) -> List[Chunk]`"
+                          ],
+                          "level": 5,
+                          "line_range": [
+                            62,
+                            70
+                          ],
+                          "metadata": {
+                            "title": "`chunk(text: str) -> List[Chunk]`"
+                          },
+                          "node_id": "sec_10",
+                          "node_type": "section",
+                          "parent_id": "sec_9"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [],
+                              "content": "Generates embeddings for chunks.",
+                              "heading_path": [
+                                "Chonkie RAG Library",
+                                "API Reference",
+                                "SemanticChunker",
+                                "Methods",
+                                "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                              ],
+                              "level": 6,
+                              "line_range": [
+                                74,
+                                74
+                              ],
+                              "metadata": {},
+                              "node_id": "block_17",
+                              "node_type": "paragraph",
+                              "parent_id": "sec_11"
+                            }
+                          ],
+                          "content": "##### `embed(chunks: List[Chunk]) -> np.ndarray`",
+                          "heading_path": [
+                            "Chonkie RAG Library",
+                            "API Reference",
+                            "SemanticChunker",
+                            "Methods",
+                            "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                          ],
+                          "level": 5,
+                          "line_range": [
+                            72,
+                            74
+                          ],
+                          "metadata": {
+                            "title": "`embed(chunks: List[Chunk]) -> np.ndarray`"
+                          },
+                          "node_id": "sec_11",
+                          "node_type": "section",
+                          "parent_id": "sec_9"
+                        }
+                      ],
+                      "content": "#### Methods",
+                      "heading_path": [
+                        "Chonkie RAG Library",
+                        "API Reference",
+                        "SemanticChunker",
+                        "Methods"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        60,
+                        72
+                      ],
+                      "metadata": {
+                        "title": "Methods"
+                      },
+                      "node_id": "sec_9",
+                      "node_type": "section",
+                      "parent_id": "sec_8"
+                    }
+                  ],
+                  "content": "### SemanticChunker",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "API Reference",
+                    "SemanticChunker"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    56,
+                    60
+                  ],
+                  "metadata": {
+                    "title": "SemanticChunker"
+                  },
+                  "node_id": "sec_8",
+                  "node_type": "section",
+                  "parent_id": "sec_7"
+                }
+              ],
+              "content": "## API Reference",
+              "heading_path": [
+                "Chonkie RAG Library",
+                "API Reference"
+              ],
+              "level": 2,
+              "line_range": [
+                54,
+                56
+              ],
+              "metadata": {
+                "title": "API Reference"
+              },
+              "node_id": "sec_7",
+              "node_type": "section",
+              "parent_id": "sec_1"
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "content": "We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Contributing"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    78,
+                    78
+                  ],
+                  "metadata": {},
+                  "node_id": "block_18",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_12"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "1. Fork the repository\n2. Create a feature branch\n3. Make your changes\n4. Submit a pull request",
+                      "heading_path": [
+                        "Chonkie RAG Library",
+                        "Contributing",
+                        "Steps"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        82,
+                        85
+                      ],
+                      "metadata": {},
+                      "node_id": "block_19",
+                      "node_type": "list",
+                      "parent_id": "sec_13"
+                    }
+                  ],
+                  "content": "### Steps",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "Contributing",
+                    "Steps"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    80,
+                    85
+                  ],
+                  "metadata": {
+                    "title": "Steps"
+                  },
+                  "node_id": "sec_13",
+                  "node_type": "section",
+                  "parent_id": "sec_12"
+                }
+              ],
+              "content": "## Contributing",
+              "heading_path": [
+                "Chonkie RAG Library",
+                "Contributing"
+              ],
+              "level": 2,
+              "line_range": [
+                76,
+                80
+              ],
+              "metadata": {
+                "title": "Contributing"
+              },
+              "node_id": "sec_12",
+              "node_type": "section",
+              "parent_id": "sec_1"
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "content": "MIT License - See [LICENSE](LICENSE) for details.",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "License"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    89,
+                    89
+                  ],
+                  "metadata": {},
+                  "node_id": "block_20",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_14"
+                },
+                {
+                  "children": [],
+                  "content": "---",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "License"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    91,
+                    91
+                  ],
+                  "metadata": {},
+                  "node_id": "block_21",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_14"
+                },
+                {
+                  "children": [],
+                  "content": "*Last updated: 2024*",
+                  "heading_path": [
+                    "Chonkie RAG Library",
+                    "License"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    93,
+                    93
+                  ],
+                  "metadata": {},
+                  "node_id": "block_22",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_14"
+                }
+              ],
+              "content": "## License",
+              "heading_path": [
+                "Chonkie RAG Library",
+                "License"
+              ],
+              "level": 2,
+              "line_range": [
+                87,
+                93
+              ],
+              "metadata": {
+                "title": "License"
+              },
+              "node_id": "sec_14",
+              "node_type": "section",
+              "parent_id": "sec_1"
+            }
+          ],
+          "content": "# Chonkie RAG Library",
+          "heading_path": [
+            "Chonkie RAG Library"
+          ],
+          "level": 1,
+          "line_range": [
+            1,
+            87
+          ],
+          "metadata": {
+            "title": "Chonkie RAG Library"
+          },
+          "node_id": "sec_1",
+          "node_type": "section",
+          "parent_id": "doc_root"
+        }
+      ],
+      "content": "",
+      "heading_path": [],
+      "level": 0,
+      "line_range": [
+        1,
+        93
+      ],
+      "metadata": {},
+      "node_id": "doc_root",
+      "node_type": "document",
+      "parent_id": null
+    }
+  },
+  "observability": {
+    "block_count": 22,
+    "chunk_count": 22,
+    "section_count": 14
+  },
+  "outputs": {
+    "final_chunking_decision": false,
+    "markdown_preserved": true
+  }
+}

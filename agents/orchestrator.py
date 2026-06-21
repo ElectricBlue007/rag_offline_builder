@@ -49,8 +49,14 @@ class DocumentQualificationEngine:
         # Convert StructureAnalysis to dict if needed
         if hasattr(structured_doc, 'to_dict'):
             doc_dict = structured_doc.to_dict()
+            # Add blocks from structured_blocks for agents
+            if 'structured_blocks' in doc_dict and not doc_dict.get('blocks'):
+                doc_dict['blocks'] = doc_dict['structured_blocks']
         elif isinstance(structured_doc, dict):
             doc_dict = structured_doc
+            # Ensure blocks key exists
+            if 'blocks' not in doc_dict:
+                doc_dict['blocks'] = doc_dict.get('structured_blocks', [])
         else:
             raise ValueError(f"Unsupported document type: {type(structured_doc)}")
         
@@ -122,7 +128,15 @@ class DocumentQualificationEngine:
         structured_doc: dict
     ) -> Dict[str, float]:
         """Calculate overall qualification scores."""
-        blocks = structured_doc.get('blocks', [])
+        # Convert StructureAnalysis to dict if needed
+        if hasattr(structured_doc, 'to_dict'):
+            doc_dict = structured_doc.to_dict()
+            blocks = doc_dict.get('structured_blocks', [])
+        elif isinstance(structured_doc, dict):
+            blocks = structured_doc.get('blocks', structured_doc.get('structured_blocks', []))
+        else:
+            blocks = []
+        
         total_blocks = len(blocks)
         
         if total_blocks == 0:

@@ -103,7 +103,15 @@ class RetrievalAgent:
         self.warnings = []
         self.content_types = {}
         
-        blocks = structured_doc.get('blocks', [])
+        # Convert StructureAnalysis to dict if needed
+        if hasattr(structured_doc, 'to_dict'):
+            doc_dict = structured_doc.to_dict()
+            blocks = doc_dict.get('structured_blocks', [])
+        elif isinstance(structured_doc, dict):
+            blocks = structured_doc.get('blocks', structured_doc.get('structured_blocks', []))
+        else:
+            return self.issues, self.warnings, self.content_types
+        
         if not blocks:
             return self.issues, self.warnings, self.content_types
         
