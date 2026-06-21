@@ -161,8 +161,29 @@ class DocumentBlock:
     
     def to_dict(self) -> dict[str, Any]:
         """Convert block to dictionary representation."""
+        metadata: dict[str, Any] = {
+            "level": self.level,
+            "heading_path": self.heading_path,
+        }
+        if self.link_metadata:
+            metadata.update(self.link_metadata.to_dict())
+        if self.image_metadata:
+            metadata.update(self.image_metadata.to_dict())
+        if self.table_structure:
+            metadata.update(self.table_structure.to_dict())
+        if self.code_metadata:
+            metadata.update(self.code_metadata.to_dict())
+        if self.list_items:
+            metadata["items"] = [item.to_dict() for item in self.list_items]
+            metadata["ordered"] = all(item.item_type == ListType.ORDERED for item in self.list_items)
+        if self.quote_level > 0:
+            metadata["quote_level"] = self.quote_level
+        if self.front_matter_data:
+            metadata["front_matter_data"] = self.front_matter_data
+
         data: dict[str, Any] = {
             "block_id": self.block_id,
+            "type": self.block_type.value,
             "block_type": self.block_type.value,
             "order": self.order,
             "line_range": list(self.line_range),
@@ -170,6 +191,7 @@ class DocumentBlock:
             "level": self.level,
             "heading_path": self.heading_path,
             "parent_id": self.parent_id,
+            "metadata": metadata,
         }
         
         # Add type-specific metadata

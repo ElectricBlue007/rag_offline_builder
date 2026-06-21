@@ -234,7 +234,7 @@ class StructureAgent:
         """Rule 107: Detect unclosed code blocks."""
         # In structured doc, code blocks should already be parsed
         # Check for any raw markdown that suggests broken code
-        raw_content = structured_doc.get('raw_content', '')
+        raw_content = structured_doc.get('raw_content', '') if isinstance(structured_doc, dict) else ''
         
         # Count opening and closing code fences
         open_fences = raw_content.count('```')

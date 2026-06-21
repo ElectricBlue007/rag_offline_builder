@@ -15,6 +15,8 @@ from agents import (
     EmbeddingReadinessAgent,
 )
 from agents.models import IssueSeverity, IssueType
+from core.markdown_normalizer import MarkdownNormalizer
+from core.structure_analyzer import StructureAnalyzer
 
 
 # ============================================================================
@@ -590,6 +592,24 @@ class TestDocumentQualificationEngine:
         assert result.overall_score > 0.5
         assert result.is_chunkable
         assert result.chunking_strategy is not None
+
+    def test_full_pipeline_accepts_structure_analysis_from_phase1(self):
+        """Phase 2 should validate real Phase 1 output, not an empty compatibility shell."""
+        normalized = MarkdownNormalizer().normalize(
+            "# API\n\n"
+            "SemanticChunker is a tool that prepares content for embeddings.\n\n"
+            "## Usage\n\n"
+            "Step 1: Configure the model.\n"
+            "Step 2: Run the pipeline.\n"
+        )
+        analysis = StructureAnalyzer().analyze(normalized)
+
+        result = DocumentQualificationEngine().qualify(analysis)
+
+        assert len(analysis.structured_blocks) >= 4
+        assert result.overall_score > 0.0
+        assert result.metadata["chunk_metadata"]["boundary_candidates"]
+        assert result.metadata["retrieval_metadata"]["has_definitions"]
     
     def test_full_pipeline_poor_document(self):
         """Test complete pipeline with a poorly-structured document."""

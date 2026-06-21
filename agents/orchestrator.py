@@ -165,8 +165,8 @@ class DocumentQualificationEngine:
         # Calculate component scores
         structural_score = max(0.0, 1.0 - issue_penalty - (len([i for i in issues if i.issue_type.value == 'structural']) * 0.05))
         semantic_score = max(0.0, 1.0 - issue_penalty - (len([i for i in issues if i.issue_type.value == 'semantic']) * 0.05))
-        retrieval_score = max(0.0, base_embedding_score * embedding_scores.get('retrieval_utility_score', 0.5))
-        embedding_readiness_score = max(0.0, base_embedding_score - issue_penalty * 0.5)
+        retrieval_score = max(0.0, min(1.0, base_embedding_score * embedding_scores.get('retrieval_utility_score', 0.5)))
+        embedding_readiness_score = max(0.0, min(1.0, base_embedding_score - issue_penalty * 0.5))
         
         # Overall score (weighted average)
         overall_score = (
@@ -175,6 +175,7 @@ class DocumentQualificationEngine:
             retrieval_score * 0.25 +
             embedding_readiness_score * 0.25
         )
+        overall_score = max(0.0, min(1.0, overall_score))
         
         return {
             "overall_score": round(overall_score, 3),

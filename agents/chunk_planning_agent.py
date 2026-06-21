@@ -468,7 +468,8 @@ class EmbeddingReadinessAgent:
     
     def _calculate_scores(self, blocks: List[Dict], retrieval_metadata: Dict = None) -> None:
         """Rules 147-150: Calculate various scores."""
-        total_blocks = len([b for b in blocks if b.get('type') not in ['heading', 'image']])
+        semantic_blocks = [b for b in blocks if b.get('type') not in ['heading', 'image']]
+        total_blocks = len(semantic_blocks)
         
         if total_blocks == 0:
             self.scores = {
@@ -482,18 +483,18 @@ class EmbeddingReadinessAgent:
         # Rule 147: Self-sufficiency score
         # Higher if blocks have context (headings, explanations)
         blocks_with_context = sum(
-            1 for b in blocks 
+            1 for b in semantic_blocks
             if b.get('metadata', {}).get('heading_path') or 
                b.get('type') in ['code', 'table']
         )
-        self.scores['self_sufficiency_score'] = blocks_with_context / max(total_blocks, 1)
+        self.scores['self_sufficiency_score'] = min(1.0, blocks_with_context / max(total_blocks, 1))
         
         # Rule 148: Context dependency score (lower is better)
         standalone_blocks = sum(
-            1 for b in blocks
+            1 for b in semantic_blocks
             if len(str(b.get('content', '')).split()) > 20
         )
-        self.scores['context_dependency_score'] = 1.0 - (standalone_blocks / max(total_blocks, 1))
+        self.scores['context_dependency_score'] = max(0.0, 1.0 - (standalone_blocks / max(total_blocks, 1)))
         
         # Rule 149: Retrieval utility score
         if retrieval_metadata:
@@ -511,3 +512,4 @@ class EmbeddingReadinessAgent:
             (1.0 - self.scores['context_dependency_score']) * 0.3 +
             self.scores['retrieval_utility_score'] * 0.4
         )
+        self.scores['embedding_readiness_score'] = max(0.0, min(1.0, self.scores['embedding_readiness_score']))
