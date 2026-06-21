@@ -194,12 +194,14 @@ def run_full_pipeline(file_path: str, output: Optional[str] = None, verbose: boo
         
         if result.issues:
             print(f"   ⚠️  Issues found: {len(result.issues)}")
-            for issue in result.issues[:3]: # Show first 3
+            for issue in result.issues[:5]: # Show first 5
                 print(f"      - [{issue.severity}] {issue.rule_id}: {issue.message}")
+                if verbose and hasattr(issue, 'recommendation') and issue.recommendation:
+                    print(f"        💡 Fix: {issue.recommendation}")
         
         if result.recommendations:
             print(f"   💡 Recommendations: {len(result.recommendations)}")
-            for rec in result.recommendations[:3]:
+            for rec in result.recommendations:
                 print(f"      - {rec}")
         print("="*40 + "\n")
 
