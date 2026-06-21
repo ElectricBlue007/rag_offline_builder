@@ -68,6 +68,7 @@ class SmartStructureFixer:
         in_code_block = False
         first_content_seen = False
         heading_level = 1
+        last_heading_text = ""
         
         for i, line in enumerate(lines):
             stripped = line.strip()
@@ -98,35 +99,64 @@ class SmartStructureFixer:
                     # Likely a title
                     result_lines.append(f"# {stripped}\n")
                     first_content_seen = True
+                    last_heading_text = stripped.lower()
                     heading_level = 2
                     continue
             
             # Rule 2: Short capitalized lines followed by content are likely headings
+            # BUT they must NOT:
+            # - End with punctuation (., :, etc.) - those are sentences
+            # - Contain common non-heading phrases like "using", "with", "by"
+            # - Be too long (>50 chars)
+            # - Look like instructions
+            
             next_line_idx = i + 1
             while next_line_idx < len(lines) and not lines[next_line_idx].strip():
                 next_line_idx += 1
             
             has_following_content = next_line_idx < len(lines)
             
-            if (len(stripped) < 60 and 
+            # Check if it looks like a heading candidate
+            is_heading_candidate = (
+                len(stripped) < 50 and 
+                len(stripped) > 2 and
                 stripped[0].isupper() and 
-                not stripped.endswith('.') and 
-                not stripped.endswith(',') and
+                not stripped.endswith(('.', ',', ':', ';')) and
+                not stripped.endswith('.') and
                 has_following_content and
                 not self._is_list_item(stripped) and
-                not self._is_table_row(stripped)):
-                
-                # Check if it looks like a heading
+                not self._is_table_row(stripped) and
+                not self._is_instruction_line(stripped) and
+                not self._is_code_import(stripped)
+            )
+            
+            if is_heading_candidate:
+                # Additional check: should not contain mid-sentence words
                 words = stripped.split()
-                if len(words) <= 8:  # Headings are usually short
-                    result_lines.append(f"{'#' * heading_level} {stripped}\n")
-                    continue
+                if len(words) <= 6:  # Headings are usually short
+                    # Avoid making headings from lines with certain patterns
+                    lower_stripped = stripped.lower()
+                    if not any(word in lower_stripped for word in ['using ', 'with ', 'by ', 'for ', 'to ']):
+                        result_lines.append(f"{'#' * heading_level} {stripped}\n")
+                        last_heading_text = stripped.lower()
+                        continue
             
             # Regular content line
             result_lines.append(line)
             first_content_seen = True
         
         return ''.join(result_lines)
+    
+    def _is_instruction_line(self, text: str) -> bool:
+        """Check if text looks like an instruction rather than a heading."""
+        lower = text.lower()
+        # Common instruction patterns
+        instruction_words = ['install', 'run', 'execute', 'type', 'enter', 'click', 'select']
+        return any(lower.startswith(word) for word in instruction_words)
+    
+    def _is_code_import(self, text: str) -> bool:
+        """Check if text looks like a code import statement."""
+        return text.startswith('from ') or text.startswith('import ')
     
     def _fix_heading_hierarchy(self, content: str) -> str:
         """Ensure heading levels don't skip (e.g., H1 to H3)."""

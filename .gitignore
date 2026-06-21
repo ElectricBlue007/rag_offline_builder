@@ -1,8 +1,8 @@
 ```
-# Compiled Python files
-*.pyc
-__pycache__/
+# Test result files
+test_result.json
+test_result2.json
 
-# Test outputs
-test_output/
+# Temporary test files
+*.tmp
 ```
