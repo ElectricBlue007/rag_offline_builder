@@ -1,0 +1,356 @@
+{
+  "source_file": "sample_doc.md",
+  "phase_1_structure": {
+    "metadata": {
+      "total_blocks": 22,
+      "has_front_matter": false
+    },
+    "blocks": [
+      {
+        "block_id": "block_1",
+        "order": 0,
+        "block_type": "paragraph",
+        "content": "  <strong>Advanced Semantic Chunking for RAG</strong>",
+        "metadata": {},
+        "level": 2,
+        "heading_path": [
+          "Chonkie RAG Library"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_2",
+        "order": 1,
+        "block_type": "paragraph",
+        "content": "---",
+        "metadata": {},
+        "level": 2,
+        "heading_path": [
+          "Chonkie RAG Library"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_3",
+        "order": 2,
+        "block_type": "paragraph",
+        "content": "Install Chonkie using pip:",
+        "metadata": {},
+        "level": 3,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_4",
+        "order": 3,
+        "block_type": "code_block",
+        "content": "```bash\npip install chonkie\n```",
+        "metadata": {},
+        "level": 3,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_5",
+        "order": 4,
+        "block_type": "paragraph",
+        "content": "Or using uv:",
+        "metadata": {},
+        "level": 3,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_6",
+        "order": 5,
+        "block_type": "code_block",
+        "content": "```bash\nuv add chonkie\n```",
+        "metadata": {},
+        "level": 3,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_7",
+        "order": 6,
+        "block_type": "list",
+        "content": "- Python 3.8+\n- numpy\n- transformers",
+        "metadata": {},
+        "level": 4,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Installation",
+          "Requirements"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_8",
+        "order": 7,
+        "block_type": "code_block",
+        "content": "```python\nfrom chonkie import SemanticChunker\n\nchunker = SemanticChunker(\n    embedding_model=\"intfloat/multilingual-e5-large\",\n    chunk_size=512\n)\n\ntext = \"Your long document text here...\"\nchunks = chunker.chunk(text)\n```",
+        "metadata": {},
+        "level": 4,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage",
+          "Basic Example"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_9",
+        "order": 8,
+        "block_type": "paragraph",
+        "content": "You can customize the chunking behavior:",
+        "metadata": {},
+        "level": 4,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage",
+          "Advanced Configuration"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_10",
+        "order": 9,
+        "block_type": "table",
+        "content": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| chunk_size | int | 512 | Maximum tokens per chunk |\n| similarity_threshold | float | 0.5 | Minimum semantic similarity |\n| min_chunk_size | int | 50 | Minimum tokens per chunk |",
+        "metadata": {},
+        "level": 4,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Usage",
+          "Advanced Configuration"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_11",
+        "order": 10,
+        "block_type": "paragraph",
+        "content": "The main class for semantic chunking.",
+        "metadata": {},
+        "level": 4,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_12",
+        "order": 11,
+        "block_type": "paragraph",
+        "content": "Splits text into semantic chunks.",
+        "metadata": {},
+        "level": 6,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_13",
+        "order": 12,
+        "block_type": "paragraph",
+        "content": "**Parameters:**",
+        "metadata": {},
+        "level": 6,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_14",
+        "order": 13,
+        "block_type": "list",
+        "content": "- `text`: The input text to chunk",
+        "metadata": {},
+        "level": 6,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_15",
+        "order": 14,
+        "block_type": "paragraph",
+        "content": "**Returns:**",
+        "metadata": {},
+        "level": 6,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_16",
+        "order": 15,
+        "block_type": "list",
+        "content": "- List of Chunk objects",
+        "metadata": {},
+        "level": 6,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`chunk(text: str) -> List[Chunk]`"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_17",
+        "order": 16,
+        "block_type": "paragraph",
+        "content": "Generates embeddings for chunks.",
+        "metadata": {},
+        "level": 6,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "API Reference",
+          "SemanticChunker",
+          "Methods",
+          "`embed(chunks: List[Chunk]) -> np.ndarray`"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_18",
+        "order": 17,
+        "block_type": "paragraph",
+        "content": "We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).",
+        "metadata": {},
+        "level": 3,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Contributing"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_19",
+        "order": 18,
+        "block_type": "list",
+        "content": "1. Fork the repository\n2. Create a feature branch\n3. Make your changes\n4. Submit a pull request",
+        "metadata": {},
+        "level": 4,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "Contributing",
+          "Steps"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_20",
+        "order": 19,
+        "block_type": "paragraph",
+        "content": "MIT License - See [LICENSE](LICENSE) for details.",
+        "metadata": {},
+        "level": 3,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "License"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_21",
+        "order": 20,
+        "block_type": "paragraph",
+        "content": "---",
+        "metadata": {},
+        "level": 3,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "License"
+        ],
+        "flags": []
+      },
+      {
+        "block_id": "block_22",
+        "order": 21,
+        "block_type": "paragraph",
+        "content": "*Last updated: 2024*",
+        "metadata": {},
+        "level": 3,
+        "heading_path": [
+          "Chonkie RAG Library",
+          "License"
+        ],
+        "flags": []
+      }
+    ]
+  },
+  "phase_2_qualification": {
+    "is_chunkable": false,
+    "is_embeddable": false,
+    "is_retrievable": false,
+    "overall_score": 0.0,
+    "structural_score": 0.0,
+    "semantic_score": 0.0,
+    "retrieval_score": 0.0,
+    "embedding_readiness_score": 0.0,
+    "chunking_strategy": {
+      "strategy_type": "adaptive_semantic",
+      "min_chunk_size": 150,
+      "max_chunk_size": 400,
+      "preferred_boundary_types": [
+        "heading_level_1",
+        "heading_level_2"
+      ],
+      "anchoring_rules": [],
+      "context_injection": true,
+      "parent_context_depth": 2,
+      "merge_sparse_blocks": true,
+      "split_large_sections": false,
+      "custom_parameters": {
+        "heading_path_injection": true,
+        "semantic_density_threshold": 0.3,
+        "entity_preservation": true
+      }
+    },
+    "issues": [],
+    "warnings": [],
+    "recommendations": [
+      "Improve document structure: fix heading hierarchy and broken markdown",
+      "Remove noise content: navigation elements, badges, and boilerplate",
+      "Enrich document with definitions, procedures, or API documentation",
+      "Significant document improvement needed before RAG ingestion"
+    ]
+  }
+}
