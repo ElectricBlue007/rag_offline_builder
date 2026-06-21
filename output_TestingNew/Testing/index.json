@@ -1,0 +1,4206 @@
+{
+  "compiler": {
+    "name": "rag-document-intelligence-compiler",
+    "version": "0.1.0"
+  },
+  "flat_chunk_view": [
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_1::chunk_2::prompt-engineering",
+        "previous_chunk_id": null
+      },
+      "chunk_id": "sec_1::chunk_1::prompt-engineering",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 3,
+          "start_line": 3
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering"
+      ],
+      "hierarchy_level": 1,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        3,
+        3
+      ],
+      "parent_section_id": "sec_1",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering"
+      ],
+      "text": "Author: Lee Boonstra",
+      "token_estimate": 5
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_3::chunk_3::reviewers-and-contributors",
+        "previous_chunk_id": "sec_1::chunk_1::prompt-engineering"
+      },
+      "chunk_id": "sec_1::chunk_2::prompt-engineering",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 5,
+          "start_line": 5
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 1.0,
+        "density_score": 0.529,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering"
+      ],
+      "hierarchy_level": 1,
+      "importance_score": 0.588,
+      "intent": "definition",
+      "line_range": [
+        5,
+        5
+      ],
+      "parent_section_id": "sec_1",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering"
+      ],
+      "text": "![Google logo](a5c52eb326dc00fc9e10c45812a6fcfb_3_img.webp)The Google logo is located in the bottom left corner of the page. It consists of the word \"Google\" in its signature multi-colored font, with each letter in a different color: blue, red, yellow, blue, green, and red.![Abstract geometric shape](a5c52eb326dc00fc9e10c45812a6fcfb_4_img.webp)A large, abstract, three-dimensional geometric shape is positioned in the bottom right corner of the page. It is composed of several flat, angular faces that create a faceted, crystalline appearance. The shape is primarily light blue and purple, with some darker, shadowed areas that give it depth and a sense of volume. The lighting appears to come from the upper left, casting shadows that emphasize its three-dimensional form.",
+      "token_estimate": 194
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_3::chunk_4::reviewers-and-contributors",
+        "previous_chunk_id": "sec_1::chunk_2::prompt-engineering"
+      },
+      "chunk_id": "sec_3::chunk_3::reviewers-and-contributors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 10,
+          "start_line": 10
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Reviewers and Contributors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        10,
+        10
+      ],
+      "parent_section_id": "sec_3",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:reviewers-and-contributors"
+      ],
+      "text": "Michael Sherman",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_3::chunk_5::reviewers-and-contributors",
+        "previous_chunk_id": "sec_3::chunk_3::reviewers-and-contributors"
+      },
+      "chunk_id": "sec_3::chunk_4::reviewers-and-contributors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 12,
+          "start_line": 12
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Reviewers and Contributors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        12,
+        12
+      ],
+      "parent_section_id": "sec_3",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:reviewers-and-contributors"
+      ],
+      "text": "Yuan Cao",
+      "token_estimate": 2
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_3::chunk_6::reviewers-and-contributors",
+        "previous_chunk_id": "sec_3::chunk_4::reviewers-and-contributors"
+      },
+      "chunk_id": "sec_3::chunk_5::reviewers-and-contributors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 14,
+          "start_line": 14
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Reviewers and Contributors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        14,
+        14
+      ],
+      "parent_section_id": "sec_3",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:reviewers-and-contributors"
+      ],
+      "text": "Erick Armbrust",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_3::chunk_7::reviewers-and-contributors",
+        "previous_chunk_id": "sec_3::chunk_5::reviewers-and-contributors"
+      },
+      "chunk_id": "sec_3::chunk_6::reviewers-and-contributors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 16,
+          "start_line": 16
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Reviewers and Contributors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        16,
+        16
+      ],
+      "parent_section_id": "sec_3",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:reviewers-and-contributors"
+      ],
+      "text": "Anant Nawalgaria",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_3::chunk_8::reviewers-and-contributors",
+        "previous_chunk_id": "sec_3::chunk_6::reviewers-and-contributors"
+      },
+      "chunk_id": "sec_3::chunk_7::reviewers-and-contributors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 18,
+          "start_line": 18
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Reviewers and Contributors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        18,
+        18
+      ],
+      "parent_section_id": "sec_3",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:reviewers-and-contributors"
+      ],
+      "text": "Antonio Gulli",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_4::chunk_9::curators-and-editors",
+        "previous_chunk_id": "sec_3::chunk_7::reviewers-and-contributors"
+      },
+      "chunk_id": "sec_3::chunk_8::reviewers-and-contributors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 20,
+          "start_line": 20
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Reviewers and Contributors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        20,
+        20
+      ],
+      "parent_section_id": "sec_3",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:reviewers-and-contributors"
+      ],
+      "text": "Simone Cammel",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_4::chunk_10::curators-and-editors",
+        "previous_chunk_id": "sec_3::chunk_8::reviewers-and-contributors"
+      },
+      "chunk_id": "sec_4::chunk_9::curators-and-editors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 24,
+          "start_line": 24
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Curators and Editors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        24,
+        24
+      ],
+      "parent_section_id": "sec_4",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:curators-and-editors"
+      ],
+      "text": "Antonio Gulli",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_4::chunk_11::curators-and-editors",
+        "previous_chunk_id": "sec_4::chunk_9::curators-and-editors"
+      },
+      "chunk_id": "sec_4::chunk_10::curators-and-editors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 26,
+          "start_line": 26
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Curators and Editors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        26,
+        26
+      ],
+      "parent_section_id": "sec_4",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:curators-and-editors"
+      ],
+      "text": "Anant Nawalgaria",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_5::chunk_12::technical-writer",
+        "previous_chunk_id": "sec_4::chunk_10::curators-and-editors"
+      },
+      "chunk_id": "sec_4::chunk_11::curators-and-editors",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 28,
+          "start_line": 28
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Curators and Editors"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        28,
+        28
+      ],
+      "parent_section_id": "sec_4",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:curators-and-editors"
+      ],
+      "text": "Grace Mollison",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_6::chunk_13::designer",
+        "previous_chunk_id": "sec_4::chunk_11::curators-and-editors"
+      },
+      "chunk_id": "sec_5::chunk_12::technical-writer",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 32,
+          "start_line": 32
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Technical Writer"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        32,
+        32
+      ],
+      "parent_section_id": "sec_5",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:technical-writer"
+      ],
+      "text": "Joey Haymaker",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_6::chunk_14::designer",
+        "previous_chunk_id": "sec_5::chunk_12::technical-writer"
+      },
+      "chunk_id": "sec_6::chunk_13::designer",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 36,
+          "start_line": 36
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.55,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Designer"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.732,
+      "intent": "explanation",
+      "line_range": [
+        36,
+        36
+      ],
+      "parent_section_id": "sec_6",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:designer"
+      ],
+      "text": "Michael Lanning",
+      "token_estimate": 4
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_7::chunk_15::table-of-contents",
+        "previous_chunk_id": "sec_6::chunk_13::designer"
+      },
+      "chunk_id": "sec_6::chunk_14::designer",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 38,
+          "start_line": 38
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.67,
+        "density_score": 0.405,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Prompt Engineering",
+        "Acknowledgements",
+        "Designer"
+      ],
+      "hierarchy_level": 3,
+      "importance_score": 0.532,
+      "intent": "explanation",
+      "line_range": [
+        38,
+        38
+      ],
+      "parent_section_id": "sec_6",
+      "semantic_tags": [
+        "paragraph",
+        "h1:prompt-engineering",
+        "h2:acknowledgements",
+        "h3:designer"
+      ],
+      "text": "![A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.](28909e351d3b81147ec2d5f6aa2f5253_18_img.webp)A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.",
+      "token_estimate": 95
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_7::chunk_16::table-of-contents",
+        "previous_chunk_id": "sec_6::chunk_14::designer"
+      },
+      "chunk_id": "sec_7::chunk_15::table-of-contents",
+      "content_type": "reference",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::table",
+        "normalization_flags": {
+          "39": [
+            "embedded_atx_heading_split"
+          ]
+        },
+        "source_offset": {
+          "end_line": 41,
+          "start_line": 41
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.257,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents"
+      ],
+      "hierarchy_level": 1,
+      "importance_score": 0.566,
+      "intent": "explanation",
+      "line_range": [
+        41,
+        41
+      ],
+      "parent_section_id": "sec_7",
+      "semantic_tags": [
+        "table",
+        "h1:table-of-contents"
+      ],
+      "text": "<table><tr><td>Introduction .....</td><td>6</td></tr><tr><td>Prompt engineering .....</td><td>7</td></tr><tr><td>LLM output configuration .....</td><td>8</td></tr><tr><td>    Output length .....</td><td>8</td></tr><tr><td>    Sampling controls .....</td><td>9</td></tr><tr><td>        Temperature .....</td><td>9</td></tr><tr><td>        Top-K and top-P .....</td><td>10</td></tr><tr><td>        Putting it all together .....</td><td>11</td></tr><tr><td>Prompting techniques .....</td><td>12</td></tr><tr><td>    General prompting / zero shot .....</td><td>13</td></tr><tr><td>    One-shot &amp; few-shot .....</td><td>14</td></tr><tr><td>    System, contextual and role prompting .....</td><td>17</td></tr><tr><td>        System prompting .....</td><td>18</td></tr><tr><td>        Role prompting .....</td><td>21</td></tr><tr><td>        Contextual prompting .....</td><td>23</td></tr></table>",
+      "token_estimate": 224
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_8::chunk_17::introduction",
+        "previous_chunk_id": "sec_7::chunk_15::table-of-contents"
+      },
+      "chunk_id": "sec_7::chunk_16::table-of-contents",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {
+          "39": [
+            "embedded_atx_heading_split"
+          ]
+        },
+        "source_offset": {
+          "end_line": 43,
+          "start_line": 43
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.91,
+        "density_score": 0.614,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents"
+      ],
+      "hierarchy_level": 1,
+      "importance_score": 0.626,
+      "intent": "definition",
+      "line_range": [
+        43,
+        43
+      ],
+      "parent_section_id": "sec_7",
+      "semantic_tags": [
+        "paragraph",
+        "h1:table-of-contents"
+      ],
+      "text": "![Abstract geometric shape in the bottom left corner.](34d10c78614fa5ce7dc5619bf8917918_3_img.webp)An abstract geometric shape in the bottom left corner of the page. It consists of several overlapping, flat, polygonal planes in shades of blue, purple, and white, creating a faceted, crystalline appearance. The shape is partially cut off by the edge of the page.You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt.",
+      "token_estimate": 116
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_8::chunk_18::introduction",
+        "previous_chunk_id": "sec_7::chunk_16::table-of-contents"
+      },
+      "chunk_id": "sec_8::chunk_17::introduction",
+      "content_type": "technical",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 47,
+          "start_line": 47
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 1.0,
+        "density_score": 0.572,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "Introduction"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.607,
+      "intent": "definition",
+      "line_range": [
+        47,
+        47
+      ],
+      "parent_section_id": "sec_8",
+      "semantic_tags": [
+        "paragraph",
+        "h1:table-of-contents",
+        "h2:introduction"
+      ],
+      "text": "When thinking about a large language model input and output, a text prompt (sometimes accompanied by other modalities such as image prompts) is the input the model uses to predict a specific output. You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt. However, crafting the most effective prompt can be complicated. Many aspects of your prompt affect its efficacy: the model you use, the model's training data, the model configurations, your word-choice, style and tone, structure, and context all matter. Therefore, prompt engineering is an iterative process. Inadequate prompts can lead to ambiguous, inaccurate responses, and can hinder the model's ability to provide meaningful output.",
+      "token_estimate": 184
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_8::chunk_19::introduction",
+        "previous_chunk_id": "sec_8::chunk_17::introduction"
+      },
+      "chunk_id": "sec_8::chunk_18::introduction",
+      "content_type": "reference",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::table",
+        "normalization_flags": {
+          "48": [
+            "embedded_html_table_split"
+          ]
+        },
+        "source_offset": {
+          "end_line": 85,
+          "start_line": 48
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.347,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "Introduction"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.606,
+      "intent": "definition",
+      "line_range": [
+        48,
+        85
+      ],
+      "parent_section_id": "sec_8",
+      "semantic_tags": [
+        "table",
+        "h1:table-of-contents",
+        "h2:introduction"
+      ],
+      "text": "<table border=\"1\">\n<tr>\n<td><b>Name</b></td>\n<td colspan=\"3\">1_1_movie_classification</td>\n</tr>\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Classify movie reviews as positive, neutral or negative.</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>5</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n                Classify movie reviews as POSITIVE, NEUTRAL or NEGATIVE.<br/>\n                Review: \"Her\" is a disturbing study revealing the direction humanity is headed if AI is allowed to keep evolving, unchecked. I wish there were more movies like this masterpiece.<br/>\n                Sentiment:\n            </td>\n</tr>\n<tr>\n<td><b>Output</b></td>\n<td colspan=\"3\">POSITIVE</td>\n</tr>\n</table>",
+      "token_estimate": 222
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_8::chunk_20::introduction",
+        "previous_chunk_id": "sec_8::chunk_18::introduction"
+      },
+      "chunk_id": "sec_8::chunk_19::introduction",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {
+          "48": [
+            "embedded_html_table_split"
+          ]
+        },
+        "source_offset": {
+          "end_line": 87,
+          "start_line": 87
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.67,
+        "density_score": 0.85,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "Introduction"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.732,
+      "intent": "example",
+      "line_range": [
+        87,
+        87
+      ],
+      "parent_section_id": "sec_8",
+      "semantic_tags": [
+        "paragraph",
+        "h1:table-of-contents",
+        "h2:introduction"
+      ],
+      "text": "Table 1. An example of zero-shot prompting",
+      "token_estimate": 11
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_9::chunk_21::one-shot-few-shot",
+        "previous_chunk_id": "sec_8::chunk_19::introduction"
+      },
+      "chunk_id": "sec_8::chunk_20::introduction",
+      "content_type": "narrative",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {
+          "48": [
+            "embedded_html_table_split"
+          ]
+        },
+        "source_offset": {
+          "end_line": 89,
+          "start_line": 89
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.67,
+        "density_score": 0.698,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "Introduction"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.664,
+      "intent": "example",
+      "line_range": [
+        89,
+        89
+      ],
+      "parent_section_id": "sec_8",
+      "semantic_tags": [
+        "paragraph",
+        "h1:table-of-contents",
+        "h2:introduction"
+      ],
+      "text": "When zero-shot doesn't work, you can provide demonstrations or examples in the prompt, which leads to \"one-shot\" and \"few-shot\" prompting. General prompting / zero shot",
+      "token_estimate": 42
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_9::chunk_22::one-shot-few-shot",
+        "previous_chunk_id": "sec_8::chunk_20::introduction"
+      },
+      "chunk_id": "sec_9::chunk_21::one-shot-few-shot",
+      "content_type": "technical",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 93,
+          "start_line": 93
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.91,
+        "density_score": 0.648,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "One-shot & few-shot"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.642,
+      "intent": "example",
+      "line_range": [
+        93,
+        93
+      ],
+      "parent_section_id": "sec_9",
+      "semantic_tags": [
+        "paragraph",
+        "h1:table-of-contents",
+        "h2:one-shot-&-few-shot"
+      ],
+      "text": "When creating prompts for AI models, it is helpful to provide examples. These examples can help the model understand what you are asking for. Examples are especially useful when you want to steer the model to a certain output structure or pattern.",
+      "token_estimate": 62
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_9::chunk_23::one-shot-few-shot",
+        "previous_chunk_id": "sec_9::chunk_21::one-shot-few-shot"
+      },
+      "chunk_id": "sec_9::chunk_22::one-shot-few-shot",
+      "content_type": "technical",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 95,
+          "start_line": 95
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.79,
+        "density_score": 0.645,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "One-shot & few-shot"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.64,
+      "intent": "example",
+      "line_range": [
+        95,
+        95
+      ],
+      "parent_section_id": "sec_9",
+      "semantic_tags": [
+        "paragraph",
+        "h1:table-of-contents",
+        "h2:one-shot-&-few-shot"
+      ],
+      "text": "A **one-shot prompt**, provides a *single* example, hence the name one-shot. The idea is the model has an example it can imitate to best complete the task.",
+      "token_estimate": 39
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_9::chunk_24::one-shot-few-shot",
+        "previous_chunk_id": "sec_9::chunk_22::one-shot-few-shot"
+      },
+      "chunk_id": "sec_9::chunk_23::one-shot-few-shot",
+      "content_type": "technical",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 97,
+          "start_line": 97
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 1.0,
+        "density_score": 0.456,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "One-shot & few-shot"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.555,
+      "intent": "example",
+      "line_range": [
+        97,
+        97
+      ],
+      "parent_section_id": "sec_9",
+      "semantic_tags": [
+        "paragraph",
+        "h1:table-of-contents",
+        "h2:one-shot-&-few-shot"
+      ],
+      "text": "A **few-shot prompt** <sup>7</sup> provides *multiple* examples to the model. This approach shows the model a pattern that it needs to follow. The idea is similar to one-shot, but multiple examples of the desired pattern increases the chance the model follows the pattern.The number of examples you need for few-shot prompting depends on a few factors, including the complexity of the task, the quality of the examples, and the capabilities of the generative AI (gen AI) model you are using. As a general rule of thumb, you should use at least three to five examples for few-shot prompting. However, you may need to use more examples for more complex tasks, or you may need to use fewer due to the input length limitation of your model.",
+      "token_estimate": 184
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": "sec_9::chunk_25::one-shot-few-shot",
+        "previous_chunk_id": "sec_9::chunk_23::one-shot-few-shot"
+      },
+      "chunk_id": "sec_9::chunk_24::one-shot-few-shot",
+      "content_type": "technical",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::paragraph",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 99,
+          "start_line": 99
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.67,
+        "density_score": 0.775,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "One-shot & few-shot"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.699,
+      "intent": "example",
+      "line_range": [
+        99,
+        99
+      ],
+      "parent_section_id": "sec_9",
+      "semantic_tags": [
+        "paragraph",
+        "h1:table-of-contents",
+        "h2:one-shot-&-few-shot"
+      ],
+      "text": "Table 2 shows a few-shot prompt example, let's use the same gemini-pro model configuration settings as before, other than increasing the token limit to accommodate the need for a longer response.",
+      "token_estimate": 49
+    },
+    {
+      "adjacency": {
+        "next_chunk_id": null,
+        "previous_chunk_id": "sec_9::chunk_24::one-shot-few-shot"
+      },
+      "chunk_id": "sec_9::chunk_25::one-shot-few-shot",
+      "content_type": "reference",
+      "debug_metadata": {
+        "extraction_method": "structure_analyzer::table",
+        "normalization_flags": {},
+        "source_offset": {
+          "end_line": 139,
+          "start_line": 101
+        }
+      },
+      "evaluation_metadata": {
+        "chunk_coherence_score": 0.9,
+        "density_score": 0.351,
+        "redundancy_flag": false
+      },
+      "heading_path": [
+        "Table of contents",
+        "One-shot & few-shot"
+      ],
+      "hierarchy_level": 2,
+      "importance_score": 0.608,
+      "intent": "example",
+      "line_range": [
+        101,
+        139
+      ],
+      "parent_section_id": "sec_9",
+      "semantic_tags": [
+        "table",
+        "h1:table-of-contents",
+        "h2:one-shot-&-few-shot"
+      ],
+      "text": "<table border=\"1\">\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Parse pizza orders to JSON</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>250</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n<p>Parse a customer's pizza order into valid JSON:</p>\n<p>EXAMPLE:</p>\n<p>I want a small pizza with cheese, tomato sauce, and pepperoni.</p>\n<p>JSON Response:</p>\n<pre>...\n{\n  \"size\": \"small\",\n  \"type\": \"normal\",\n  \"ingredients\": [\"cheese\", \"tomato sauce\", \"peperoni\"]\n}</pre>\n<p>...</p>\n<p style=\"text-align: right;\"><b>Continues next page...</b></p>\n</td>\n</tr>\n</table>",
+      "token_estimate": 189
+    }
+  ],
+  "hierarchical_structure_view": {
+    "flat_reference_map": {
+      "block_1": {
+        "children": [],
+        "content": "Author: Lee Boonstra",
+        "heading_path": [
+          "Prompt Engineering"
+        ],
+        "level": 2,
+        "line_range": [
+          3,
+          3
+        ],
+        "metadata": {},
+        "node_id": "block_1",
+        "node_type": "paragraph",
+        "parent_id": "sec_1"
+      },
+      "block_10": {
+        "children": [],
+        "content": "Anant Nawalgaria",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Curators and Editors"
+        ],
+        "level": 4,
+        "line_range": [
+          26,
+          26
+        ],
+        "metadata": {},
+        "node_id": "block_10",
+        "node_type": "paragraph",
+        "parent_id": "sec_4"
+      },
+      "block_11": {
+        "children": [],
+        "content": "Grace Mollison",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Curators and Editors"
+        ],
+        "level": 4,
+        "line_range": [
+          28,
+          28
+        ],
+        "metadata": {},
+        "node_id": "block_11",
+        "node_type": "paragraph",
+        "parent_id": "sec_4"
+      },
+      "block_12": {
+        "children": [],
+        "content": "Joey Haymaker",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Technical Writer"
+        ],
+        "level": 4,
+        "line_range": [
+          32,
+          32
+        ],
+        "metadata": {},
+        "node_id": "block_12",
+        "node_type": "paragraph",
+        "parent_id": "sec_5"
+      },
+      "block_13": {
+        "children": [],
+        "content": "Michael Lanning",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Designer"
+        ],
+        "level": 4,
+        "line_range": [
+          36,
+          36
+        ],
+        "metadata": {},
+        "node_id": "block_13",
+        "node_type": "paragraph",
+        "parent_id": "sec_6"
+      },
+      "block_14": {
+        "children": [],
+        "content": "![A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.](28909e351d3b81147ec2d5f6aa2f5253_18_img.webp)A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Designer"
+        ],
+        "level": 4,
+        "line_range": [
+          38,
+          38
+        ],
+        "metadata": {},
+        "node_id": "block_14",
+        "node_type": "paragraph",
+        "parent_id": "sec_6"
+      },
+      "block_15": {
+        "children": [],
+        "content": "<table><tr><td>Introduction .....</td><td>6</td></tr><tr><td>Prompt engineering .....</td><td>7</td></tr><tr><td>LLM output configuration .....</td><td>8</td></tr><tr><td>    Output length .....</td><td>8</td></tr><tr><td>    Sampling controls .....</td><td>9</td></tr><tr><td>        Temperature .....</td><td>9</td></tr><tr><td>        Top-K and top-P .....</td><td>10</td></tr><tr><td>        Putting it all together .....</td><td>11</td></tr><tr><td>Prompting techniques .....</td><td>12</td></tr><tr><td>    General prompting / zero shot .....</td><td>13</td></tr><tr><td>    One-shot &amp; few-shot .....</td><td>14</td></tr><tr><td>    System, contextual and role prompting .....</td><td>17</td></tr><tr><td>        System prompting .....</td><td>18</td></tr><tr><td>        Role prompting .....</td><td>21</td></tr><tr><td>        Contextual prompting .....</td><td>23</td></tr></table>",
+        "heading_path": [
+          "Table of contents"
+        ],
+        "level": 2,
+        "line_range": [
+          41,
+          41
+        ],
+        "metadata": {},
+        "node_id": "block_15",
+        "node_type": "table",
+        "parent_id": "sec_7"
+      },
+      "block_16": {
+        "children": [],
+        "content": "![Abstract geometric shape in the bottom left corner.](34d10c78614fa5ce7dc5619bf8917918_3_img.webp)An abstract geometric shape in the bottom left corner of the page. It consists of several overlapping, flat, polygonal planes in shades of blue, purple, and white, creating a faceted, crystalline appearance. The shape is partially cut off by the edge of the page.You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt.",
+        "heading_path": [
+          "Table of contents"
+        ],
+        "level": 2,
+        "line_range": [
+          43,
+          43
+        ],
+        "metadata": {},
+        "node_id": "block_16",
+        "node_type": "paragraph",
+        "parent_id": "sec_7"
+      },
+      "block_17": {
+        "children": [],
+        "content": "When thinking about a large language model input and output, a text prompt (sometimes accompanied by other modalities such as image prompts) is the input the model uses to predict a specific output. You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt. However, crafting the most effective prompt can be complicated. Many aspects of your prompt affect its efficacy: the model you use, the model's training data, the model configurations, your word-choice, style and tone, structure, and context all matter. Therefore, prompt engineering is an iterative process. Inadequate prompts can lead to ambiguous, inaccurate responses, and can hinder the model's ability to provide meaningful output.",
+        "heading_path": [
+          "Table of contents",
+          "Introduction"
+        ],
+        "level": 3,
+        "line_range": [
+          47,
+          47
+        ],
+        "metadata": {},
+        "node_id": "block_17",
+        "node_type": "paragraph",
+        "parent_id": "sec_8"
+      },
+      "block_18": {
+        "children": [],
+        "content": "<table border=\"1\">\n<tr>\n<td><b>Name</b></td>\n<td colspan=\"3\">1_1_movie_classification</td>\n</tr>\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Classify movie reviews as positive, neutral or negative.</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>5</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n                Classify movie reviews as POSITIVE, NEUTRAL or NEGATIVE.<br/>\n                Review: \"Her\" is a disturbing study revealing the direction humanity is headed if AI is allowed to keep evolving, unchecked. I wish there were more movies like this masterpiece.<br/>\n                Sentiment:\n            </td>\n</tr>\n<tr>\n<td><b>Output</b></td>\n<td colspan=\"3\">POSITIVE</td>\n</tr>\n</table>",
+        "heading_path": [
+          "Table of contents",
+          "Introduction"
+        ],
+        "level": 3,
+        "line_range": [
+          48,
+          85
+        ],
+        "metadata": {},
+        "node_id": "block_18",
+        "node_type": "table",
+        "parent_id": "sec_8"
+      },
+      "block_19": {
+        "children": [],
+        "content": "Table 1. An example of zero-shot prompting",
+        "heading_path": [
+          "Table of contents",
+          "Introduction"
+        ],
+        "level": 3,
+        "line_range": [
+          87,
+          87
+        ],
+        "metadata": {},
+        "node_id": "block_19",
+        "node_type": "paragraph",
+        "parent_id": "sec_8"
+      },
+      "block_2": {
+        "children": [],
+        "content": "![Google logo](a5c52eb326dc00fc9e10c45812a6fcfb_3_img.webp)The Google logo is located in the bottom left corner of the page. It consists of the word \"Google\" in its signature multi-colored font, with each letter in a different color: blue, red, yellow, blue, green, and red.![Abstract geometric shape](a5c52eb326dc00fc9e10c45812a6fcfb_4_img.webp)A large, abstract, three-dimensional geometric shape is positioned in the bottom right corner of the page. It is composed of several flat, angular faces that create a faceted, crystalline appearance. The shape is primarily light blue and purple, with some darker, shadowed areas that give it depth and a sense of volume. The lighting appears to come from the upper left, casting shadows that emphasize its three-dimensional form.",
+        "heading_path": [
+          "Prompt Engineering"
+        ],
+        "level": 2,
+        "line_range": [
+          5,
+          5
+        ],
+        "metadata": {},
+        "node_id": "block_2",
+        "node_type": "paragraph",
+        "parent_id": "sec_1"
+      },
+      "block_20": {
+        "children": [],
+        "content": "When zero-shot doesn't work, you can provide demonstrations or examples in the prompt, which leads to \"one-shot\" and \"few-shot\" prompting. General prompting / zero shot",
+        "heading_path": [
+          "Table of contents",
+          "Introduction"
+        ],
+        "level": 3,
+        "line_range": [
+          89,
+          89
+        ],
+        "metadata": {},
+        "node_id": "block_20",
+        "node_type": "paragraph",
+        "parent_id": "sec_8"
+      },
+      "block_21": {
+        "children": [],
+        "content": "When creating prompts for AI models, it is helpful to provide examples. These examples can help the model understand what you are asking for. Examples are especially useful when you want to steer the model to a certain output structure or pattern.",
+        "heading_path": [
+          "Table of contents",
+          "One-shot & few-shot"
+        ],
+        "level": 3,
+        "line_range": [
+          93,
+          93
+        ],
+        "metadata": {},
+        "node_id": "block_21",
+        "node_type": "paragraph",
+        "parent_id": "sec_9"
+      },
+      "block_22": {
+        "children": [],
+        "content": "A **one-shot prompt**, provides a *single* example, hence the name one-shot. The idea is the model has an example it can imitate to best complete the task.",
+        "heading_path": [
+          "Table of contents",
+          "One-shot & few-shot"
+        ],
+        "level": 3,
+        "line_range": [
+          95,
+          95
+        ],
+        "metadata": {},
+        "node_id": "block_22",
+        "node_type": "paragraph",
+        "parent_id": "sec_9"
+      },
+      "block_23": {
+        "children": [],
+        "content": "A **few-shot prompt** <sup>7</sup> provides *multiple* examples to the model. This approach shows the model a pattern that it needs to follow. The idea is similar to one-shot, but multiple examples of the desired pattern increases the chance the model follows the pattern.The number of examples you need for few-shot prompting depends on a few factors, including the complexity of the task, the quality of the examples, and the capabilities of the generative AI (gen AI) model you are using. As a general rule of thumb, you should use at least three to five examples for few-shot prompting. However, you may need to use more examples for more complex tasks, or you may need to use fewer due to the input length limitation of your model.",
+        "heading_path": [
+          "Table of contents",
+          "One-shot & few-shot"
+        ],
+        "level": 3,
+        "line_range": [
+          97,
+          97
+        ],
+        "metadata": {},
+        "node_id": "block_23",
+        "node_type": "paragraph",
+        "parent_id": "sec_9"
+      },
+      "block_24": {
+        "children": [],
+        "content": "Table 2 shows a few-shot prompt example, let's use the same gemini-pro model configuration settings as before, other than increasing the token limit to accommodate the need for a longer response.",
+        "heading_path": [
+          "Table of contents",
+          "One-shot & few-shot"
+        ],
+        "level": 3,
+        "line_range": [
+          99,
+          99
+        ],
+        "metadata": {},
+        "node_id": "block_24",
+        "node_type": "paragraph",
+        "parent_id": "sec_9"
+      },
+      "block_25": {
+        "children": [],
+        "content": "<table border=\"1\">\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Parse pizza orders to JSON</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>250</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n<p>Parse a customer's pizza order into valid JSON:</p>\n<p>EXAMPLE:</p>\n<p>I want a small pizza with cheese, tomato sauce, and pepperoni.</p>\n<p>JSON Response:</p>\n<pre>...\n{\n  \"size\": \"small\",\n  \"type\": \"normal\",\n  \"ingredients\": [\"cheese\", \"tomato sauce\", \"peperoni\"]\n}</pre>\n<p>...</p>\n<p style=\"text-align: right;\"><b>Continues next page...</b></p>\n</td>\n</tr>\n</table>",
+        "heading_path": [
+          "Table of contents",
+          "One-shot & few-shot"
+        ],
+        "level": 3,
+        "line_range": [
+          101,
+          139
+        ],
+        "metadata": {},
+        "node_id": "block_25",
+        "node_type": "table",
+        "parent_id": "sec_9"
+      },
+      "block_3": {
+        "children": [],
+        "content": "Michael Sherman",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Reviewers and Contributors"
+        ],
+        "level": 4,
+        "line_range": [
+          10,
+          10
+        ],
+        "metadata": {},
+        "node_id": "block_3",
+        "node_type": "paragraph",
+        "parent_id": "sec_3"
+      },
+      "block_4": {
+        "children": [],
+        "content": "Yuan Cao",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Reviewers and Contributors"
+        ],
+        "level": 4,
+        "line_range": [
+          12,
+          12
+        ],
+        "metadata": {},
+        "node_id": "block_4",
+        "node_type": "paragraph",
+        "parent_id": "sec_3"
+      },
+      "block_5": {
+        "children": [],
+        "content": "Erick Armbrust",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Reviewers and Contributors"
+        ],
+        "level": 4,
+        "line_range": [
+          14,
+          14
+        ],
+        "metadata": {},
+        "node_id": "block_5",
+        "node_type": "paragraph",
+        "parent_id": "sec_3"
+      },
+      "block_6": {
+        "children": [],
+        "content": "Anant Nawalgaria",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Reviewers and Contributors"
+        ],
+        "level": 4,
+        "line_range": [
+          16,
+          16
+        ],
+        "metadata": {},
+        "node_id": "block_6",
+        "node_type": "paragraph",
+        "parent_id": "sec_3"
+      },
+      "block_7": {
+        "children": [],
+        "content": "Antonio Gulli",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Reviewers and Contributors"
+        ],
+        "level": 4,
+        "line_range": [
+          18,
+          18
+        ],
+        "metadata": {},
+        "node_id": "block_7",
+        "node_type": "paragraph",
+        "parent_id": "sec_3"
+      },
+      "block_8": {
+        "children": [],
+        "content": "Simone Cammel",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Reviewers and Contributors"
+        ],
+        "level": 4,
+        "line_range": [
+          20,
+          20
+        ],
+        "metadata": {},
+        "node_id": "block_8",
+        "node_type": "paragraph",
+        "parent_id": "sec_3"
+      },
+      "block_9": {
+        "children": [],
+        "content": "Antonio Gulli",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Curators and Editors"
+        ],
+        "level": 4,
+        "line_range": [
+          24,
+          24
+        ],
+        "metadata": {},
+        "node_id": "block_9",
+        "node_type": "paragraph",
+        "parent_id": "sec_4"
+      },
+      "doc_root": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "Author: Lee Boonstra",
+                "heading_path": [
+                  "Prompt Engineering"
+                ],
+                "level": 2,
+                "line_range": [
+                  3,
+                  3
+                ],
+                "metadata": {},
+                "node_id": "block_1",
+                "node_type": "paragraph",
+                "parent_id": "sec_1"
+              },
+              {
+                "children": [],
+                "content": "![Google logo](a5c52eb326dc00fc9e10c45812a6fcfb_3_img.webp)The Google logo is located in the bottom left corner of the page. It consists of the word \"Google\" in its signature multi-colored font, with each letter in a different color: blue, red, yellow, blue, green, and red.![Abstract geometric shape](a5c52eb326dc00fc9e10c45812a6fcfb_4_img.webp)A large, abstract, three-dimensional geometric shape is positioned in the bottom right corner of the page. It is composed of several flat, angular faces that create a faceted, crystalline appearance. The shape is primarily light blue and purple, with some darker, shadowed areas that give it depth and a sense of volume. The lighting appears to come from the upper left, casting shadows that emphasize its three-dimensional form.",
+                "heading_path": [
+                  "Prompt Engineering"
+                ],
+                "level": 2,
+                "line_range": [
+                  5,
+                  5
+                ],
+                "metadata": {},
+                "node_id": "block_2",
+                "node_type": "paragraph",
+                "parent_id": "sec_1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "Michael Sherman",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Reviewers and Contributors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          10,
+                          10
+                        ],
+                        "metadata": {},
+                        "node_id": "block_3",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_3"
+                      },
+                      {
+                        "children": [],
+                        "content": "Yuan Cao",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Reviewers and Contributors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          12,
+                          12
+                        ],
+                        "metadata": {},
+                        "node_id": "block_4",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_3"
+                      },
+                      {
+                        "children": [],
+                        "content": "Erick Armbrust",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Reviewers and Contributors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          14,
+                          14
+                        ],
+                        "metadata": {},
+                        "node_id": "block_5",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_3"
+                      },
+                      {
+                        "children": [],
+                        "content": "Anant Nawalgaria",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Reviewers and Contributors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          16,
+                          16
+                        ],
+                        "metadata": {},
+                        "node_id": "block_6",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_3"
+                      },
+                      {
+                        "children": [],
+                        "content": "Antonio Gulli",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Reviewers and Contributors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          18,
+                          18
+                        ],
+                        "metadata": {},
+                        "node_id": "block_7",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_3"
+                      },
+                      {
+                        "children": [],
+                        "content": "Simone Cammel",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Reviewers and Contributors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          20,
+                          20
+                        ],
+                        "metadata": {},
+                        "node_id": "block_8",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_3"
+                      }
+                    ],
+                    "content": "### Reviewers and Contributors",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Reviewers and Contributors"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      8,
+                      20
+                    ],
+                    "metadata": {
+                      "title": "Reviewers and Contributors"
+                    },
+                    "node_id": "sec_3",
+                    "node_type": "section",
+                    "parent_id": "sec_2"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "Antonio Gulli",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Curators and Editors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          24,
+                          24
+                        ],
+                        "metadata": {},
+                        "node_id": "block_9",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_4"
+                      },
+                      {
+                        "children": [],
+                        "content": "Anant Nawalgaria",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Curators and Editors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          26,
+                          26
+                        ],
+                        "metadata": {},
+                        "node_id": "block_10",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_4"
+                      },
+                      {
+                        "children": [],
+                        "content": "Grace Mollison",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Curators and Editors"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          28,
+                          28
+                        ],
+                        "metadata": {},
+                        "node_id": "block_11",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_4"
+                      }
+                    ],
+                    "content": "### Curators and Editors",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Curators and Editors"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      22,
+                      28
+                    ],
+                    "metadata": {
+                      "title": "Curators and Editors"
+                    },
+                    "node_id": "sec_4",
+                    "node_type": "section",
+                    "parent_id": "sec_2"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "Joey Haymaker",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Technical Writer"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          32,
+                          32
+                        ],
+                        "metadata": {},
+                        "node_id": "block_12",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_5"
+                      }
+                    ],
+                    "content": "### Technical Writer",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Technical Writer"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      30,
+                      32
+                    ],
+                    "metadata": {
+                      "title": "Technical Writer"
+                    },
+                    "node_id": "sec_5",
+                    "node_type": "section",
+                    "parent_id": "sec_2"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "content": "Michael Lanning",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Designer"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          36,
+                          36
+                        ],
+                        "metadata": {},
+                        "node_id": "block_13",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_6"
+                      },
+                      {
+                        "children": [],
+                        "content": "![A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.](28909e351d3b81147ec2d5f6aa2f5253_18_img.webp)A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.",
+                        "heading_path": [
+                          "Prompt Engineering",
+                          "Acknowledgements",
+                          "Designer"
+                        ],
+                        "level": 4,
+                        "line_range": [
+                          38,
+                          38
+                        ],
+                        "metadata": {},
+                        "node_id": "block_14",
+                        "node_type": "paragraph",
+                        "parent_id": "sec_6"
+                      }
+                    ],
+                    "content": "### Designer",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Designer"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      34,
+                      38
+                    ],
+                    "metadata": {
+                      "title": "Designer"
+                    },
+                    "node_id": "sec_6",
+                    "node_type": "section",
+                    "parent_id": "sec_2"
+                  }
+                ],
+                "content": "## Acknowledgements",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements"
+                ],
+                "level": 2,
+                "line_range": [
+                  6,
+                  34
+                ],
+                "metadata": {
+                  "title": "Acknowledgements"
+                },
+                "node_id": "sec_2",
+                "node_type": "section",
+                "parent_id": "sec_1"
+              }
+            ],
+            "content": "# Prompt Engineering",
+            "heading_path": [
+              "Prompt Engineering"
+            ],
+            "level": 1,
+            "line_range": [
+              1,
+              6
+            ],
+            "metadata": {
+              "title": "Prompt Engineering"
+            },
+            "node_id": "sec_1",
+            "node_type": "section",
+            "parent_id": "doc_root"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "<table><tr><td>Introduction .....</td><td>6</td></tr><tr><td>Prompt engineering .....</td><td>7</td></tr><tr><td>LLM output configuration .....</td><td>8</td></tr><tr><td>    Output length .....</td><td>8</td></tr><tr><td>    Sampling controls .....</td><td>9</td></tr><tr><td>        Temperature .....</td><td>9</td></tr><tr><td>        Top-K and top-P .....</td><td>10</td></tr><tr><td>        Putting it all together .....</td><td>11</td></tr><tr><td>Prompting techniques .....</td><td>12</td></tr><tr><td>    General prompting / zero shot .....</td><td>13</td></tr><tr><td>    One-shot &amp; few-shot .....</td><td>14</td></tr><tr><td>    System, contextual and role prompting .....</td><td>17</td></tr><tr><td>        System prompting .....</td><td>18</td></tr><tr><td>        Role prompting .....</td><td>21</td></tr><tr><td>        Contextual prompting .....</td><td>23</td></tr></table>",
+                "heading_path": [
+                  "Table of contents"
+                ],
+                "level": 2,
+                "line_range": [
+                  41,
+                  41
+                ],
+                "metadata": {},
+                "node_id": "block_15",
+                "node_type": "table",
+                "parent_id": "sec_7"
+              },
+              {
+                "children": [],
+                "content": "![Abstract geometric shape in the bottom left corner.](34d10c78614fa5ce7dc5619bf8917918_3_img.webp)An abstract geometric shape in the bottom left corner of the page. It consists of several overlapping, flat, polygonal planes in shades of blue, purple, and white, creating a faceted, crystalline appearance. The shape is partially cut off by the edge of the page.You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt.",
+                "heading_path": [
+                  "Table of contents"
+                ],
+                "level": 2,
+                "line_range": [
+                  43,
+                  43
+                ],
+                "metadata": {},
+                "node_id": "block_16",
+                "node_type": "paragraph",
+                "parent_id": "sec_7"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "When thinking about a large language model input and output, a text prompt (sometimes accompanied by other modalities such as image prompts) is the input the model uses to predict a specific output. You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt. However, crafting the most effective prompt can be complicated. Many aspects of your prompt affect its efficacy: the model you use, the model's training data, the model configurations, your word-choice, style and tone, structure, and context all matter. Therefore, prompt engineering is an iterative process. Inadequate prompts can lead to ambiguous, inaccurate responses, and can hinder the model's ability to provide meaningful output.",
+                    "heading_path": [
+                      "Table of contents",
+                      "Introduction"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      47,
+                      47
+                    ],
+                    "metadata": {},
+                    "node_id": "block_17",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_8"
+                  },
+                  {
+                    "children": [],
+                    "content": "<table border=\"1\">\n<tr>\n<td><b>Name</b></td>\n<td colspan=\"3\">1_1_movie_classification</td>\n</tr>\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Classify movie reviews as positive, neutral or negative.</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>5</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n                Classify movie reviews as POSITIVE, NEUTRAL or NEGATIVE.<br/>\n                Review: \"Her\" is a disturbing study revealing the direction humanity is headed if AI is allowed to keep evolving, unchecked. I wish there were more movies like this masterpiece.<br/>\n                Sentiment:\n            </td>\n</tr>\n<tr>\n<td><b>Output</b></td>\n<td colspan=\"3\">POSITIVE</td>\n</tr>\n</table>",
+                    "heading_path": [
+                      "Table of contents",
+                      "Introduction"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      48,
+                      85
+                    ],
+                    "metadata": {},
+                    "node_id": "block_18",
+                    "node_type": "table",
+                    "parent_id": "sec_8"
+                  },
+                  {
+                    "children": [],
+                    "content": "Table 1. An example of zero-shot prompting",
+                    "heading_path": [
+                      "Table of contents",
+                      "Introduction"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      87,
+                      87
+                    ],
+                    "metadata": {},
+                    "node_id": "block_19",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_8"
+                  },
+                  {
+                    "children": [],
+                    "content": "When zero-shot doesn't work, you can provide demonstrations or examples in the prompt, which leads to \"one-shot\" and \"few-shot\" prompting. General prompting / zero shot",
+                    "heading_path": [
+                      "Table of contents",
+                      "Introduction"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      89,
+                      89
+                    ],
+                    "metadata": {},
+                    "node_id": "block_20",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_8"
+                  }
+                ],
+                "content": "## Introduction",
+                "heading_path": [
+                  "Table of contents",
+                  "Introduction"
+                ],
+                "level": 2,
+                "line_range": [
+                  45,
+                  89
+                ],
+                "metadata": {
+                  "title": "Introduction"
+                },
+                "node_id": "sec_8",
+                "node_type": "section",
+                "parent_id": "sec_7"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "When creating prompts for AI models, it is helpful to provide examples. These examples can help the model understand what you are asking for. Examples are especially useful when you want to steer the model to a certain output structure or pattern.",
+                    "heading_path": [
+                      "Table of contents",
+                      "One-shot & few-shot"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      93,
+                      93
+                    ],
+                    "metadata": {},
+                    "node_id": "block_21",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_9"
+                  },
+                  {
+                    "children": [],
+                    "content": "A **one-shot prompt**, provides a *single* example, hence the name one-shot. The idea is the model has an example it can imitate to best complete the task.",
+                    "heading_path": [
+                      "Table of contents",
+                      "One-shot & few-shot"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      95,
+                      95
+                    ],
+                    "metadata": {},
+                    "node_id": "block_22",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_9"
+                  },
+                  {
+                    "children": [],
+                    "content": "A **few-shot prompt** <sup>7</sup> provides *multiple* examples to the model. This approach shows the model a pattern that it needs to follow. The idea is similar to one-shot, but multiple examples of the desired pattern increases the chance the model follows the pattern.The number of examples you need for few-shot prompting depends on a few factors, including the complexity of the task, the quality of the examples, and the capabilities of the generative AI (gen AI) model you are using. As a general rule of thumb, you should use at least three to five examples for few-shot prompting. However, you may need to use more examples for more complex tasks, or you may need to use fewer due to the input length limitation of your model.",
+                    "heading_path": [
+                      "Table of contents",
+                      "One-shot & few-shot"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      97,
+                      97
+                    ],
+                    "metadata": {},
+                    "node_id": "block_23",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_9"
+                  },
+                  {
+                    "children": [],
+                    "content": "Table 2 shows a few-shot prompt example, let's use the same gemini-pro model configuration settings as before, other than increasing the token limit to accommodate the need for a longer response.",
+                    "heading_path": [
+                      "Table of contents",
+                      "One-shot & few-shot"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      99,
+                      99
+                    ],
+                    "metadata": {},
+                    "node_id": "block_24",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_9"
+                  },
+                  {
+                    "children": [],
+                    "content": "<table border=\"1\">\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Parse pizza orders to JSON</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>250</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n<p>Parse a customer's pizza order into valid JSON:</p>\n<p>EXAMPLE:</p>\n<p>I want a small pizza with cheese, tomato sauce, and pepperoni.</p>\n<p>JSON Response:</p>\n<pre>...\n{\n  \"size\": \"small\",\n  \"type\": \"normal\",\n  \"ingredients\": [\"cheese\", \"tomato sauce\", \"peperoni\"]\n}</pre>\n<p>...</p>\n<p style=\"text-align: right;\"><b>Continues next page...</b></p>\n</td>\n</tr>\n</table>",
+                    "heading_path": [
+                      "Table of contents",
+                      "One-shot & few-shot"
+                    ],
+                    "level": 3,
+                    "line_range": [
+                      101,
+                      139
+                    ],
+                    "metadata": {},
+                    "node_id": "block_25",
+                    "node_type": "table",
+                    "parent_id": "sec_9"
+                  }
+                ],
+                "content": "## One-shot & few-shot",
+                "heading_path": [
+                  "Table of contents",
+                  "One-shot & few-shot"
+                ],
+                "level": 2,
+                "line_range": [
+                  91,
+                  139
+                ],
+                "metadata": {
+                  "title": "One-shot & few-shot"
+                },
+                "node_id": "sec_9",
+                "node_type": "section",
+                "parent_id": "sec_7"
+              }
+            ],
+            "content": "# Table of contents",
+            "heading_path": [
+              "Table of contents"
+            ],
+            "level": 1,
+            "line_range": [
+              39,
+              91
+            ],
+            "metadata": {
+              "title": "Table of contents"
+            },
+            "node_id": "sec_7",
+            "node_type": "section",
+            "parent_id": "doc_root"
+          }
+        ],
+        "content": "",
+        "heading_path": [],
+        "level": 0,
+        "line_range": [
+          1,
+          139
+        ],
+        "metadata": {},
+        "node_id": "doc_root",
+        "node_type": "document",
+        "parent_id": null
+      },
+      "sec_1": {
+        "children": [
+          {
+            "children": [],
+            "content": "Author: Lee Boonstra",
+            "heading_path": [
+              "Prompt Engineering"
+            ],
+            "level": 2,
+            "line_range": [
+              3,
+              3
+            ],
+            "metadata": {},
+            "node_id": "block_1",
+            "node_type": "paragraph",
+            "parent_id": "sec_1"
+          },
+          {
+            "children": [],
+            "content": "![Google logo](a5c52eb326dc00fc9e10c45812a6fcfb_3_img.webp)The Google logo is located in the bottom left corner of the page. It consists of the word \"Google\" in its signature multi-colored font, with each letter in a different color: blue, red, yellow, blue, green, and red.![Abstract geometric shape](a5c52eb326dc00fc9e10c45812a6fcfb_4_img.webp)A large, abstract, three-dimensional geometric shape is positioned in the bottom right corner of the page. It is composed of several flat, angular faces that create a faceted, crystalline appearance. The shape is primarily light blue and purple, with some darker, shadowed areas that give it depth and a sense of volume. The lighting appears to come from the upper left, casting shadows that emphasize its three-dimensional form.",
+            "heading_path": [
+              "Prompt Engineering"
+            ],
+            "level": 2,
+            "line_range": [
+              5,
+              5
+            ],
+            "metadata": {},
+            "node_id": "block_2",
+            "node_type": "paragraph",
+            "parent_id": "sec_1"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "Michael Sherman",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Reviewers and Contributors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      10,
+                      10
+                    ],
+                    "metadata": {},
+                    "node_id": "block_3",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_3"
+                  },
+                  {
+                    "children": [],
+                    "content": "Yuan Cao",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Reviewers and Contributors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      12,
+                      12
+                    ],
+                    "metadata": {},
+                    "node_id": "block_4",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_3"
+                  },
+                  {
+                    "children": [],
+                    "content": "Erick Armbrust",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Reviewers and Contributors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      14,
+                      14
+                    ],
+                    "metadata": {},
+                    "node_id": "block_5",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_3"
+                  },
+                  {
+                    "children": [],
+                    "content": "Anant Nawalgaria",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Reviewers and Contributors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      16,
+                      16
+                    ],
+                    "metadata": {},
+                    "node_id": "block_6",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_3"
+                  },
+                  {
+                    "children": [],
+                    "content": "Antonio Gulli",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Reviewers and Contributors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      18,
+                      18
+                    ],
+                    "metadata": {},
+                    "node_id": "block_7",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_3"
+                  },
+                  {
+                    "children": [],
+                    "content": "Simone Cammel",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Reviewers and Contributors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      20,
+                      20
+                    ],
+                    "metadata": {},
+                    "node_id": "block_8",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_3"
+                  }
+                ],
+                "content": "### Reviewers and Contributors",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Reviewers and Contributors"
+                ],
+                "level": 3,
+                "line_range": [
+                  8,
+                  20
+                ],
+                "metadata": {
+                  "title": "Reviewers and Contributors"
+                },
+                "node_id": "sec_3",
+                "node_type": "section",
+                "parent_id": "sec_2"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "Antonio Gulli",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Curators and Editors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      24,
+                      24
+                    ],
+                    "metadata": {},
+                    "node_id": "block_9",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_4"
+                  },
+                  {
+                    "children": [],
+                    "content": "Anant Nawalgaria",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Curators and Editors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      26,
+                      26
+                    ],
+                    "metadata": {},
+                    "node_id": "block_10",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_4"
+                  },
+                  {
+                    "children": [],
+                    "content": "Grace Mollison",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Curators and Editors"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      28,
+                      28
+                    ],
+                    "metadata": {},
+                    "node_id": "block_11",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_4"
+                  }
+                ],
+                "content": "### Curators and Editors",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Curators and Editors"
+                ],
+                "level": 3,
+                "line_range": [
+                  22,
+                  28
+                ],
+                "metadata": {
+                  "title": "Curators and Editors"
+                },
+                "node_id": "sec_4",
+                "node_type": "section",
+                "parent_id": "sec_2"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "Joey Haymaker",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Technical Writer"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      32,
+                      32
+                    ],
+                    "metadata": {},
+                    "node_id": "block_12",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_5"
+                  }
+                ],
+                "content": "### Technical Writer",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Technical Writer"
+                ],
+                "level": 3,
+                "line_range": [
+                  30,
+                  32
+                ],
+                "metadata": {
+                  "title": "Technical Writer"
+                },
+                "node_id": "sec_5",
+                "node_type": "section",
+                "parent_id": "sec_2"
+              },
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "content": "Michael Lanning",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Designer"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      36,
+                      36
+                    ],
+                    "metadata": {},
+                    "node_id": "block_13",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_6"
+                  },
+                  {
+                    "children": [],
+                    "content": "![A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.](28909e351d3b81147ec2d5f6aa2f5253_18_img.webp)A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.",
+                    "heading_path": [
+                      "Prompt Engineering",
+                      "Acknowledgements",
+                      "Designer"
+                    ],
+                    "level": 4,
+                    "line_range": [
+                      38,
+                      38
+                    ],
+                    "metadata": {},
+                    "node_id": "block_14",
+                    "node_type": "paragraph",
+                    "parent_id": "sec_6"
+                  }
+                ],
+                "content": "### Designer",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Designer"
+                ],
+                "level": 3,
+                "line_range": [
+                  34,
+                  38
+                ],
+                "metadata": {
+                  "title": "Designer"
+                },
+                "node_id": "sec_6",
+                "node_type": "section",
+                "parent_id": "sec_2"
+              }
+            ],
+            "content": "## Acknowledgements",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements"
+            ],
+            "level": 2,
+            "line_range": [
+              6,
+              34
+            ],
+            "metadata": {
+              "title": "Acknowledgements"
+            },
+            "node_id": "sec_2",
+            "node_type": "section",
+            "parent_id": "sec_1"
+          }
+        ],
+        "content": "# Prompt Engineering",
+        "heading_path": [
+          "Prompt Engineering"
+        ],
+        "level": 1,
+        "line_range": [
+          1,
+          6
+        ],
+        "metadata": {
+          "title": "Prompt Engineering"
+        },
+        "node_id": "sec_1",
+        "node_type": "section",
+        "parent_id": "doc_root"
+      },
+      "sec_2": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "Michael Sherman",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Reviewers and Contributors"
+                ],
+                "level": 4,
+                "line_range": [
+                  10,
+                  10
+                ],
+                "metadata": {},
+                "node_id": "block_3",
+                "node_type": "paragraph",
+                "parent_id": "sec_3"
+              },
+              {
+                "children": [],
+                "content": "Yuan Cao",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Reviewers and Contributors"
+                ],
+                "level": 4,
+                "line_range": [
+                  12,
+                  12
+                ],
+                "metadata": {},
+                "node_id": "block_4",
+                "node_type": "paragraph",
+                "parent_id": "sec_3"
+              },
+              {
+                "children": [],
+                "content": "Erick Armbrust",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Reviewers and Contributors"
+                ],
+                "level": 4,
+                "line_range": [
+                  14,
+                  14
+                ],
+                "metadata": {},
+                "node_id": "block_5",
+                "node_type": "paragraph",
+                "parent_id": "sec_3"
+              },
+              {
+                "children": [],
+                "content": "Anant Nawalgaria",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Reviewers and Contributors"
+                ],
+                "level": 4,
+                "line_range": [
+                  16,
+                  16
+                ],
+                "metadata": {},
+                "node_id": "block_6",
+                "node_type": "paragraph",
+                "parent_id": "sec_3"
+              },
+              {
+                "children": [],
+                "content": "Antonio Gulli",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Reviewers and Contributors"
+                ],
+                "level": 4,
+                "line_range": [
+                  18,
+                  18
+                ],
+                "metadata": {},
+                "node_id": "block_7",
+                "node_type": "paragraph",
+                "parent_id": "sec_3"
+              },
+              {
+                "children": [],
+                "content": "Simone Cammel",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Reviewers and Contributors"
+                ],
+                "level": 4,
+                "line_range": [
+                  20,
+                  20
+                ],
+                "metadata": {},
+                "node_id": "block_8",
+                "node_type": "paragraph",
+                "parent_id": "sec_3"
+              }
+            ],
+            "content": "### Reviewers and Contributors",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Reviewers and Contributors"
+            ],
+            "level": 3,
+            "line_range": [
+              8,
+              20
+            ],
+            "metadata": {
+              "title": "Reviewers and Contributors"
+            },
+            "node_id": "sec_3",
+            "node_type": "section",
+            "parent_id": "sec_2"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "Antonio Gulli",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Curators and Editors"
+                ],
+                "level": 4,
+                "line_range": [
+                  24,
+                  24
+                ],
+                "metadata": {},
+                "node_id": "block_9",
+                "node_type": "paragraph",
+                "parent_id": "sec_4"
+              },
+              {
+                "children": [],
+                "content": "Anant Nawalgaria",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Curators and Editors"
+                ],
+                "level": 4,
+                "line_range": [
+                  26,
+                  26
+                ],
+                "metadata": {},
+                "node_id": "block_10",
+                "node_type": "paragraph",
+                "parent_id": "sec_4"
+              },
+              {
+                "children": [],
+                "content": "Grace Mollison",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Curators and Editors"
+                ],
+                "level": 4,
+                "line_range": [
+                  28,
+                  28
+                ],
+                "metadata": {},
+                "node_id": "block_11",
+                "node_type": "paragraph",
+                "parent_id": "sec_4"
+              }
+            ],
+            "content": "### Curators and Editors",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Curators and Editors"
+            ],
+            "level": 3,
+            "line_range": [
+              22,
+              28
+            ],
+            "metadata": {
+              "title": "Curators and Editors"
+            },
+            "node_id": "sec_4",
+            "node_type": "section",
+            "parent_id": "sec_2"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "Joey Haymaker",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Technical Writer"
+                ],
+                "level": 4,
+                "line_range": [
+                  32,
+                  32
+                ],
+                "metadata": {},
+                "node_id": "block_12",
+                "node_type": "paragraph",
+                "parent_id": "sec_5"
+              }
+            ],
+            "content": "### Technical Writer",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Technical Writer"
+            ],
+            "level": 3,
+            "line_range": [
+              30,
+              32
+            ],
+            "metadata": {
+              "title": "Technical Writer"
+            },
+            "node_id": "sec_5",
+            "node_type": "section",
+            "parent_id": "sec_2"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "Michael Lanning",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Designer"
+                ],
+                "level": 4,
+                "line_range": [
+                  36,
+                  36
+                ],
+                "metadata": {},
+                "node_id": "block_13",
+                "node_type": "paragraph",
+                "parent_id": "sec_6"
+              },
+              {
+                "children": [],
+                "content": "![A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.](28909e351d3b81147ec2d5f6aa2f5253_18_img.webp)A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.",
+                "heading_path": [
+                  "Prompt Engineering",
+                  "Acknowledgements",
+                  "Designer"
+                ],
+                "level": 4,
+                "line_range": [
+                  38,
+                  38
+                ],
+                "metadata": {},
+                "node_id": "block_14",
+                "node_type": "paragraph",
+                "parent_id": "sec_6"
+              }
+            ],
+            "content": "### Designer",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Designer"
+            ],
+            "level": 3,
+            "line_range": [
+              34,
+              38
+            ],
+            "metadata": {
+              "title": "Designer"
+            },
+            "node_id": "sec_6",
+            "node_type": "section",
+            "parent_id": "sec_2"
+          }
+        ],
+        "content": "## Acknowledgements",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements"
+        ],
+        "level": 2,
+        "line_range": [
+          6,
+          34
+        ],
+        "metadata": {
+          "title": "Acknowledgements"
+        },
+        "node_id": "sec_2",
+        "node_type": "section",
+        "parent_id": "sec_1"
+      },
+      "sec_3": {
+        "children": [
+          {
+            "children": [],
+            "content": "Michael Sherman",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Reviewers and Contributors"
+            ],
+            "level": 4,
+            "line_range": [
+              10,
+              10
+            ],
+            "metadata": {},
+            "node_id": "block_3",
+            "node_type": "paragraph",
+            "parent_id": "sec_3"
+          },
+          {
+            "children": [],
+            "content": "Yuan Cao",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Reviewers and Contributors"
+            ],
+            "level": 4,
+            "line_range": [
+              12,
+              12
+            ],
+            "metadata": {},
+            "node_id": "block_4",
+            "node_type": "paragraph",
+            "parent_id": "sec_3"
+          },
+          {
+            "children": [],
+            "content": "Erick Armbrust",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Reviewers and Contributors"
+            ],
+            "level": 4,
+            "line_range": [
+              14,
+              14
+            ],
+            "metadata": {},
+            "node_id": "block_5",
+            "node_type": "paragraph",
+            "parent_id": "sec_3"
+          },
+          {
+            "children": [],
+            "content": "Anant Nawalgaria",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Reviewers and Contributors"
+            ],
+            "level": 4,
+            "line_range": [
+              16,
+              16
+            ],
+            "metadata": {},
+            "node_id": "block_6",
+            "node_type": "paragraph",
+            "parent_id": "sec_3"
+          },
+          {
+            "children": [],
+            "content": "Antonio Gulli",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Reviewers and Contributors"
+            ],
+            "level": 4,
+            "line_range": [
+              18,
+              18
+            ],
+            "metadata": {},
+            "node_id": "block_7",
+            "node_type": "paragraph",
+            "parent_id": "sec_3"
+          },
+          {
+            "children": [],
+            "content": "Simone Cammel",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Reviewers and Contributors"
+            ],
+            "level": 4,
+            "line_range": [
+              20,
+              20
+            ],
+            "metadata": {},
+            "node_id": "block_8",
+            "node_type": "paragraph",
+            "parent_id": "sec_3"
+          }
+        ],
+        "content": "### Reviewers and Contributors",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Reviewers and Contributors"
+        ],
+        "level": 3,
+        "line_range": [
+          8,
+          20
+        ],
+        "metadata": {
+          "title": "Reviewers and Contributors"
+        },
+        "node_id": "sec_3",
+        "node_type": "section",
+        "parent_id": "sec_2"
+      },
+      "sec_4": {
+        "children": [
+          {
+            "children": [],
+            "content": "Antonio Gulli",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Curators and Editors"
+            ],
+            "level": 4,
+            "line_range": [
+              24,
+              24
+            ],
+            "metadata": {},
+            "node_id": "block_9",
+            "node_type": "paragraph",
+            "parent_id": "sec_4"
+          },
+          {
+            "children": [],
+            "content": "Anant Nawalgaria",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Curators and Editors"
+            ],
+            "level": 4,
+            "line_range": [
+              26,
+              26
+            ],
+            "metadata": {},
+            "node_id": "block_10",
+            "node_type": "paragraph",
+            "parent_id": "sec_4"
+          },
+          {
+            "children": [],
+            "content": "Grace Mollison",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Curators and Editors"
+            ],
+            "level": 4,
+            "line_range": [
+              28,
+              28
+            ],
+            "metadata": {},
+            "node_id": "block_11",
+            "node_type": "paragraph",
+            "parent_id": "sec_4"
+          }
+        ],
+        "content": "### Curators and Editors",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Curators and Editors"
+        ],
+        "level": 3,
+        "line_range": [
+          22,
+          28
+        ],
+        "metadata": {
+          "title": "Curators and Editors"
+        },
+        "node_id": "sec_4",
+        "node_type": "section",
+        "parent_id": "sec_2"
+      },
+      "sec_5": {
+        "children": [
+          {
+            "children": [],
+            "content": "Joey Haymaker",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Technical Writer"
+            ],
+            "level": 4,
+            "line_range": [
+              32,
+              32
+            ],
+            "metadata": {},
+            "node_id": "block_12",
+            "node_type": "paragraph",
+            "parent_id": "sec_5"
+          }
+        ],
+        "content": "### Technical Writer",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Technical Writer"
+        ],
+        "level": 3,
+        "line_range": [
+          30,
+          32
+        ],
+        "metadata": {
+          "title": "Technical Writer"
+        },
+        "node_id": "sec_5",
+        "node_type": "section",
+        "parent_id": "sec_2"
+      },
+      "sec_6": {
+        "children": [
+          {
+            "children": [],
+            "content": "Michael Lanning",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Designer"
+            ],
+            "level": 4,
+            "line_range": [
+              36,
+              36
+            ],
+            "metadata": {},
+            "node_id": "block_13",
+            "node_type": "paragraph",
+            "parent_id": "sec_6"
+          },
+          {
+            "children": [],
+            "content": "![A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.](28909e351d3b81147ec2d5f6aa2f5253_18_img.webp)A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.",
+            "heading_path": [
+              "Prompt Engineering",
+              "Acknowledgements",
+              "Designer"
+            ],
+            "level": 4,
+            "line_range": [
+              38,
+              38
+            ],
+            "metadata": {},
+            "node_id": "block_14",
+            "node_type": "paragraph",
+            "parent_id": "sec_6"
+          }
+        ],
+        "content": "### Designer",
+        "heading_path": [
+          "Prompt Engineering",
+          "Acknowledgements",
+          "Designer"
+        ],
+        "level": 3,
+        "line_range": [
+          34,
+          38
+        ],
+        "metadata": {
+          "title": "Designer"
+        },
+        "node_id": "sec_6",
+        "node_type": "section",
+        "parent_id": "sec_2"
+      },
+      "sec_7": {
+        "children": [
+          {
+            "children": [],
+            "content": "<table><tr><td>Introduction .....</td><td>6</td></tr><tr><td>Prompt engineering .....</td><td>7</td></tr><tr><td>LLM output configuration .....</td><td>8</td></tr><tr><td>    Output length .....</td><td>8</td></tr><tr><td>    Sampling controls .....</td><td>9</td></tr><tr><td>        Temperature .....</td><td>9</td></tr><tr><td>        Top-K and top-P .....</td><td>10</td></tr><tr><td>        Putting it all together .....</td><td>11</td></tr><tr><td>Prompting techniques .....</td><td>12</td></tr><tr><td>    General prompting / zero shot .....</td><td>13</td></tr><tr><td>    One-shot &amp; few-shot .....</td><td>14</td></tr><tr><td>    System, contextual and role prompting .....</td><td>17</td></tr><tr><td>        System prompting .....</td><td>18</td></tr><tr><td>        Role prompting .....</td><td>21</td></tr><tr><td>        Contextual prompting .....</td><td>23</td></tr></table>",
+            "heading_path": [
+              "Table of contents"
+            ],
+            "level": 2,
+            "line_range": [
+              41,
+              41
+            ],
+            "metadata": {},
+            "node_id": "block_15",
+            "node_type": "table",
+            "parent_id": "sec_7"
+          },
+          {
+            "children": [],
+            "content": "![Abstract geometric shape in the bottom left corner.](34d10c78614fa5ce7dc5619bf8917918_3_img.webp)An abstract geometric shape in the bottom left corner of the page. It consists of several overlapping, flat, polygonal planes in shades of blue, purple, and white, creating a faceted, crystalline appearance. The shape is partially cut off by the edge of the page.You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt.",
+            "heading_path": [
+              "Table of contents"
+            ],
+            "level": 2,
+            "line_range": [
+              43,
+              43
+            ],
+            "metadata": {},
+            "node_id": "block_16",
+            "node_type": "paragraph",
+            "parent_id": "sec_7"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "When thinking about a large language model input and output, a text prompt (sometimes accompanied by other modalities such as image prompts) is the input the model uses to predict a specific output. You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt. However, crafting the most effective prompt can be complicated. Many aspects of your prompt affect its efficacy: the model you use, the model's training data, the model configurations, your word-choice, style and tone, structure, and context all matter. Therefore, prompt engineering is an iterative process. Inadequate prompts can lead to ambiguous, inaccurate responses, and can hinder the model's ability to provide meaningful output.",
+                "heading_path": [
+                  "Table of contents",
+                  "Introduction"
+                ],
+                "level": 3,
+                "line_range": [
+                  47,
+                  47
+                ],
+                "metadata": {},
+                "node_id": "block_17",
+                "node_type": "paragraph",
+                "parent_id": "sec_8"
+              },
+              {
+                "children": [],
+                "content": "<table border=\"1\">\n<tr>\n<td><b>Name</b></td>\n<td colspan=\"3\">1_1_movie_classification</td>\n</tr>\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Classify movie reviews as positive, neutral or negative.</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>5</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n                Classify movie reviews as POSITIVE, NEUTRAL or NEGATIVE.<br/>\n                Review: \"Her\" is a disturbing study revealing the direction humanity is headed if AI is allowed to keep evolving, unchecked. I wish there were more movies like this masterpiece.<br/>\n                Sentiment:\n            </td>\n</tr>\n<tr>\n<td><b>Output</b></td>\n<td colspan=\"3\">POSITIVE</td>\n</tr>\n</table>",
+                "heading_path": [
+                  "Table of contents",
+                  "Introduction"
+                ],
+                "level": 3,
+                "line_range": [
+                  48,
+                  85
+                ],
+                "metadata": {},
+                "node_id": "block_18",
+                "node_type": "table",
+                "parent_id": "sec_8"
+              },
+              {
+                "children": [],
+                "content": "Table 1. An example of zero-shot prompting",
+                "heading_path": [
+                  "Table of contents",
+                  "Introduction"
+                ],
+                "level": 3,
+                "line_range": [
+                  87,
+                  87
+                ],
+                "metadata": {},
+                "node_id": "block_19",
+                "node_type": "paragraph",
+                "parent_id": "sec_8"
+              },
+              {
+                "children": [],
+                "content": "When zero-shot doesn't work, you can provide demonstrations or examples in the prompt, which leads to \"one-shot\" and \"few-shot\" prompting. General prompting / zero shot",
+                "heading_path": [
+                  "Table of contents",
+                  "Introduction"
+                ],
+                "level": 3,
+                "line_range": [
+                  89,
+                  89
+                ],
+                "metadata": {},
+                "node_id": "block_20",
+                "node_type": "paragraph",
+                "parent_id": "sec_8"
+              }
+            ],
+            "content": "## Introduction",
+            "heading_path": [
+              "Table of contents",
+              "Introduction"
+            ],
+            "level": 2,
+            "line_range": [
+              45,
+              89
+            ],
+            "metadata": {
+              "title": "Introduction"
+            },
+            "node_id": "sec_8",
+            "node_type": "section",
+            "parent_id": "sec_7"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "content": "When creating prompts for AI models, it is helpful to provide examples. These examples can help the model understand what you are asking for. Examples are especially useful when you want to steer the model to a certain output structure or pattern.",
+                "heading_path": [
+                  "Table of contents",
+                  "One-shot & few-shot"
+                ],
+                "level": 3,
+                "line_range": [
+                  93,
+                  93
+                ],
+                "metadata": {},
+                "node_id": "block_21",
+                "node_type": "paragraph",
+                "parent_id": "sec_9"
+              },
+              {
+                "children": [],
+                "content": "A **one-shot prompt**, provides a *single* example, hence the name one-shot. The idea is the model has an example it can imitate to best complete the task.",
+                "heading_path": [
+                  "Table of contents",
+                  "One-shot & few-shot"
+                ],
+                "level": 3,
+                "line_range": [
+                  95,
+                  95
+                ],
+                "metadata": {},
+                "node_id": "block_22",
+                "node_type": "paragraph",
+                "parent_id": "sec_9"
+              },
+              {
+                "children": [],
+                "content": "A **few-shot prompt** <sup>7</sup> provides *multiple* examples to the model. This approach shows the model a pattern that it needs to follow. The idea is similar to one-shot, but multiple examples of the desired pattern increases the chance the model follows the pattern.The number of examples you need for few-shot prompting depends on a few factors, including the complexity of the task, the quality of the examples, and the capabilities of the generative AI (gen AI) model you are using. As a general rule of thumb, you should use at least three to five examples for few-shot prompting. However, you may need to use more examples for more complex tasks, or you may need to use fewer due to the input length limitation of your model.",
+                "heading_path": [
+                  "Table of contents",
+                  "One-shot & few-shot"
+                ],
+                "level": 3,
+                "line_range": [
+                  97,
+                  97
+                ],
+                "metadata": {},
+                "node_id": "block_23",
+                "node_type": "paragraph",
+                "parent_id": "sec_9"
+              },
+              {
+                "children": [],
+                "content": "Table 2 shows a few-shot prompt example, let's use the same gemini-pro model configuration settings as before, other than increasing the token limit to accommodate the need for a longer response.",
+                "heading_path": [
+                  "Table of contents",
+                  "One-shot & few-shot"
+                ],
+                "level": 3,
+                "line_range": [
+                  99,
+                  99
+                ],
+                "metadata": {},
+                "node_id": "block_24",
+                "node_type": "paragraph",
+                "parent_id": "sec_9"
+              },
+              {
+                "children": [],
+                "content": "<table border=\"1\">\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Parse pizza orders to JSON</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>250</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n<p>Parse a customer's pizza order into valid JSON:</p>\n<p>EXAMPLE:</p>\n<p>I want a small pizza with cheese, tomato sauce, and pepperoni.</p>\n<p>JSON Response:</p>\n<pre>...\n{\n  \"size\": \"small\",\n  \"type\": \"normal\",\n  \"ingredients\": [\"cheese\", \"tomato sauce\", \"peperoni\"]\n}</pre>\n<p>...</p>\n<p style=\"text-align: right;\"><b>Continues next page...</b></p>\n</td>\n</tr>\n</table>",
+                "heading_path": [
+                  "Table of contents",
+                  "One-shot & few-shot"
+                ],
+                "level": 3,
+                "line_range": [
+                  101,
+                  139
+                ],
+                "metadata": {},
+                "node_id": "block_25",
+                "node_type": "table",
+                "parent_id": "sec_9"
+              }
+            ],
+            "content": "## One-shot & few-shot",
+            "heading_path": [
+              "Table of contents",
+              "One-shot & few-shot"
+            ],
+            "level": 2,
+            "line_range": [
+              91,
+              139
+            ],
+            "metadata": {
+              "title": "One-shot & few-shot"
+            },
+            "node_id": "sec_9",
+            "node_type": "section",
+            "parent_id": "sec_7"
+          }
+        ],
+        "content": "# Table of contents",
+        "heading_path": [
+          "Table of contents"
+        ],
+        "level": 1,
+        "line_range": [
+          39,
+          91
+        ],
+        "metadata": {
+          "title": "Table of contents"
+        },
+        "node_id": "sec_7",
+        "node_type": "section",
+        "parent_id": "doc_root"
+      },
+      "sec_8": {
+        "children": [
+          {
+            "children": [],
+            "content": "When thinking about a large language model input and output, a text prompt (sometimes accompanied by other modalities such as image prompts) is the input the model uses to predict a specific output. You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt. However, crafting the most effective prompt can be complicated. Many aspects of your prompt affect its efficacy: the model you use, the model's training data, the model configurations, your word-choice, style and tone, structure, and context all matter. Therefore, prompt engineering is an iterative process. Inadequate prompts can lead to ambiguous, inaccurate responses, and can hinder the model's ability to provide meaningful output.",
+            "heading_path": [
+              "Table of contents",
+              "Introduction"
+            ],
+            "level": 3,
+            "line_range": [
+              47,
+              47
+            ],
+            "metadata": {},
+            "node_id": "block_17",
+            "node_type": "paragraph",
+            "parent_id": "sec_8"
+          },
+          {
+            "children": [],
+            "content": "<table border=\"1\">\n<tr>\n<td><b>Name</b></td>\n<td colspan=\"3\">1_1_movie_classification</td>\n</tr>\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Classify movie reviews as positive, neutral or negative.</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>5</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n                Classify movie reviews as POSITIVE, NEUTRAL or NEGATIVE.<br/>\n                Review: \"Her\" is a disturbing study revealing the direction humanity is headed if AI is allowed to keep evolving, unchecked. I wish there were more movies like this masterpiece.<br/>\n                Sentiment:\n            </td>\n</tr>\n<tr>\n<td><b>Output</b></td>\n<td colspan=\"3\">POSITIVE</td>\n</tr>\n</table>",
+            "heading_path": [
+              "Table of contents",
+              "Introduction"
+            ],
+            "level": 3,
+            "line_range": [
+              48,
+              85
+            ],
+            "metadata": {},
+            "node_id": "block_18",
+            "node_type": "table",
+            "parent_id": "sec_8"
+          },
+          {
+            "children": [],
+            "content": "Table 1. An example of zero-shot prompting",
+            "heading_path": [
+              "Table of contents",
+              "Introduction"
+            ],
+            "level": 3,
+            "line_range": [
+              87,
+              87
+            ],
+            "metadata": {},
+            "node_id": "block_19",
+            "node_type": "paragraph",
+            "parent_id": "sec_8"
+          },
+          {
+            "children": [],
+            "content": "When zero-shot doesn't work, you can provide demonstrations or examples in the prompt, which leads to \"one-shot\" and \"few-shot\" prompting. General prompting / zero shot",
+            "heading_path": [
+              "Table of contents",
+              "Introduction"
+            ],
+            "level": 3,
+            "line_range": [
+              89,
+              89
+            ],
+            "metadata": {},
+            "node_id": "block_20",
+            "node_type": "paragraph",
+            "parent_id": "sec_8"
+          }
+        ],
+        "content": "## Introduction",
+        "heading_path": [
+          "Table of contents",
+          "Introduction"
+        ],
+        "level": 2,
+        "line_range": [
+          45,
+          89
+        ],
+        "metadata": {
+          "title": "Introduction"
+        },
+        "node_id": "sec_8",
+        "node_type": "section",
+        "parent_id": "sec_7"
+      },
+      "sec_9": {
+        "children": [
+          {
+            "children": [],
+            "content": "When creating prompts for AI models, it is helpful to provide examples. These examples can help the model understand what you are asking for. Examples are especially useful when you want to steer the model to a certain output structure or pattern.",
+            "heading_path": [
+              "Table of contents",
+              "One-shot & few-shot"
+            ],
+            "level": 3,
+            "line_range": [
+              93,
+              93
+            ],
+            "metadata": {},
+            "node_id": "block_21",
+            "node_type": "paragraph",
+            "parent_id": "sec_9"
+          },
+          {
+            "children": [],
+            "content": "A **one-shot prompt**, provides a *single* example, hence the name one-shot. The idea is the model has an example it can imitate to best complete the task.",
+            "heading_path": [
+              "Table of contents",
+              "One-shot & few-shot"
+            ],
+            "level": 3,
+            "line_range": [
+              95,
+              95
+            ],
+            "metadata": {},
+            "node_id": "block_22",
+            "node_type": "paragraph",
+            "parent_id": "sec_9"
+          },
+          {
+            "children": [],
+            "content": "A **few-shot prompt** <sup>7</sup> provides *multiple* examples to the model. This approach shows the model a pattern that it needs to follow. The idea is similar to one-shot, but multiple examples of the desired pattern increases the chance the model follows the pattern.The number of examples you need for few-shot prompting depends on a few factors, including the complexity of the task, the quality of the examples, and the capabilities of the generative AI (gen AI) model you are using. As a general rule of thumb, you should use at least three to five examples for few-shot prompting. However, you may need to use more examples for more complex tasks, or you may need to use fewer due to the input length limitation of your model.",
+            "heading_path": [
+              "Table of contents",
+              "One-shot & few-shot"
+            ],
+            "level": 3,
+            "line_range": [
+              97,
+              97
+            ],
+            "metadata": {},
+            "node_id": "block_23",
+            "node_type": "paragraph",
+            "parent_id": "sec_9"
+          },
+          {
+            "children": [],
+            "content": "Table 2 shows a few-shot prompt example, let's use the same gemini-pro model configuration settings as before, other than increasing the token limit to accommodate the need for a longer response.",
+            "heading_path": [
+              "Table of contents",
+              "One-shot & few-shot"
+            ],
+            "level": 3,
+            "line_range": [
+              99,
+              99
+            ],
+            "metadata": {},
+            "node_id": "block_24",
+            "node_type": "paragraph",
+            "parent_id": "sec_9"
+          },
+          {
+            "children": [],
+            "content": "<table border=\"1\">\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Parse pizza orders to JSON</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>250</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n<p>Parse a customer's pizza order into valid JSON:</p>\n<p>EXAMPLE:</p>\n<p>I want a small pizza with cheese, tomato sauce, and pepperoni.</p>\n<p>JSON Response:</p>\n<pre>...\n{\n  \"size\": \"small\",\n  \"type\": \"normal\",\n  \"ingredients\": [\"cheese\", \"tomato sauce\", \"peperoni\"]\n}</pre>\n<p>...</p>\n<p style=\"text-align: right;\"><b>Continues next page...</b></p>\n</td>\n</tr>\n</table>",
+            "heading_path": [
+              "Table of contents",
+              "One-shot & few-shot"
+            ],
+            "level": 3,
+            "line_range": [
+              101,
+              139
+            ],
+            "metadata": {},
+            "node_id": "block_25",
+            "node_type": "table",
+            "parent_id": "sec_9"
+          }
+        ],
+        "content": "## One-shot & few-shot",
+        "heading_path": [
+          "Table of contents",
+          "One-shot & few-shot"
+        ],
+        "level": 2,
+        "line_range": [
+          91,
+          139
+        ],
+        "metadata": {
+          "title": "One-shot & few-shot"
+        },
+        "node_id": "sec_9",
+        "node_type": "section",
+        "parent_id": "sec_7"
+      }
+    },
+    "ordered_block_ids": [
+      "block_1",
+      "block_2",
+      "block_3",
+      "block_4",
+      "block_5",
+      "block_6",
+      "block_7",
+      "block_8",
+      "block_9",
+      "block_10",
+      "block_11",
+      "block_12",
+      "block_13",
+      "block_14",
+      "block_15",
+      "block_16",
+      "block_17",
+      "block_18",
+      "block_19",
+      "block_20",
+      "block_21",
+      "block_22",
+      "block_23",
+      "block_24",
+      "block_25"
+    ],
+    "structured_blocks": [],
+    "tree": {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "content": "Author: Lee Boonstra",
+              "heading_path": [
+                "Prompt Engineering"
+              ],
+              "level": 2,
+              "line_range": [
+                3,
+                3
+              ],
+              "metadata": {},
+              "node_id": "block_1",
+              "node_type": "paragraph",
+              "parent_id": "sec_1"
+            },
+            {
+              "children": [],
+              "content": "![Google logo](a5c52eb326dc00fc9e10c45812a6fcfb_3_img.webp)The Google logo is located in the bottom left corner of the page. It consists of the word \"Google\" in its signature multi-colored font, with each letter in a different color: blue, red, yellow, blue, green, and red.![Abstract geometric shape](a5c52eb326dc00fc9e10c45812a6fcfb_4_img.webp)A large, abstract, three-dimensional geometric shape is positioned in the bottom right corner of the page. It is composed of several flat, angular faces that create a faceted, crystalline appearance. The shape is primarily light blue and purple, with some darker, shadowed areas that give it depth and a sense of volume. The lighting appears to come from the upper left, casting shadows that emphasize its three-dimensional form.",
+              "heading_path": [
+                "Prompt Engineering"
+              ],
+              "level": 2,
+              "line_range": [
+                5,
+                5
+              ],
+              "metadata": {},
+              "node_id": "block_2",
+              "node_type": "paragraph",
+              "parent_id": "sec_1"
+            },
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "Michael Sherman",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Reviewers and Contributors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        10,
+                        10
+                      ],
+                      "metadata": {},
+                      "node_id": "block_3",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_3"
+                    },
+                    {
+                      "children": [],
+                      "content": "Yuan Cao",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Reviewers and Contributors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        12,
+                        12
+                      ],
+                      "metadata": {},
+                      "node_id": "block_4",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_3"
+                    },
+                    {
+                      "children": [],
+                      "content": "Erick Armbrust",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Reviewers and Contributors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        14,
+                        14
+                      ],
+                      "metadata": {},
+                      "node_id": "block_5",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_3"
+                    },
+                    {
+                      "children": [],
+                      "content": "Anant Nawalgaria",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Reviewers and Contributors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        16,
+                        16
+                      ],
+                      "metadata": {},
+                      "node_id": "block_6",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_3"
+                    },
+                    {
+                      "children": [],
+                      "content": "Antonio Gulli",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Reviewers and Contributors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        18,
+                        18
+                      ],
+                      "metadata": {},
+                      "node_id": "block_7",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_3"
+                    },
+                    {
+                      "children": [],
+                      "content": "Simone Cammel",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Reviewers and Contributors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        20,
+                        20
+                      ],
+                      "metadata": {},
+                      "node_id": "block_8",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_3"
+                    }
+                  ],
+                  "content": "### Reviewers and Contributors",
+                  "heading_path": [
+                    "Prompt Engineering",
+                    "Acknowledgements",
+                    "Reviewers and Contributors"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    8,
+                    20
+                  ],
+                  "metadata": {
+                    "title": "Reviewers and Contributors"
+                  },
+                  "node_id": "sec_3",
+                  "node_type": "section",
+                  "parent_id": "sec_2"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "Antonio Gulli",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Curators and Editors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        24,
+                        24
+                      ],
+                      "metadata": {},
+                      "node_id": "block_9",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_4"
+                    },
+                    {
+                      "children": [],
+                      "content": "Anant Nawalgaria",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Curators and Editors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        26,
+                        26
+                      ],
+                      "metadata": {},
+                      "node_id": "block_10",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_4"
+                    },
+                    {
+                      "children": [],
+                      "content": "Grace Mollison",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Curators and Editors"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        28,
+                        28
+                      ],
+                      "metadata": {},
+                      "node_id": "block_11",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_4"
+                    }
+                  ],
+                  "content": "### Curators and Editors",
+                  "heading_path": [
+                    "Prompt Engineering",
+                    "Acknowledgements",
+                    "Curators and Editors"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    22,
+                    28
+                  ],
+                  "metadata": {
+                    "title": "Curators and Editors"
+                  },
+                  "node_id": "sec_4",
+                  "node_type": "section",
+                  "parent_id": "sec_2"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "Joey Haymaker",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Technical Writer"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        32,
+                        32
+                      ],
+                      "metadata": {},
+                      "node_id": "block_12",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_5"
+                    }
+                  ],
+                  "content": "### Technical Writer",
+                  "heading_path": [
+                    "Prompt Engineering",
+                    "Acknowledgements",
+                    "Technical Writer"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    30,
+                    32
+                  ],
+                  "metadata": {
+                    "title": "Technical Writer"
+                  },
+                  "node_id": "sec_5",
+                  "node_type": "section",
+                  "parent_id": "sec_2"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "content": "Michael Lanning",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Designer"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        36,
+                        36
+                      ],
+                      "metadata": {},
+                      "node_id": "block_13",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_6"
+                    },
+                    {
+                      "children": [],
+                      "content": "![A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.](28909e351d3b81147ec2d5f6aa2f5253_18_img.webp)A large, stylized, faceted geometric shape resembling a crystal or gemstone, rendered in shades of blue, purple, and white, positioned on the right side of the page.",
+                      "heading_path": [
+                        "Prompt Engineering",
+                        "Acknowledgements",
+                        "Designer"
+                      ],
+                      "level": 4,
+                      "line_range": [
+                        38,
+                        38
+                      ],
+                      "metadata": {},
+                      "node_id": "block_14",
+                      "node_type": "paragraph",
+                      "parent_id": "sec_6"
+                    }
+                  ],
+                  "content": "### Designer",
+                  "heading_path": [
+                    "Prompt Engineering",
+                    "Acknowledgements",
+                    "Designer"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    34,
+                    38
+                  ],
+                  "metadata": {
+                    "title": "Designer"
+                  },
+                  "node_id": "sec_6",
+                  "node_type": "section",
+                  "parent_id": "sec_2"
+                }
+              ],
+              "content": "## Acknowledgements",
+              "heading_path": [
+                "Prompt Engineering",
+                "Acknowledgements"
+              ],
+              "level": 2,
+              "line_range": [
+                6,
+                34
+              ],
+              "metadata": {
+                "title": "Acknowledgements"
+              },
+              "node_id": "sec_2",
+              "node_type": "section",
+              "parent_id": "sec_1"
+            }
+          ],
+          "content": "# Prompt Engineering",
+          "heading_path": [
+            "Prompt Engineering"
+          ],
+          "level": 1,
+          "line_range": [
+            1,
+            6
+          ],
+          "metadata": {
+            "title": "Prompt Engineering"
+          },
+          "node_id": "sec_1",
+          "node_type": "section",
+          "parent_id": "doc_root"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "content": "<table><tr><td>Introduction .....</td><td>6</td></tr><tr><td>Prompt engineering .....</td><td>7</td></tr><tr><td>LLM output configuration .....</td><td>8</td></tr><tr><td>    Output length .....</td><td>8</td></tr><tr><td>    Sampling controls .....</td><td>9</td></tr><tr><td>        Temperature .....</td><td>9</td></tr><tr><td>        Top-K and top-P .....</td><td>10</td></tr><tr><td>        Putting it all together .....</td><td>11</td></tr><tr><td>Prompting techniques .....</td><td>12</td></tr><tr><td>    General prompting / zero shot .....</td><td>13</td></tr><tr><td>    One-shot &amp; few-shot .....</td><td>14</td></tr><tr><td>    System, contextual and role prompting .....</td><td>17</td></tr><tr><td>        System prompting .....</td><td>18</td></tr><tr><td>        Role prompting .....</td><td>21</td></tr><tr><td>        Contextual prompting .....</td><td>23</td></tr></table>",
+              "heading_path": [
+                "Table of contents"
+              ],
+              "level": 2,
+              "line_range": [
+                41,
+                41
+              ],
+              "metadata": {},
+              "node_id": "block_15",
+              "node_type": "table",
+              "parent_id": "sec_7"
+            },
+            {
+              "children": [],
+              "content": "![Abstract geometric shape in the bottom left corner.](34d10c78614fa5ce7dc5619bf8917918_3_img.webp)An abstract geometric shape in the bottom left corner of the page. It consists of several overlapping, flat, polygonal planes in shades of blue, purple, and white, creating a faceted, crystalline appearance. The shape is partially cut off by the edge of the page.You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt.",
+              "heading_path": [
+                "Table of contents"
+              ],
+              "level": 2,
+              "line_range": [
+                43,
+                43
+              ],
+              "metadata": {},
+              "node_id": "block_16",
+              "node_type": "paragraph",
+              "parent_id": "sec_7"
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "content": "When thinking about a large language model input and output, a text prompt (sometimes accompanied by other modalities such as image prompts) is the input the model uses to predict a specific output. You don't need to be a data scientist or a machine learning engineer – everyone can write a prompt. However, crafting the most effective prompt can be complicated. Many aspects of your prompt affect its efficacy: the model you use, the model's training data, the model configurations, your word-choice, style and tone, structure, and context all matter. Therefore, prompt engineering is an iterative process. Inadequate prompts can lead to ambiguous, inaccurate responses, and can hinder the model's ability to provide meaningful output.",
+                  "heading_path": [
+                    "Table of contents",
+                    "Introduction"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    47,
+                    47
+                  ],
+                  "metadata": {},
+                  "node_id": "block_17",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_8"
+                },
+                {
+                  "children": [],
+                  "content": "<table border=\"1\">\n<tr>\n<td><b>Name</b></td>\n<td colspan=\"3\">1_1_movie_classification</td>\n</tr>\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Classify movie reviews as positive, neutral or negative.</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>5</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n                Classify movie reviews as POSITIVE, NEUTRAL or NEGATIVE.<br/>\n                Review: \"Her\" is a disturbing study revealing the direction humanity is headed if AI is allowed to keep evolving, unchecked. I wish there were more movies like this masterpiece.<br/>\n                Sentiment:\n            </td>\n</tr>\n<tr>\n<td><b>Output</b></td>\n<td colspan=\"3\">POSITIVE</td>\n</tr>\n</table>",
+                  "heading_path": [
+                    "Table of contents",
+                    "Introduction"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    48,
+                    85
+                  ],
+                  "metadata": {},
+                  "node_id": "block_18",
+                  "node_type": "table",
+                  "parent_id": "sec_8"
+                },
+                {
+                  "children": [],
+                  "content": "Table 1. An example of zero-shot prompting",
+                  "heading_path": [
+                    "Table of contents",
+                    "Introduction"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    87,
+                    87
+                  ],
+                  "metadata": {},
+                  "node_id": "block_19",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_8"
+                },
+                {
+                  "children": [],
+                  "content": "When zero-shot doesn't work, you can provide demonstrations or examples in the prompt, which leads to \"one-shot\" and \"few-shot\" prompting. General prompting / zero shot",
+                  "heading_path": [
+                    "Table of contents",
+                    "Introduction"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    89,
+                    89
+                  ],
+                  "metadata": {},
+                  "node_id": "block_20",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_8"
+                }
+              ],
+              "content": "## Introduction",
+              "heading_path": [
+                "Table of contents",
+                "Introduction"
+              ],
+              "level": 2,
+              "line_range": [
+                45,
+                89
+              ],
+              "metadata": {
+                "title": "Introduction"
+              },
+              "node_id": "sec_8",
+              "node_type": "section",
+              "parent_id": "sec_7"
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "content": "When creating prompts for AI models, it is helpful to provide examples. These examples can help the model understand what you are asking for. Examples are especially useful when you want to steer the model to a certain output structure or pattern.",
+                  "heading_path": [
+                    "Table of contents",
+                    "One-shot & few-shot"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    93,
+                    93
+                  ],
+                  "metadata": {},
+                  "node_id": "block_21",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_9"
+                },
+                {
+                  "children": [],
+                  "content": "A **one-shot prompt**, provides a *single* example, hence the name one-shot. The idea is the model has an example it can imitate to best complete the task.",
+                  "heading_path": [
+                    "Table of contents",
+                    "One-shot & few-shot"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    95,
+                    95
+                  ],
+                  "metadata": {},
+                  "node_id": "block_22",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_9"
+                },
+                {
+                  "children": [],
+                  "content": "A **few-shot prompt** <sup>7</sup> provides *multiple* examples to the model. This approach shows the model a pattern that it needs to follow. The idea is similar to one-shot, but multiple examples of the desired pattern increases the chance the model follows the pattern.The number of examples you need for few-shot prompting depends on a few factors, including the complexity of the task, the quality of the examples, and the capabilities of the generative AI (gen AI) model you are using. As a general rule of thumb, you should use at least three to five examples for few-shot prompting. However, you may need to use more examples for more complex tasks, or you may need to use fewer due to the input length limitation of your model.",
+                  "heading_path": [
+                    "Table of contents",
+                    "One-shot & few-shot"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    97,
+                    97
+                  ],
+                  "metadata": {},
+                  "node_id": "block_23",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_9"
+                },
+                {
+                  "children": [],
+                  "content": "Table 2 shows a few-shot prompt example, let's use the same gemini-pro model configuration settings as before, other than increasing the token limit to accommodate the need for a longer response.",
+                  "heading_path": [
+                    "Table of contents",
+                    "One-shot & few-shot"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    99,
+                    99
+                  ],
+                  "metadata": {},
+                  "node_id": "block_24",
+                  "node_type": "paragraph",
+                  "parent_id": "sec_9"
+                },
+                {
+                  "children": [],
+                  "content": "<table border=\"1\">\n<tr>\n<td><b>Goal</b></td>\n<td colspan=\"3\">Parse pizza orders to JSON</td>\n</tr>\n<tr>\n<td><b>Model</b></td>\n<td colspan=\"3\">gemini-pro</td>\n</tr>\n<tr>\n<td><b>Temperature</b></td>\n<td>0.1</td>\n<td><b>Token Limit</b></td>\n<td>250</td>\n</tr>\n<tr>\n<td><b>Top-K</b></td>\n<td>N/A</td>\n<td><b>Top-P</b></td>\n<td>1</td>\n</tr>\n<tr>\n<td><b>Prompt</b></td>\n<td colspan=\"3\">\n<p>Parse a customer's pizza order into valid JSON:</p>\n<p>EXAMPLE:</p>\n<p>I want a small pizza with cheese, tomato sauce, and pepperoni.</p>\n<p>JSON Response:</p>\n<pre>...\n{\n  \"size\": \"small\",\n  \"type\": \"normal\",\n  \"ingredients\": [\"cheese\", \"tomato sauce\", \"peperoni\"]\n}</pre>\n<p>...</p>\n<p style=\"text-align: right;\"><b>Continues next page...</b></p>\n</td>\n</tr>\n</table>",
+                  "heading_path": [
+                    "Table of contents",
+                    "One-shot & few-shot"
+                  ],
+                  "level": 3,
+                  "line_range": [
+                    101,
+                    139
+                  ],
+                  "metadata": {},
+                  "node_id": "block_25",
+                  "node_type": "table",
+                  "parent_id": "sec_9"
+                }
+              ],
+              "content": "## One-shot & few-shot",
+              "heading_path": [
+                "Table of contents",
+                "One-shot & few-shot"
+              ],
+              "level": 2,
+              "line_range": [
+                91,
+                139
+              ],
+              "metadata": {
+                "title": "One-shot & few-shot"
+              },
+              "node_id": "sec_9",
+              "node_type": "section",
+              "parent_id": "sec_7"
+            }
+          ],
+          "content": "# Table of contents",
+          "heading_path": [
+            "Table of contents"
+          ],
+          "level": 1,
+          "line_range": [
+            39,
+            91
+          ],
+          "metadata": {
+            "title": "Table of contents"
+          },
+          "node_id": "sec_7",
+          "node_type": "section",
+          "parent_id": "doc_root"
+        }
+      ],
+      "content": "",
+      "heading_path": [],
+      "level": 0,
+      "line_range": [
+        1,
+        139
+      ],
+      "metadata": {},
+      "node_id": "doc_root",
+      "node_type": "document",
+      "parent_id": null
+    }
+  },
+  "observability": {
+    "block_count": 25,
+    "chunk_count": 25,
+    "section_count": 9
+  },
+  "outputs": {
+    "final_chunking_decision": false,
+    "markdown_preserved": true
+  }
+}
