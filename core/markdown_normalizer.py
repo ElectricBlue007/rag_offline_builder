@@ -41,9 +41,17 @@ _FENCE = re.compile(r"^\s*(```|~~~)")
 _FRONT_MATTER_FENCE = re.compile(r"^---\s*$")
 _HTML_DIV_OPEN = re.compile(r"^<div\b", re.IGNORECASE)
 _HTML_DIV_CLOSE = re.compile(r"</div>\s*$", re.IGNORECASE)
+_HTML_TABLE_OPEN = re.compile(r"^\s*<table\b", re.IGNORECASE)
+_HTML_TABLE_CLOSE = re.compile(r"</table>\s*$", re.IGNORECASE)
 _BADGE_PATTERN = re.compile(r"!\[.*?\]\(.*?(?:badge|shields|pypi|discord|downloads).*?\)", re.IGNORECASE)
 _IMAGE_PATTERN = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<src>[^\)]+)\)")
 _LINK_PATTERN = re.compile(r"\[(?P<text>[^\]]+)\]\((?P<url>[^\)]+)\)")
+_TOC_HEADING = re.compile(r"^\s*#{1,6}\s+table\s+of\s+contents\s*$", re.IGNORECASE)
+_EMBEDDED_TOC_HEADING = re.compile(r"^(?P<prefix>.+?)#{1,6}\s+table\s+of\s+contents\s*$", re.IGNORECASE)
+_CONTINUATION_NOISE = re.compile(
+    r"<p[^>]*>\s*<b>\s*(?:continues?|continued)\s+(?:on\s+)?next\s+page\.{0,3}\s*</b>\s*</p>",
+    re.IGNORECASE,
+)
 _TABLE_DELIMITER = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$")
 _QUOTE_START = re.compile(r"^>\s*")
 _LIST_ITEM = re.compile(r"^(\s*)([-*+]|\d+[.)])\s+(.+)$")
@@ -115,6 +123,40 @@ class MarkdownNormalizer:
                 index += 1
                 continue
 
+            embedded_toc_heading = _EMBEDDED_TOC_HEADING.match(stripped_newline)
+            if embedded_toc_heading:
+                prefix = embedded_toc_heading.group("prefix").rstrip()
+                if prefix:
+                    normalized.append(prefix + newline)
+                flags_by_line.setdefault(line_no, []).append("embedded_table_of_contents_removed")
+                removed_noise_count += 1
+                index += 1
+                while index < len(lines) and not lines[index].strip():
+                    index += 1
+                if index < len(lines) and _HTML_TABLE_OPEN.match(lines[index].strip()):
+                    while index < len(lines):
+                        removed_noise_count += 1
+                        if _HTML_TABLE_CLOSE.search(lines[index]):
+                            index += 1
+                            break
+                        index += 1
+                continue
+
+            if _TOC_HEADING.match(stripped_newline):
+                flags_by_line.setdefault(line_no, []).append("table_of_contents_removed")
+                removed_noise_count += 1
+                index += 1
+                while index < len(lines) and not lines[index].strip():
+                    index += 1
+                if index < len(lines) and _HTML_TABLE_OPEN.match(lines[index].strip()):
+                    while index < len(lines):
+                        removed_noise_count += 1
+                        if _HTML_TABLE_CLOSE.search(lines[index]):
+                            index += 1
+                            break
+                        index += 1
+                continue
+
             # Rule 17-18: Remove HTML presentation noise
             if _HTML_DIV_OPEN.match(stripped_newline) or _HTML_DIV_CLOSE.match(stripped_newline):
                 flags_by_line.setdefault(line_no, []).append("html_div_removed")
@@ -128,6 +170,14 @@ class MarkdownNormalizer:
                 removed_noise_count += 1
                 index += 1
                 continue
+
+            if _CONTINUATION_NOISE.search(stripped_newline):
+                stripped_newline = _CONTINUATION_NOISE.sub("", stripped_newline).rstrip()
+                flags_by_line.setdefault(line_no, []).append("continuation_marker_removed")
+                removed_noise_count += 1
+                if not stripped_newline:
+                    index += 1
+                    continue
 
             repaired_lines = [stripped_newline]
             
@@ -198,6 +248,24 @@ class MarkdownNormalizer:
         }
         for broken, repaired in mojibake_replacements.items():
             normalized = normalized.replace(broken, repaired)
+        extra_mojibake_replacements = {
+            "\u00e2\u20ac\u201c": "-",
+            "\u00e2\u20ac\u201d": "-",
+            "\u00e2\u20ac\u02dc": "'",
+            "\u00e2\u20ac\u2122": "'",
+            "\u00e2\u20ac\u0153": '"',
+            "\u00e2\u20ac\u009d": '"',
+            "\u00e2\u20ac\u00a6": "...",
+            "\u00e2\u20ac\u00a2": "-",
+        }
+        for broken, repaired in extra_mojibake_replacements.items():
+            normalized = normalized.replace(broken, repaired)
+        normalized = normalized.replace("\u2013", "-")
+        normalized = normalized.replace("\u2014", "-")
+        normalized = normalized.replace("\u00d8\u00a2", "")
+        normalized = normalized.replace("\u0637\u00a2", "")
+        normalized = normalized.replace("\u0622", "")
+        normalized = re.sub(r"(?:\u0622\s*){2,}", "    ", normalized)
         # Replace common problematic Unicode characters
         normalized = normalized.replace("\u00a0", " ")  # Non-breaking space to regular space
         normalized = normalized.replace("\u200b", "")   # Zero-width space removal

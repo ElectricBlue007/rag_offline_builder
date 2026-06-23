@@ -9,22 +9,24 @@ The workflow is:
 3. Build chunk candidates.
 4. Plan semantic chunking.
 5. Review each chunk for embedding readiness.
-6. Optionally run LLM-based self-healing.
+6. Optionally run document self-healing.
+7. Optionally run LLM-based chunk repair and rescore the final chunks.
 
-The pipeline is local and deterministic by default. LLM healing is optional.
+The pipeline is local and deterministic by default. LLM healing and LLM chunk repair are optional.
 
 ## What You Get
 
 - `clean.md`: normalized Markdown after Phase 1.
 - `index.json`: structured chunk candidate index.
 - `chunk_review_report.json`: automated review of each chunk before embedding.
+- `chunk_repair_report.json`: optional LLM repair audit when chunk repair is enabled.
 - `result.json`: qualification report from the validation engine.
 
 ## Requirements
 
-- Python `>=3.10`
+- Python `>=3.8`
 - `pytest` for tests
-- Optional: Ollama for LLM healing
+- Optional: Ollama for LLM document healing and chunk repair
 
 On this workspace, use a Python 3.10+ executable explicitly if needed:
 
@@ -72,6 +74,36 @@ compiled\
 - `observability`
 
 `chunk_review_report.json` is the same `chunk_review` section written as a separate file for easier inspection.
+
+To enable the optional LLM chunk repair pass, run:
+
+```powershell
+python -m cli.main full output_Testing_pdf2markdown\Testing\Testing.md output_Testing_pdf2markdown\Testing\compiled_repaired --repair-chunks --repair-model qwen2.5:7b --repair-max-attempts 2 --pretty
+```
+
+This creates the same files plus:
+
+```text
+compiled_repaired\
+  chunk_repair_report.json
+```
+
+When `--repair-chunks` is enabled, the compiler:
+
+- reviews chunks first
+- sends only `REPAIR` and `RECHUNK` chunks to the LLM by default
+- builds a rule-specific repair prompt for every issue in the chunk review
+- skips `REJECT` chunks by default, because rejected noise should not be rewritten into fake content
+- replaces repaired chunk text inside `index.json`
+- reruns the chunk review after repair
+- writes the final review to `chunk_review_report.json`
+- writes the repair audit to `chunk_repair_report.json`
+
+To change which decisions are repaired:
+
+```powershell
+python -m cli.main full input.md output_dir --repair-chunks --repair-decisions REPAIR,RECHUNK --pretty
+```
 
 ### Step 3. Validate the document
 
@@ -151,12 +183,14 @@ python -m cli.main full fixed.md final_compiled --pretty
 
 ```powershell
 python -m cli.main full input.md output_dir --pretty
+python -m cli.main full input.md output_dir --repair-chunks --repair-model qwen2.5:7b --repair-max-attempts 2 --pretty
 ```
 
 ### Phase 1 only
 
 ```powershell
 python -m cli.main run input.md output_dir --pretty
+python -m cli.main run input.md output_dir --repair-chunks --repair-model qwen2.5:7b --repair-max-attempts 2 --pretty
 python -m cli.main validate input.md --pretty
 python -m cli.main debug input.md --pretty
 ```
@@ -174,8 +208,10 @@ python -m rag_doc_compiler.cli stats input.md
 python -m rag_doc_compiler.cli heal input.md result.json --dry-run
 python -m rag_doc_compiler.cli heal input.md result.json --mode semantic-enhance --dry-run
 python -m rag_doc_compiler.cli heal input.md result.json --output fixed.md --scope line
-python -m rag_doc_compiler.cli heal input.md result.json --output fixed.md --scope context --model qwen2.5:7b
+python -m rag_doc_compiler.cli heal input.md result.json --output fixed.md --scope context --model qwen2.5:7b --max-attempts 2
 ```
+
+The LLM healing layer uses `RuleRepairPromptAgent` to convert each reported rule id into a targeted operator prompt. Markdown validation issues repair the source/fixed Markdown file. Chunk review issues repair the matching chunk text inside `index.json`, then the review is rerun.
 
 ## Output Files
 
@@ -195,17 +231,29 @@ The chunk index. Important fields:
 - `debug_metadata`: offsets, merge history, normalization flags
 - `evaluation_metadata`: coherence and density signals
 - `semantic_chunk_plan`: Phase 3 planning output
-- `chunk_review`: automated review output
+- `chunk_review`: final automated review output
+- `chunk_repair_report`: optional repair audit when `--repair-chunks` is enabled
 
 ### `chunk_review_report.json`
 
-The chunk review summary written as a standalone file. It contains:
+The final chunk review summary written as a standalone file. It contains:
 
 - per-chunk scores
 - rule-level issues
 - final decision
 - recommended action
 - overall summary
+
+### `chunk_repair_report.json`
+
+The optional chunk repair audit written only when `--repair-chunks` is enabled. It contains:
+
+- model name
+- repaired decision types
+- attempted, repaired, and failed counts
+- before and after review summaries
+- per-chunk repair hashes
+- per-chunk before and after scores
 
 ## Readiness Checklist
 
@@ -239,6 +287,8 @@ agents/
   retrieval_agent.py           Retrieval utility rules
   chunk_planning_agent.py      Chunk planning and embedding readiness
   chunk_review_agent.py        Automated chunk review for embedding
+  chunk_repair_agent.py        Optional LLM chunk repair and rescoring
+  rule_repair_prompt_agent.py  Rule-specific LLM repair prompts
   self_healing_agent.py        Optional LLM repair
 
 output/
@@ -267,6 +317,8 @@ python -m pytest tests\test_normalizer.py -q
 python -m pytest tests\test_chunk_preparer.py -q
 python -m pytest tests\test_semantic_chunk_planner.py -q
 python -m pytest tests\test_chunk_review_agent.py -q
+python -m pytest tests\test_rule_repair_prompt_agent.py -q
+python -m pytest tests\test_chunk_repair_agent.py -q
 python -m pytest tests\test_phase3_pipeline_integration.py -q
 python -m pytest tests\test_self_healing_agent.py -q
 ```
@@ -274,7 +326,7 @@ python -m pytest tests\test_self_healing_agent.py -q
 Current verified status:
 
 ```text
-171 passed
+Run `python -m pytest -q` in your environment for the current count.
 ```
 
 ## Practical Example
@@ -291,6 +343,8 @@ python -m rag_doc_compiler.cli heal output_Testing_pdf2markdown\Testing\Testing.
 python -m rag_doc_compiler.cli heal output_Testing_pdf2markdown\Testing\Testing.md result.json --output fixed.md --mode semantic-enhance --scope line
 
 python -m cli.main full fixed.md output_Testing_pdf2markdown\Testing\compiled_fixed --pretty
+
+python -m cli.main full fixed.md output_Testing_pdf2markdown\Testing\compiled_repaired --repair-chunks --repair-model qwen2.5:7b --repair-max-attempts 2 --pretty
 ```
 
 ## Notes
@@ -298,4 +352,6 @@ python -m cli.main full fixed.md output_Testing_pdf2markdown\Testing\compiled_fi
 - Use `--dry-run` before any LLM healing.
 - Prefer `--scope line` first.
 - Use `chunk_review_report.json` to decide whether a chunk set is actually safe for embedding.
+- Use `--repair-chunks` only when you want the LLM to rewrite `REPAIR` or `RECHUNK` chunks inside `index.json`.
+- Check `chunk_repair_report.json` after LLM repair to confirm scores improved.
 - The pipeline is designed to keep deterministic processing separate from optional agentic repair.

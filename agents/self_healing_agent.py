@@ -6,17 +6,30 @@ maps validation issues to exact source lines and, when requested, asks a local
 LLM to produce a surgical Markdown repair.
 """
 
+from __future__ import annotations
+
 import json
 import os
+import re
 import subprocess
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+from agents.rule_repair_prompt_agent import RuleRepairPromptAgent
+
 
 class SelfHealingAgent:
-    def __init__(self, model_name: str = "qwen2.5:7b", llm_client: Optional[Callable[[str], str]] = None):
+    def __init__(
+        self,
+        model_name: str = "qwen2.5:7b",
+        llm_client: Optional[Callable[[str], str]] = None,
+        max_attempts: int = 2,
+        prompt_agent: Optional[RuleRepairPromptAgent] = None,
+    ):
         self.model_name = model_name
         self.llm_client = llm_client
+        self.max_attempts = max(1, max_attempts)
         self.max_context_window = 20
+        self.prompt_agent = prompt_agent or RuleRepairPromptAgent()
 
     def _call_model(self, prompt: str) -> str:
         """Call the configured LLM client."""
@@ -33,6 +46,7 @@ class SelfHealingAgent:
                 text=True,
                 timeout=120,
                 encoding="utf-8",
+                errors="replace",
             )
             if result.returncode != 0:
                 print(f"Model error: {result.stderr}")
@@ -57,36 +71,24 @@ class SelfHealingAgent:
 
         return "".join(lines[start:end]), start, end
 
-    def _generate_fix_prompt(self, issue: Dict[str, Any], context: str, line_num: int) -> str:
+    def _generate_fix_prompt(
+        self,
+        issue: Dict[str, Any],
+        context: str,
+        line_num: int,
+        target_text: str,
+        scope: str,
+        feedback: str = "",
+    ) -> str:
         """Generate a strict prompt for the model."""
-        issue_type = issue.get("issue_type", issue.get("type", "unknown"))
-        rule_id = issue.get("rule_id", "unknown")
-        description = issue.get("description", issue.get("rule_name", "Fix this issue"))
-
-        return f"""
-You are an expert Markdown Structural Engineer.
-Your task is to fix a specific structural issue in a documentation file WITHOUT changing the original content words.
-
-ISSUE DETAILS:
-- Rule: {rule_id}
-- Type: {issue_type}
-- Description: {description}
-- Target line: {line_num}
-
-CONTEXT SNIPPET:
-```markdown
-{context}
-```
-
-INSTRUCTIONS:
-1. Fix only the issue identified above.
-2. Preserve technical terms, code, tables, links, and original meaning.
-3. If scope is line-based, return only the corrected target line.
-4. If the issue requires context, return only the minimal corrected Markdown snippet.
-5. Output only Markdown. No explanations.
-
-FIXED MARKDOWN:
-"""
+        return self.prompt_agent.markdown_prompt(
+            issue=issue,
+            context=context,
+            target_text=target_text,
+            line_num=line_num,
+            scope=scope,
+            feedback=feedback,
+        )
 
     def _apply_fix(
         self,
@@ -104,6 +106,61 @@ FIXED MARKDOWN:
             fixed_lines[-1] += "\n"
 
         return original_lines[:start_idx] + fixed_lines + original_lines[end_idx:]
+
+    def _sanitize_model_output(self, output: str) -> str:
+        """Strip common assistant wrappers while preserving Markdown content."""
+        text = output.strip()
+        fenced = re.match(r"^```(?:markdown|md|text)?\s*(.*?)\s*```$", text, re.DOTALL | re.IGNORECASE)
+        if fenced:
+            text = fenced.group(1).strip()
+        text = re.sub(r"^\s*(?:fixed markdown|corrected markdown|replacement)\s*:\s*", "", text, flags=re.IGNORECASE)
+        return text.strip()
+
+    def _validate_fixed_snippet(
+        self,
+        original: str,
+        fixed: str,
+        scope: str,
+    ) -> Tuple[bool, str]:
+        """Reject unsafe LLM output before it can modify the file."""
+        if not fixed.strip():
+            return False, "The model returned empty output."
+        if re.search(r"\b(here is|i fixed|the issue|explanation|note:)\b", fixed, re.IGNORECASE):
+            return False, "The model returned explanation text instead of only Markdown."
+        if scope == "line" and len(fixed.splitlines()) > 1:
+            return False, "Line-scope repair returned multiple lines."
+        if len(fixed) > max(len(original) * 4, len(original) + 800):
+            return False, "Repair expanded the text too much for a surgical edit."
+        if fixed.count("```") % 2:
+            return False, "Repair contains an unbalanced fenced code block."
+        original_table_balance = original.lower().count("<table") - original.lower().count("</table>")
+        fixed_table_balance = fixed.lower().count("<table") - fixed.lower().count("</table>")
+        if original_table_balance == 0 and fixed_table_balance != 0:
+            return False, "Repair contains an unbalanced HTML table."
+        if original.strip().startswith("#") and not fixed.lstrip().startswith("#"):
+            return False, "Repair removed a Markdown heading marker."
+        return True, ""
+
+    def _generate_valid_fix(
+        self,
+        issue: Dict[str, Any],
+        context: str,
+        line_num: int,
+        target_text: str,
+        scope: str,
+    ) -> Tuple[str, list[str]]:
+        """Ask the model for a fix and retry with validation feedback if needed."""
+        feedback = ""
+        errors: list[str] = []
+        for _ in range(self.max_attempts):
+            prompt = self._generate_fix_prompt(issue, context, line_num, target_text, scope, feedback=feedback)
+            fixed_snippet = self._sanitize_model_output(self._call_model(prompt))
+            valid, error = self._validate_fixed_snippet(target_text, fixed_snippet, scope)
+            if valid:
+                return fixed_snippet, errors
+            errors.append(error)
+            feedback = error
+        return "", errors
 
     def _extract_qualification_items(self, data: Dict[str, Any], mode: str = "issues") -> List[Dict[str, Any]]:
         """Read validation items from raw issue JSON or full process output."""
@@ -256,32 +313,42 @@ FIXED MARKDOWN:
             lines = file.read().splitlines(keepends=True)
 
         fixed_count = 0
+        failed_count = 0
         for index, item in enumerate(fixable_items, start=1):
             issue = item["issue"]
             line_num = item["line"]
             print(f"\n[{index}/{len(fixable_items)}] Fixing Rule {issue.get('rule_id')} at line {line_num}...")
 
-            prompt = self._generate_fix_prompt(issue, item["context"], line_num)
-            fixed_snippet = self._call_model(prompt)
+            start_idx, end_idx = self._target_range(
+                line_num,
+                item["context_start"],
+                item["context_end"],
+                scope,
+            )
+            target_text = "".join(lines[start_idx:end_idx])
+            fixed_snippet, validation_errors = self._generate_valid_fix(
+                issue,
+                item["context"],
+                line_num,
+                target_text,
+                scope,
+            )
 
             if fixed_snippet:
-                start_idx, end_idx = self._target_range(
-                    line_num,
-                    item["context_start"],
-                    item["context_end"],
-                    scope,
-                )
                 lines = self._apply_fix(lines, start_idx, end_idx, fixed_snippet)
                 print("   Applied fix.")
                 fixed_count += 1
             else:
-                print("   Failed to generate fix. Skipping.")
+                reason = validation_errors[-1] if validation_errors else "Failed to generate fix."
+                print(f"   Failed validation: {reason}. Skipping.")
+                failed_count += 1
 
         with open(output_md, "w", encoding="utf-8") as file:
             file.writelines(lines)
 
         print("\nHealing complete.")
         print(f"   Fixed: {fixed_count}/{len(fixable_items)} validation item(s)")
+        print(f"   Failed: {failed_count}/{len(fixable_items)} validation item(s)")
         print(f"   Output saved to: {output_md}")
         return output_md
 
