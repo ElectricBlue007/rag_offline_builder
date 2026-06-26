@@ -62,3 +62,24 @@ def test_merges_sparse_sibling_subsections_with_labels():
     assert "Editors:" in prepared[0].text
     assert "Alice Example" in prepared[0].text
     assert "Bob Example" in prepared[0].text
+
+
+def test_filters_ocr_boilerplate_and_merges_bridge_paragraphs():
+    prepared = chunks(
+        "# Prompt Engineering\n"
+        "Author: Lee Boonstra\n\n"
+        "![Google logo](logo.webp)The Google logo is decorative.\n\n"
+        "## Acknowledgements\n"
+        "Reviewer Name\n\n"
+        "## Introduction\n"
+        "Table 1. An example of zero-shot prompting. General prompting / zero shot.\n\n"
+        "## One-shot & few-shot\n"
+        "When creating prompts for AI models, examples help the model understand the requested output structure.\n"
+    )
+
+    assert len(prepared) == 1
+    assert "Author:" not in prepared[0].text
+    assert "Google logo" not in prepared[0].text
+    assert "Reviewer Name" not in prepared[0].text
+    assert "Introduction:" in prepared[0].text
+    assert "One-shot & few-shot:" in prepared[0].text

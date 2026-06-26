@@ -4,6 +4,8 @@ Validates document blocks for retrieval utility.
 Implements Rules 121-130.
 """
 
+from __future__ import annotations
+
 from typing import List, Dict, Any
 import re
 from agents.models import ValidationIssue, IssueSeverity, IssueType

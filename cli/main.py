@@ -23,6 +23,11 @@ def build_parser() -> argparse.ArgumentParser:
     run = subparsers.add_parser("run", help="Run full Phase 1 compilation pipeline")
     run.add_argument("input", type=Path, help="Input markdown file")
     run.add_argument("output_dir", type=Path, help="Output directory")
+    run.add_argument("--repair-chunks", action="store_true", help="Use an LLM to repair reviewed chunks before final output")
+    run.add_argument("--repair-model", default="qwen2.5:7b", help="Local Ollama model used when --repair-chunks is enabled")
+    run.add_argument("--repair-decisions", default="REPAIR,RECHUNK", help="Comma-separated decisions to repair")
+    run.add_argument("--repair-accept-decisions", default="APPROVE", help="Comma-separated final decisions accepted after LLM repair")
+    run.add_argument("--repair-max-attempts", type=int, default=2, help="Maximum LLM attempts per chunk repair")
     run.add_argument("--pretty", action="store_true", help="Pretty print JSON output")
 
     # Phase 1: Validate only
@@ -47,6 +52,11 @@ def build_parser() -> argparse.ArgumentParser:
     full.add_argument("input", type=Path, help="Input markdown file")
     full.add_argument("output_dir", type=Path, help="Output directory")
     full.add_argument("--detailed", action="store_true", help="Include detailed qualification reports")
+    full.add_argument("--repair-chunks", action="store_true", help="Use an LLM to repair reviewed chunks before final output")
+    full.add_argument("--repair-model", default="qwen2.5:7b", help="Local Ollama model used when --repair-chunks is enabled")
+    full.add_argument("--repair-decisions", default="REPAIR,RECHUNK", help="Comma-separated decisions to repair")
+    full.add_argument("--repair-accept-decisions", default="APPROVE", help="Comma-separated final decisions accepted after LLM repair")
+    full.add_argument("--repair-max-attempts", type=int, default=2, help="Maximum LLM attempts per chunk repair")
     full.add_argument("--pretty", action="store_true", help="Pretty print JSON output")
 
     # Run tests
@@ -61,7 +71,7 @@ def run_phase1(compiler: DocumentCompiler, input_path: Path, output_dir: Path | 
     """Execute Phase 1 compilation pipeline."""
     if output_dir:
         result = compiler.run_file(input_path, output_dir)
-        return {
+        output = {
             "phase": 1,
             "status": "success",
             "markdown_path": str(result["markdown_path"]),
@@ -69,13 +79,16 @@ def run_phase1(compiler: DocumentCompiler, input_path: Path, output_dir: Path | 
             "chunk_review_path": str(result["chunk_review_path"]),
             "chunk_count": len(result["chunks"]),
         }
+        if "chunk_repair_path" in result:
+            output["chunk_repair_path"] = str(result["chunk_repair_path"])
+        return output
     else:
         result = compiler.compile_text(compiler.loader.load_text(input_path))
         return {
             "phase": 1,
             "status": "success",
             "chunk_count": len(result["chunks"]),
-            "block_count": len(result["analysis"].blocks),
+            "block_count": len(result["analysis"].ordered_blocks),
         }
 
 
@@ -109,6 +122,27 @@ def run_phase2(input_path: Path, detailed: bool = False) -> dict:
     return result
 
 
+def build_compiler_from_args(args: argparse.Namespace) -> DocumentCompiler:
+    """Create a compiler with optional chunk repair settings from CLI args."""
+    repair_decisions = [
+        decision.strip().upper()
+        for decision in getattr(args, "repair_decisions", "").split(",")
+        if decision.strip()
+    ]
+    repair_accept_decisions = [
+        decision.strip().upper()
+        for decision in getattr(args, "repair_accept_decisions", "").split(",")
+        if decision.strip()
+    ]
+    return DocumentCompiler(
+        repair_chunks=getattr(args, "repair_chunks", False),
+        repair_model=getattr(args, "repair_model", "qwen2.5:7b"),
+        repair_decisions=repair_decisions or None,
+        repair_accept_decisions=repair_accept_decisions or None,
+        repair_max_attempts=getattr(args, "repair_max_attempts", 2),
+    )
+
+
 def run_tests(phase: str = "all", verbose: bool = False) -> dict:
     """Run test suite."""
     import subprocess
@@ -140,7 +174,7 @@ def main(argv: list[str] | None = None) -> int:
     
     try:
         if args.command == "run":
-            compiler = DocumentCompiler()
+            compiler = build_compiler_from_args(args)
             result = run_phase1(compiler, args.input, args.output_dir)
             print(json.dumps(result, indent=indent, sort_keys=True))
             return 0
@@ -158,8 +192,10 @@ def main(argv: list[str] | None = None) -> int:
             result = compiler.compile_text(markdown)
             output = {
                 "phase": 1,
+                "normalized_markdown": result["markdown"],
                 "structure_tree": result["analysis"].tree.to_dict(),
-                "block_count": len(result["analysis"].blocks),
+                "block_count": len(result["analysis"].ordered_blocks),
+                "ordered_blocks": [block.to_dict() for block in result["analysis"].structured_blocks],
                 "chunk_candidates": [chunk.to_dict() for chunk in result["chunks"]],
                 "semantic_labels": [
                     {"chunk_id": chunk.chunk_id, "intent": chunk.intent, "content_type": chunk.content_type}
@@ -181,7 +217,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
             
         elif args.command == "full":
-            compiler = DocumentCompiler()
+            compiler = build_compiler_from_args(args)
             phase1_result = run_phase1(compiler, args.input, args.output_dir)
             phase2_result = run_phase2(args.input, detailed=args.detailed)
             

@@ -12,6 +12,8 @@ Usage:
     python -m rag_doc_compiler.cli heal input.md issues.json --output fixed.md
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import sys
@@ -299,7 +301,7 @@ def cmd_heal(args):
         output_file = f"{base}_fixed{ext}"
         
     print(f"🩺 Starting Self-Healing Process...")
-    agent = SelfHealingAgent(model_name=args.model)
+    agent = SelfHealingAgent(model_name=args.model, max_attempts=args.max_attempts)
     agent.heal(
         str(input_file),
         str(issues_file),
@@ -368,17 +370,19 @@ def cmd_stats(args):
     
     normalized = normalize_markdown(content)
     doc = analyze_structure(normalized)
+    structured_blocks = getattr(doc, "structured_blocks", [])
     
     stats = {
         "file": args.input,
         "original_length": len(content),
         "normalized_length": len(normalized),
-        "total_blocks": len(doc.blocks),
-        "has_front_matter": doc.has_front_matter,
+        "total_blocks": len(doc.ordered_blocks),
+        "total_structured_blocks": len(structured_blocks),
+        "has_front_matter": False,
         "block_counts": {}
     }
     
-    for block in doc.blocks:
+    for block in structured_blocks:
         bt = block.block_type.value
         stats["block_counts"][bt] = stats["block_counts"].get(bt, 0) + 1
     
@@ -416,6 +420,7 @@ def main():
     p_heal.add_argument("--dry-run", action="store_true", help="List exact fixable lines without calling an LLM or writing output")
     p_heal.add_argument("--no-llm", action="store_true", help="List exact fixable lines without calling an LLM or writing output")
     p_heal.add_argument("--scope", default="line", choices=["line", "context"], help="Replacement scope for LLM fixes")
+    p_heal.add_argument("--max-attempts", type=int, default=2, help="Maximum LLM attempts per validation item")
     p_heal.set_defaults(func=cmd_heal)
 
     args = parser.parse_args()

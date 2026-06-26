@@ -120,3 +120,91 @@ def test_heal_uses_injected_llm_and_replaces_only_target_line(tmp_path):
 
     assert result == str(output)
     assert output.read_text(encoding="utf-8") == "# Title\n\nFixed line\n\nKeep me\n"
+
+
+def test_heal_retries_when_llm_returns_explanation(tmp_path):
+    markdown = tmp_path / "doc.md"
+    issues = tmp_path / "result.json"
+    output = tmp_path / "fixed.md"
+    markdown.write_text("# Title\n\nBad line\n", encoding="utf-8")
+    write_json(
+        issues,
+        {
+            "issues": [
+                {
+                    "rule_id": 101,
+                    "description": "Fix bad line",
+                    "location": {"line": 3},
+                }
+            ]
+        },
+    )
+    replies = iter(["Here is the fixed markdown: Fixed line", "Fixed line"])
+
+    result = SelfHealingAgent(llm_client=lambda prompt: next(replies), max_attempts=2).heal(
+        str(markdown),
+        str(issues),
+        str(output),
+        scope="line",
+    )
+
+    assert result == str(output)
+    assert output.read_text(encoding="utf-8") == "# Title\n\nFixed line\n"
+
+
+def test_heal_strips_markdown_fence_from_llm_output(tmp_path):
+    markdown = tmp_path / "doc.md"
+    issues = tmp_path / "result.json"
+    output = tmp_path / "fixed.md"
+    markdown.write_text("# Title\n\nBad line\n", encoding="utf-8")
+    write_json(
+        issues,
+        {
+            "issues": [
+                {
+                    "rule_id": 101,
+                    "description": "Fix bad line",
+                    "location": {"line": 3},
+                }
+            ]
+        },
+    )
+
+    result = SelfHealingAgent(llm_client=lambda prompt: "```markdown\nFixed line\n```").heal(
+        str(markdown),
+        str(issues),
+        str(output),
+        scope="line",
+    )
+
+    assert result == str(output)
+    assert output.read_text(encoding="utf-8") == "# Title\n\nFixed line\n"
+
+
+def test_heal_skips_invalid_llm_output_without_corrupting_file(tmp_path):
+    markdown = tmp_path / "doc.md"
+    issues = tmp_path / "result.json"
+    output = tmp_path / "fixed.md"
+    markdown.write_text("# Title\n\nBad line\n", encoding="utf-8")
+    write_json(
+        issues,
+        {
+            "issues": [
+                {
+                    "rule_id": 101,
+                    "description": "Fix bad line",
+                    "location": {"line": 3},
+                }
+            ]
+        },
+    )
+
+    result = SelfHealingAgent(llm_client=lambda prompt: "Line one\nLine two", max_attempts=1).heal(
+        str(markdown),
+        str(issues),
+        str(output),
+        scope="line",
+    )
+
+    assert result == str(output)
+    assert output.read_text(encoding="utf-8") == "# Title\n\nBad line\n"

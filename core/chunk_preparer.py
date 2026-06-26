@@ -15,7 +15,22 @@ class ChunkPreparer:
 
     _ALLOWED_INTENTS = {"definition", "explanation", "list", "warning", "example"}
     _ALLOWED_TYPES = {"technical", "narrative", "procedural", "reference"}
-    _MIN_EMBEDDABLE_TOKENS = 50
+    _MIN_EMBEDDABLE_TOKENS = 80
+    _NOISE_SECTION_TITLES = {
+        "acknowledgements",
+        "reviewers and contributors",
+        "curators and editors",
+        "technical writer",
+        "designer",
+        "table of contents",
+    }
+    _DECORATIVE_IMAGE = re.compile(
+        r"!\[[^\]]*(?:google logo|abstract|geometric|crystal|gemstone|logo)[^\]]*\]"
+        r"|\b(?:google logo|abstract(?:,\s*)?(?:three-dimensional\s+)?geometric shape|faceted geometric shape|crystal|gemstone)\b",
+        re.IGNORECASE,
+    )
+    _AUTHOR_COVER_BLOCK = re.compile(r"^\s*author:\s+.+?!\[", re.IGNORECASE | re.DOTALL)
+    _AUTHOR_ONLY_BLOCK = re.compile(r"^\s*author:\s+\S.+$", re.IGNORECASE)
 
     def __init__(self, settings: CompilerSettings = DEFAULT_SETTINGS) -> None:
         self.settings = settings
@@ -27,6 +42,7 @@ class ChunkPreparer:
         candidates = [
             self._candidate_for_block(index, block, analysis, normalization_flags)
             for index, block in enumerate(analysis.ordered_blocks, start=1)
+            if not self._is_embedding_noise_block(block)
         ]
         candidates = self._merge_sparse_candidates(candidates)
         for index, candidate in enumerate(candidates):
@@ -63,8 +79,6 @@ class ChunkPreparer:
             and left.heading_path[:-1] == right.heading_path[:-1]
         )
         if not same_section and not sibling_section:
-            return False
-        if left.content_type != right.content_type:
             return False
         if left.content_type == "reference" or right.content_type == "reference":
             return False
@@ -105,6 +119,8 @@ class ChunkPreparer:
         left_text = left.text.rstrip()
         if not left_text.startswith(f"{left_label}:"):
             left_text = f"{left_label}:\n{left_text}"
+        if f"{right_label}:" in left_text:
+            return f"{left_text}\n\n{right.text.lstrip()}"
         return f"{left_text}\n\n{right_label}:\n{right.text.lstrip()}"
 
     def _candidate_for_block(
@@ -154,6 +170,48 @@ class ChunkPreparer:
                 "redundancy_flag": False,
             },
         )
+
+    def _is_embedding_noise_block(self, block: DocumentNode) -> bool:
+        """Skip OCR/layout blocks that should not be embedded as knowledge."""
+        heading_titles = {heading.strip().lower() for heading in block.heading_path}
+        last_heading = block.heading_path[-1].strip().lower() if block.heading_path else ""
+        if "acknowledgements" in heading_titles:
+            return True
+        if last_heading in self._NOISE_SECTION_TITLES:
+            return True
+
+        text = block.content.strip()
+        if not text:
+            return True
+        if self._AUTHOR_ONLY_BLOCK.fullmatch(text):
+            return True
+        if self._AUTHOR_COVER_BLOCK.search(text) and self._DECORATIVE_IMAGE.search(text):
+            return True
+        if self._DECORATIVE_IMAGE.search(text) and not self._has_substantive_text(text):
+            return True
+        if "![" in text and self._DECORATIVE_IMAGE.search(text) and not self._has_substantive_text(text):
+            return True
+        return False
+
+    @staticmethod
+    def _has_substantive_text(text: str) -> bool:
+        without_images = re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", text)
+        words = re.findall(r"[A-Za-z]{4,}", without_images)
+        domain_words = {
+            "prompt",
+            "prompts",
+            "model",
+            "models",
+            "token",
+            "tokens",
+            "temperature",
+            "sampling",
+            "output",
+            "json",
+            "classification",
+            "example",
+        }
+        return len(words) >= 35 and bool({word.lower() for word in words} & domain_words)
 
     def _intent(self, block: DocumentNode) -> str:
         text = block.content.lower()

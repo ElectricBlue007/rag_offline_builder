@@ -1,5 +1,6 @@
 import json
 
+from agents.chunk_repair_agent import ChunkRepairAgent
 from rag_doc_compiler.pipeline import DocumentCompiler
 
 
@@ -40,3 +41,35 @@ def test_run_file_writes_chunk_review_report(tmp_path):
     report = json.loads(review_path.read_text(encoding="utf-8"))
     assert report == index["chunk_review"]
     assert report["summary"]["chunk_count"] == len(result["chunks"])
+
+
+def test_run_file_writes_chunk_repair_report_when_enabled(tmp_path):
+    input_path = tmp_path / "input.md"
+    output_dir = tmp_path / "compiled"
+    input_path.write_text("# Installation\nInstall Chonkie.\n", encoding="utf-8")
+
+    repair_agent = ChunkRepairAgent(
+        llm_client=lambda prompt: (
+            "passage: Installation\n\n"
+            "SemanticChunker is a Chonkie component that uses embeddings to create semantic retrieval chunks. "
+            "Install Chonkie with pip before indexing markdown documents for retrieval. This chunk includes "
+            "the Installation heading, the Chonkie entity, the action to install, and searchable concepts for "
+            "embedding readiness. SemanticChunker creates chunk candidates and keeps setup context connected "
+            "to the document section."
+        ),
+        model_name="fake-model",
+    )
+
+    result = DocumentCompiler(repair_chunks=True, chunk_repair_agent=repair_agent).run_file(input_path, output_dir)
+
+    assert result["chunk_repair_path"].name == "chunk_repair_report.json"
+    assert result["chunk_repair_path"].exists()
+
+    index = json.loads(result["index_path"].read_text(encoding="utf-8"))
+    repair_report = json.loads(result["chunk_repair_path"].read_text(encoding="utf-8"))
+    review_report = json.loads(result["chunk_review_path"].read_text(encoding="utf-8"))
+
+    assert repair_report == index["chunk_repair_report"]
+    assert review_report == index["chunk_review"]
+    assert repair_report["enabled"] is True
+    assert repair_report["attempted_count"] >= 1

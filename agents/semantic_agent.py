@@ -4,6 +4,8 @@ Validates semantic quality, information density, and content types.
 Implements Rules 111-120.
 """
 
+from __future__ import annotations
+
 from typing import List, Dict, Any, Set
 import re
 from agents.models import (

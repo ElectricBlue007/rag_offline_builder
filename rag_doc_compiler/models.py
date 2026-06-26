@@ -28,18 +28,22 @@ from typing import Any
 
 class BlockType(str, Enum):
     """Rule 26: Typed Blocks for different content types."""
-    
-    HEADING = "heading"
-    PARAGRAPH = "paragraph"
-    CODE = "code"
-    TABLE = "table"
-    LIST = "list"
-    IMAGE = "image"
-    QUOTE = "quote"
-    LINK = "link"
+
+    HEADING      = "heading"
+    PARAGRAPH    = "paragraph"
+    CODE         = "code"
+    TABLE        = "table"
+    LIST         = "list"
+    TASK_LIST    = "task_list"    # - [x] / - [ ] GitHub-style task items
+    IMAGE        = "image"
+    QUOTE        = "quote"
+    ADMONITION   = "admonition"   # > [!NOTE/TIP/WARNING/IMPORTANT/CAUTION]
+    MATH_BLOCK   = "math_block"   # $$ ... $$ fenced math
+    FOOTNOTE     = "footnote"     # [^id]: definition
+    LINK         = "link"
     FRONT_MATTER = "front_matter"
-    HTML_NOISE = "html_noise"
-    BADGE_NOISE = "badge_noise"
+    HTML_NOISE   = "html_noise"
+    BADGE_NOISE  = "badge_noise"
 
 
 class ListType(str, Enum):
@@ -276,7 +280,7 @@ class StructureAnalysis:
 @dataclass
 class ChunkCandidate:
     """Prepared chunk candidate (not yet final chunking - Rule 30)."""
-    
+
     chunk_id: str
     parent_section_id: str
     heading_path: list[str]
@@ -291,6 +295,96 @@ class ChunkCandidate:
     text: str
     debug_metadata: dict[str, Any]
     evaluation_metadata: dict[str, Any]
-    
+
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+# ---------------------------------------------------------------------------
+# Chandra OCR post-processing helpers
+# ---------------------------------------------------------------------------
+
+def deduplicate_image_descriptions(blocks: list[DocumentBlock]) -> list[DocumentBlock]:
+    """Mark PARAGRAPH blocks that are duplicates of the preceding IMAGE alt text.
+
+    Chandra OCR places the visual description in two locations:
+      1. The image alt attribute → stored in ImageMetadata.alt
+      2. Plain text immediately after the image on the next line
+
+    Embedding both wastes vector space and dilutes retrieval precision.
+    This function tags the redundant PARAGRAPH with ``image_description_duplicate``
+    so the embedding layer can skip it.
+
+    Bidirectional overlap check (both thresholds must be met):
+      - alt_coverage  ≥ 0.75  (most of the alt appears in the paragraph)
+      - para_coverage ≥ 0.55  (most of the paragraph IS the alt, not glued content)
+
+    The para_coverage threshold prevents over-flagging when a description paragraph
+    is glued to the next content paragraph (a common Chandra OCR artifact), since
+    the combined text would have low para_coverage despite high alt_coverage.
+    """
+    _ALT_COVERAGE_THRESHOLD  = 0.75   # alt words found in para / total alt words
+    _PARA_COVERAGE_THRESHOLD = 0.55   # alt words found in para / total para words
+
+    result: list[DocumentBlock] = []
+    for i, block in enumerate(blocks):
+        if (
+            block.block_type == BlockType.PARAGRAPH
+            and result
+            and result[-1].block_type == BlockType.IMAGE
+        ):
+            img_block = result[-1]
+            alt  = (img_block.image_metadata.alt or "").strip().lower() if img_block.image_metadata else ""
+            text = block.content.strip().lower()
+
+            if alt and text:
+                alt_words  = set(alt.split())
+                text_words = set(text.split())
+                overlap    = len(alt_words & text_words)
+
+                alt_coverage  = overlap / max(len(alt_words), 1)
+                para_coverage = overlap / max(len(text_words), 1)
+
+                if alt_coverage >= _ALT_COVERAGE_THRESHOLD and para_coverage >= _PARA_COVERAGE_THRESHOLD:
+                    block.normalization_flags.append("image_description_duplicate")
+
+        result.append(block)
+    return result
+
+
+def build_image_chunk_text(block: DocumentBlock) -> str:
+    """Construct the embeddable text string for a single IMAGE block.
+
+    Combines the section breadcrumb with the alt-text description so the
+    vector carries both *where* in the document the figure appears and *what*
+    it contains.
+
+    Example output::
+
+        [Figure] Introduction > Prompting techniques
+        The Google logo is located in the bottom left corner of the page.
+
+    Args:
+        block: A ``DocumentBlock`` with ``block_type == BlockType.IMAGE``.
+
+    Returns:
+        A plain-text string ready to pass to an embedding model.
+
+    Raises:
+        ValueError: If the block is not an IMAGE block.
+    """
+    if block.block_type != BlockType.IMAGE:
+        raise ValueError(
+            f"build_image_chunk_text expects BlockType.IMAGE, got {block.block_type!r}"
+        )
+    heading_breadcrumb = " > ".join(block.heading_path) if block.heading_path else ""
+    alt_text = (block.image_metadata.alt or "").strip() if block.image_metadata else ""
+
+    header = "[Figure]"
+    if heading_breadcrumb:
+        header = f"[Figure] {heading_breadcrumb}"
+
+    if alt_text:
+        return f"{header}\n{alt_text}"
+    src = block.image_metadata.src if block.image_metadata else "unknown"
+    return f"{header}\n[No description available — source: {src}]"

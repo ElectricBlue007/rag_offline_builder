@@ -10,6 +10,7 @@ from rag_doc_compiler.models import (
     CodeBlockMetadata,
     DocumentBlock,
     DocumentNode,
+    ImageMetadata,
     ListItem,
     ListType,
     NormalizationResult,
@@ -18,13 +19,21 @@ from rag_doc_compiler.models import (
 )
 
 
-_HEADING = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
-_LIST = re.compile(r"^(\s*)([-*+]|\d+[.)])\s+(.+)$")
-_FENCE = re.compile(r"^\s*(```|~~~)")
-_TABLE_DELIMITER = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$")
-_HTML_TABLE_OPEN = re.compile(r"^\s*<table\b", re.IGNORECASE)
+_HEADING          = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
+_LIST             = re.compile(r"^(\s*)([-*+]|\d+[.)])\s+(.+)$")
+_TASK_LIST        = re.compile(r"^\s*[-*+]\s+\[([xX ])\]\s+")
+_FENCE            = re.compile(r"^\s*(```|~~~)")
+_MATH_FENCE       = re.compile(r"^\s*\$\$\s*$")
+_TABLE_DELIMITER  = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$")
+_HTML_TABLE_OPEN  = re.compile(r"^\s*<table\b", re.IGNORECASE)
 _HTML_TABLE_CLOSE = re.compile(r"</table>\s*$", re.IGNORECASE)
-_QUOTE = re.compile(r"^\s*>\s?")
+_QUOTE            = re.compile(r"^\s*>\s?")
+_ADMONITION       = re.compile(
+    r"^\s*>\s*\[!(NOTE|TIP|WARNING|IMPORTANT|CAUTION)\]", re.IGNORECASE
+)
+# Standalone image: exactly one image token, nothing else on the line
+_IMAGE            = re.compile(r"^!\[(?P<alt>[^\]]*)\]\((?P<src>[^\)]+)\)\s*$")
+_FOOTNOTE_DEF     = re.compile(r"^\[\^(?P<id>[^\]]+)\]:\s+(?P<text>.+)$")
 
 
 class StructureAnalyzer:
@@ -58,6 +67,7 @@ class StructureAnalyzer:
                     raise StructureError(
                         f"Heading level jumps from {section_stack[-1].level} to {level} at line {line_no}."
                     )
+                level_jumped = False
                 while section_stack and section_stack[-1].level >= level:
                     section_stack.pop()
                 counters["sec"] += 1
@@ -70,7 +80,10 @@ class StructureAnalyzer:
                     level=level,
                     heading_path=parent.heading_path + [title],
                     parent_id=parent.node_id,
-                    metadata={"title": title},
+                    metadata={
+                        "title": title,
+                        **({"heading_level_jumped": True} if level_jumped else {}),
+                    },
                 )
                 parent.children.append(node)
                 flat_map[node.node_id] = node
@@ -106,18 +119,71 @@ class StructureAnalyzer:
         counters: dict[str, int],
     ) -> tuple[DocumentNode, int]:
         line = lines[start_index]
-        line_no = start_index + 1
+
+        # Code fence (``` / ~~~)
         if _FENCE.match(line):
             return self._consume_until_fence_close(lines, start_index, section, counters)
+
+        # Math fence ($$)
+        if _MATH_FENCE.match(line):
+            return self._consume_until_math_fence_close(lines, start_index, section, counters)
+
+        # HTML table
         if _HTML_TABLE_OPEN.match(line):
             return self._consume_until_html_table_close(lines, start_index, section, counters)
-        if _LIST.match(line):
-            return self._consume_while(lines, start_index, section, counters, "list", self._is_list_continuation)
+
+        # Admonition > [!TYPE] — must check before generic quote
+        if _ADMONITION.match(line):
+            return self._consume_while(
+                lines, start_index, section, counters, "admonition",
+                lambda v: bool(_QUOTE.match(v))
+            )
+
+        # Generic blockquote
         if _QUOTE.match(line):
-            return self._consume_while(lines, start_index, section, counters, "quote", lambda value: bool(_QUOTE.match(value)))
+            return self._consume_while(
+                lines, start_index, section, counters, "quote",
+                lambda v: bool(_QUOTE.match(v))
+            )
+
+        # Task list (- [x] / - [ ]) — must check before generic list
+        if _TASK_LIST.match(line):
+            return self._consume_while(
+                lines, start_index, section, counters, "task_list",
+                self._is_list_continuation
+            )
+
+        # Generic list
+        if _LIST.match(line):
+            return self._consume_while(
+                lines, start_index, section, counters, "list",
+                self._is_list_continuation
+            )
+
+        # Markdown pipe table
         if self._starts_table(lines, start_index):
-            return self._consume_while(lines, start_index, section, counters, "table", lambda value: "|" in value)
-        return self._consume_while(lines, start_index, section, counters, "paragraph", self._is_paragraph_continuation)
+            return self._consume_while(
+                lines, start_index, section, counters, "table",
+                lambda v: "|" in v
+            )
+
+        # Footnote definition [^id]: text
+        if _FOOTNOTE_DEF.match(line):
+            return self._make_block(
+                lines, start_index, start_index + 1, section, counters, "footnote"
+            ), start_index + 1
+
+        # Standalone image (after normalizer split, exactly one ![alt](src) per line)
+        if _IMAGE.match(line):
+            return self._make_block(
+                lines, start_index, start_index + 1, section, counters, "image"
+            ), start_index + 1
+
+        # Default: paragraph
+        return self._consume_while(
+            lines, start_index, section, counters, "paragraph",
+            self._is_paragraph_continuation
+        )
 
     def _consume_until_fence_close(
         self, lines: list[str], start_index: int, section: DocumentNode, counters: dict[str, int]
@@ -129,6 +195,17 @@ class StructureAnalyzer:
                 return self._make_block(lines, start_index, end_index + 1, section, counters, "code_block"), end_index + 1
             end_index += 1
         raise StructureError(f"Unclosed code block starting at line {start_index + 1}.")
+
+    def _consume_until_math_fence_close(
+        self, lines: list[str], start_index: int, section: DocumentNode, counters: dict[str, int]
+    ) -> tuple[DocumentNode, int]:
+        """Consume $$ ... $$ math blocks verbatim."""
+        end_index = start_index + 1
+        while end_index < len(lines):
+            if _MATH_FENCE.match(lines[end_index]):
+                return self._make_block(lines, start_index, end_index + 1, section, counters, "math_block"), end_index + 1
+            end_index += 1
+        raise StructureError(f"Unclosed math fence starting at line {start_index + 1}.")
 
     def _consume_until_html_table_close(
         self, lines: list[str], start_index: int, section: DocumentNode, counters: dict[str, int]
@@ -152,7 +229,7 @@ class StructureAnalyzer:
         end_index = start_index
         while end_index < len(lines):
             candidate = lines[end_index]
-            if not candidate.strip() or _HEADING.match(candidate) or _FENCE.match(candidate) or _HTML_TABLE_OPEN.match(candidate):
+            if not candidate.strip() or _HEADING.match(candidate) or _FENCE.match(candidate) or _HTML_TABLE_OPEN.match(candidate) or _MATH_FENCE.match(candidate):
                 break
             if not predicate(candidate):
                 break
@@ -194,7 +271,14 @@ class StructureAnalyzer:
 
     @staticmethod
     def _is_paragraph_continuation(line: str) -> bool:
-        return not _LIST.match(line) and not _QUOTE.match(line) and "|" not in line
+        return (
+            not _LIST.match(line)
+            and not _QUOTE.match(line)
+            and "|" not in line
+            and not _IMAGE.match(line)        # don't absorb standalone images
+            and not _MATH_FENCE.match(line)   # don't absorb math fence openers
+            and not _FOOTNOTE_DEF.match(line) # don't absorb footnote definitions
+        )
 
     def _structured_heading(self, node: DocumentNode, counters: dict[str, int]) -> DocumentBlock:
         counters["order"] += 1
@@ -221,19 +305,25 @@ class StructureAnalyzer:
             level=node.level,
             heading_path=list(node.heading_path),
             parent_id=node.parent_id,
+            image_metadata=self._image_metadata(node.content) if block_type == BlockType.IMAGE else None,
             table_structure=self._table_structure(node.content) if block_type == BlockType.TABLE else None,
             code_metadata=self._code_metadata(node.content) if block_type == BlockType.CODE else None,
-            list_items=self._list_items(node.content) if block_type == BlockType.LIST else None,
-            quote_level=1 if block_type == BlockType.QUOTE else 0,
+            list_items=self._list_items(node.content) if block_type in (BlockType.LIST, BlockType.TASK_LIST) else None,
+            quote_level=1 if block_type in (BlockType.QUOTE, BlockType.ADMONITION) else 0,
         )
 
     @staticmethod
     def _block_type(node_type: str) -> BlockType:
         return {
+            "image":      BlockType.IMAGE,
             "code_block": BlockType.CODE,
-            "table": BlockType.TABLE,
-            "list": BlockType.LIST,
-            "quote": BlockType.QUOTE,
+            "math_block": BlockType.MATH_BLOCK,
+            "table":      BlockType.TABLE,
+            "list":       BlockType.LIST,
+            "task_list":  BlockType.TASK_LIST,
+            "quote":      BlockType.QUOTE,
+            "admonition": BlockType.ADMONITION,
+            "footnote":   BlockType.FOOTNOTE,
         }.get(node_type, BlockType.PARAGRAPH)
 
     @staticmethod
@@ -241,6 +331,14 @@ class StructureAnalyzer:
         first_line = content.splitlines()[0] if content.splitlines() else ""
         match = re.match(r"^\s*(?:```|~~~)\s*([A-Za-z0-9_+.-]+)?", first_line)
         return CodeBlockMetadata(language=match.group(1) if match and match.group(1) else None)
+
+    @staticmethod
+    def _image_metadata(content: str) -> ImageMetadata | None:
+        """Extract alt and src from a standalone image line produced by the normalizer."""
+        match = _IMAGE.match(content.strip())
+        if not match:
+            return None
+        return ImageMetadata(alt=match.group("alt"), src=match.group("src"))
 
     @staticmethod
     def _list_items(content: str) -> list[ListItem]:

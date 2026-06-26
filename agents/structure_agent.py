@@ -4,6 +4,8 @@ Validates document structure, heading hierarchy, and markdown integrity.
 Implements Rules 101-110.
 """
 
+from __future__ import annotations
+
 from typing import List, Dict, Any, Optional
 from agents.models import (
     ValidationIssue, IssueSeverity, IssueType, 

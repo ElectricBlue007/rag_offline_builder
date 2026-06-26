@@ -4,6 +4,8 @@ Validates chunk boundaries and embedding readiness.
 Implements Rules 131-150.
 """
 
+from __future__ import annotations
+
 from typing import List, Dict, Any, Tuple
 import math
 from agents.models import ValidationIssue, IssueSeverity, IssueType, ChunkingStrategy

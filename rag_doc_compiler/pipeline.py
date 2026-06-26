@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from adapters.file_loader import FileLoader
+from agents.chunk_repair_agent import ChunkRepairAgent
 from agents.chunk_review_agent import ChunkReviewAgent
 from core.chunk_preparer import ChunkPreparer
 from core.markdown_normalizer import MarkdownNormalizer
@@ -15,13 +16,31 @@ from output.metadata_exporter import MetadataExporter
 
 
 class DocumentCompiler:
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        repair_chunks: bool = False,
+        repair_model: str = "qwen2.5:7b",
+        repair_decisions: list[str] | None = None,
+        repair_accept_decisions: list[str] | None = None,
+        repair_max_attempts: int = 2,
+        chunk_repair_agent: ChunkRepairAgent | None = None,
+        embedding_model: str = "e5",
+    ) -> None:
         self.loader = FileLoader()
         self.normalizer = MarkdownNormalizer()
         self.analyzer = StructureAnalyzer()
         self.chunk_preparer = ChunkPreparer()
         self.semantic_chunk_planner = SemanticChunkPlanner()
         self.chunk_review_agent = ChunkReviewAgent()
+        self.repair_chunks = repair_chunks
+        self.repair_decisions = repair_decisions
+        self.repair_accept_decisions = repair_accept_decisions
+        self.embedding_model = embedding_model
+        self.chunk_repair_agent = chunk_repair_agent or ChunkRepairAgent(
+            review_agent=self.chunk_review_agent,
+            model_name=repair_model,
+            max_attempts=repair_max_attempts,
+        )
         self.markdown_writer = MarkdownWriter()
         self.metadata_exporter = MetadataExporter()
 
@@ -32,7 +51,14 @@ class DocumentCompiler:
         chunks = self.chunk_preparer.prepare(analysis, normalized.flags_by_line)
         index = self.metadata_exporter.build_index(analysis, chunks)
         index["semantic_chunk_plan"] = chunk_plan.to_dict()
-        index["chunk_review"] = self.chunk_review_agent.review_index(index).to_dict()
+        index["chunk_review"] = self.chunk_review_agent.review_index(index, embedding_model=self.embedding_model).to_dict()
+        if self.repair_chunks:
+            index = self.chunk_repair_agent.repair_index(
+                index,
+                embedding_model=self.embedding_model,
+                repair_decisions=self.repair_decisions,
+                accept_decisions=self.repair_accept_decisions,
+            )
         return {"markdown": normalized.markdown, "analysis": analysis, "chunk_plan": chunk_plan, "chunks": chunks, "index": index}
 
     def run_file(self, input_path: str | Path, output_dir: str | Path) -> dict:
@@ -44,12 +70,19 @@ class DocumentCompiler:
             output_dir,
             filename="chunk_review_report.json",
         )
-        return {
+        output = {
             **result,
             "markdown_path": markdown_path,
             "index_path": index_path,
             "chunk_review_path": chunk_review_path,
         }
+        if "chunk_repair_report" in result["index"]:
+            output["chunk_repair_path"] = self.metadata_exporter.write(
+                result["index"]["chunk_repair_report"],
+                output_dir,
+                filename="chunk_repair_report.json",
+            )
+        return output
 
     def validate_file(self, input_path: str | Path) -> dict:
         result = self.compile_text(self.loader.load_text(input_path))
