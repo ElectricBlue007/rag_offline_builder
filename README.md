@@ -93,6 +93,8 @@ When `--repair-chunks` is enabled, the compiler:
 - reviews chunks first
 - sends only `REPAIR` and `RECHUNK` chunks to the LLM by default
 - builds a rule-specific repair prompt for every issue in the chunk review
+- gives the model a hard output contract: no explanations, bounded length, balanced tables/code fences, and `APPROVE` as the target final decision
+- keeps an LLM repair only if the final reviewed decision is `APPROVE` by default
 - skips `REJECT` chunks by default, because rejected noise should not be rewritten into fake content
 - replaces repaired chunk text inside `index.json`
 - reruns the chunk review after repair
@@ -103,6 +105,12 @@ To change which decisions are repaired:
 
 ```powershell
 python -m cli.main full input.md output_dir --repair-chunks --repair-decisions REPAIR,RECHUNK --pretty
+```
+
+To intentionally keep partial repairs, change accepted final decisions:
+
+```powershell
+python -m cli.main full input.md output_dir --repair-chunks --repair-accept-decisions APPROVE,REPAIR --pretty
 ```
 
 ### Step 3. Validate the document

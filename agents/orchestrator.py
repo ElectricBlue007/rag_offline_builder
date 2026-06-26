@@ -158,15 +158,32 @@ class DocumentQualificationEngine:
             high_issues * 0.15 +
             medium_issues * 0.05
         )
+        warning_penalty = min(
+            0.25,
+            sum(self._severity_penalty(w.severity) for w in warnings),
+        )
         
         # Base scores from embedding agent
         base_embedding_score = embedding_scores.get('embedding_readiness_score', 0.5)
         
         # Calculate component scores
-        structural_score = max(0.0, 1.0 - issue_penalty - (len([i for i in issues if i.issue_type.value == 'structural']) * 0.05))
-        semantic_score = max(0.0, 1.0 - issue_penalty - (len([i for i in issues if i.issue_type.value == 'semantic']) * 0.05))
+        structural_warning_penalty = min(
+            0.2,
+            sum(self._severity_penalty(w.severity) for w in warnings if w.issue_type.value == 'structural'),
+        )
+        semantic_warning_penalty = min(
+            0.2,
+            sum(self._severity_penalty(w.severity) for w in warnings if w.issue_type.value == 'semantic'),
+        )
+        embedding_warning_penalty = min(
+            0.2,
+            sum(self._severity_penalty(w.severity) for w in warnings if w.issue_type.value == 'embedding_readiness'),
+        )
+
+        structural_score = max(0.0, 1.0 - issue_penalty - structural_warning_penalty - (len([i for i in issues if i.issue_type.value == 'structural']) * 0.05))
+        semantic_score = max(0.0, 1.0 - issue_penalty - semantic_warning_penalty - (len([i for i in issues if i.issue_type.value == 'semantic']) * 0.05))
         retrieval_score = max(0.0, min(1.0, base_embedding_score * embedding_scores.get('retrieval_utility_score', 0.5)))
-        embedding_readiness_score = max(0.0, min(1.0, base_embedding_score - issue_penalty * 0.5))
+        embedding_readiness_score = max(0.0, min(1.0, base_embedding_score - issue_penalty * 0.5 - embedding_warning_penalty))
         
         # Overall score (weighted average)
         overall_score = (
@@ -175,7 +192,7 @@ class DocumentQualificationEngine:
             retrieval_score * 0.25 +
             embedding_readiness_score * 0.25
         )
-        overall_score = max(0.0, min(1.0, overall_score))
+        overall_score = max(0.0, min(1.0, overall_score - warning_penalty * 0.25))
         
         return {
             "overall_score": round(overall_score, 3),
@@ -184,6 +201,17 @@ class DocumentQualificationEngine:
             "retrieval_score": round(retrieval_score, 3),
             "embedding_readiness_score": round(embedding_readiness_score, 3),
         }
+
+    @staticmethod
+    def _severity_penalty(severity) -> float:
+        value = getattr(severity, "value", str(severity)).lower()
+        return {
+            "critical": 0.08,
+            "high": 0.05,
+            "medium": 0.025,
+            "low": 0.01,
+            "info": 0.003,
+        }.get(value, 0.01)
     
     def _generate_recommendations(
         self,
@@ -233,9 +261,14 @@ class DocumentQualificationEngine:
             )
         
         # General best practices
-        if scores['overall_score'] >= 0.8:
+        warning_count = len(warnings)
+        if scores['overall_score'] >= 0.8 and warning_count <= 5:
             recommendations.append(
                 "Document is well-structured and ready for advanced chunking strategies"
+            )
+        elif scores['overall_score'] >= 0.8:
+            recommendations.append(
+                f"Document is mostly usable but has {warning_count} warnings to review before production embedding"
             )
         elif scores['overall_score'] >= 0.6:
             recommendations.append(

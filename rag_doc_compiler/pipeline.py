@@ -21,6 +21,7 @@ class DocumentCompiler:
         repair_chunks: bool = False,
         repair_model: str = "qwen2.5:7b",
         repair_decisions: list[str] | None = None,
+        repair_accept_decisions: list[str] | None = None,
         repair_max_attempts: int = 2,
         chunk_repair_agent: ChunkRepairAgent | None = None,
         embedding_model: str = "e5",
@@ -33,6 +34,7 @@ class DocumentCompiler:
         self.chunk_review_agent = ChunkReviewAgent()
         self.repair_chunks = repair_chunks
         self.repair_decisions = repair_decisions
+        self.repair_accept_decisions = repair_accept_decisions
         self.embedding_model = embedding_model
         self.chunk_repair_agent = chunk_repair_agent or ChunkRepairAgent(
             review_agent=self.chunk_review_agent,
@@ -55,6 +57,7 @@ class DocumentCompiler:
                 index,
                 embedding_model=self.embedding_model,
                 repair_decisions=self.repair_decisions,
+                accept_decisions=self.repair_accept_decisions,
             )
         return {"markdown": normalized.markdown, "analysis": analysis, "chunk_plan": chunk_plan, "chunks": chunks, "index": index}
 

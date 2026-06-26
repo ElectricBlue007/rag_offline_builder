@@ -370,17 +370,19 @@ def cmd_stats(args):
     
     normalized = normalize_markdown(content)
     doc = analyze_structure(normalized)
+    structured_blocks = getattr(doc, "structured_blocks", [])
     
     stats = {
         "file": args.input,
         "original_length": len(content),
         "normalized_length": len(normalized),
-        "total_blocks": len(doc.blocks),
-        "has_front_matter": doc.has_front_matter,
+        "total_blocks": len(doc.ordered_blocks),
+        "total_structured_blocks": len(structured_blocks),
+        "has_front_matter": False,
         "block_counts": {}
     }
     
-    for block in doc.blocks:
+    for block in structured_blocks:
         bt = block.block_type.value
         stats["block_counts"][bt] = stats["block_counts"].get(bt, 0) + 1
     

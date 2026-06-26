@@ -26,7 +26,7 @@ class ChunkPreparer:
     }
     _DECORATIVE_IMAGE = re.compile(
         r"!\[[^\]]*(?:google logo|abstract|geometric|crystal|gemstone|logo)[^\]]*\]"
-        r"|\b(?:google logo|abstract geometric shape|faceted geometric shape|crystal|gemstone)\b",
+        r"|\b(?:google logo|abstract(?:,\s*)?(?:three-dimensional\s+)?geometric shape|faceted geometric shape|crystal|gemstone)\b",
         re.IGNORECASE,
     )
     _AUTHOR_COVER_BLOCK = re.compile(r"^\s*author:\s+.+?!\[", re.IGNORECASE | re.DOTALL)
@@ -186,6 +186,8 @@ class ChunkPreparer:
         if self._AUTHOR_ONLY_BLOCK.fullmatch(text):
             return True
         if self._AUTHOR_COVER_BLOCK.search(text) and self._DECORATIVE_IMAGE.search(text):
+            return True
+        if self._DECORATIVE_IMAGE.search(text) and not self._has_substantive_text(text):
             return True
         if "![" in text and self._DECORATIVE_IMAGE.search(text) and not self._has_substantive_text(text):
             return True

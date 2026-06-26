@@ -65,3 +65,41 @@ def test_chunk_prompt_includes_rule_repair_plan_for_each_issue():
     assert "Too Small Chunk" in prompt
     assert "Prefix Validation" in prompt
     assert "passage:" in prompt
+    assert "HARD OUTPUT CONTRACT" in prompt
+    assert "maximum_words" in prompt
+    assert "target_final_decision" in prompt
+    assert "APPROVE" in prompt
+    assert "No preface" in prompt
+    assert "balanced <table> and </table>" in prompt
+    assert "If the chunk cannot be repaired to APPROVE" in prompt
+
+
+def test_chunk_prompt_feedback_targets_previous_validator_error():
+    prompt = RuleRepairPromptAgent().chunk_prompt(
+        chunk={
+            "chunk_id": "chunk_1",
+            "heading_path": ["Doc"],
+            "parent_section_id": "sec_1",
+            "semantic_tags": ["table"],
+            "text": "<table><tr><td>A</td></tr></table>",
+        },
+        review={
+            "decision": "REPAIR",
+            "final_score": 75,
+            "issues": [
+                {
+                    "rule_id": 306,
+                    "rule_name": "Broken Table",
+                    "severity": "high",
+                    "action": "REPAIR",
+                    "message": "Table is broken.",
+                }
+            ],
+        },
+        embedding_model="e5",
+        feedback="Repaired chunk has an unbalanced HTML table.",
+    )
+
+    assert "VALIDATOR FEEDBACK FROM PREVIOUS ATTEMPT" in prompt
+    assert "Repaired chunk has an unbalanced HTML table" in prompt
+    assert "Do not discuss this feedback" in prompt

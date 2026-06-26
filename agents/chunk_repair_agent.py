@@ -79,9 +79,11 @@ class ChunkRepairAgent:
         index: dict[str, Any],
         embedding_model: str = "e5",
         repair_decisions: Iterable[str] | None = None,
+        accept_decisions: Iterable[str] | None = None,
     ) -> dict[str, Any]:
         repaired_index = copy.deepcopy(index)
         decisions = set(repair_decisions or self.DEFAULT_REPAIR_DECISIONS)
+        accepted = set(accept_decisions or ("APPROVE",))
 
         initial_report = repaired_index.get("chunk_review") or self.review_agent.review_index(
             repaired_index,
@@ -91,6 +93,7 @@ class ChunkRepairAgent:
 
         reviews_by_id = {review["chunk_id"]: review for review in initial_report.get("chunk_reviews", [])}
         chunks = repaired_index.get("flat_chunk_view", [])
+        original_chunks_by_id = {chunk.get("chunk_id"): copy.deepcopy(chunk) for chunk in chunks}
         attempts: list[ChunkRepairAttempt] = []
 
         for chunk in chunks:
@@ -112,6 +115,23 @@ class ChunkRepairAgent:
             if final_review:
                 attempt.after_score = final_review.get("final_score")
                 attempt.after_decision = final_review.get("decision")
+            if attempt.status == "REPAIRED" and not self._accepted_review(attempt, accepted):
+                self._restore_chunk(chunks, original_chunks_by_id, attempt.chunk_id)
+                attempt.status = "ROLLED_BACK"
+                attempt.error = (
+                    f"Repair was rolled back because final decision was {attempt.after_decision} "
+                    f"with score {attempt.after_score}; accepted decisions: {sorted(accepted)}."
+                )
+
+        if any(attempt.status == "ROLLED_BACK" for attempt in attempts):
+            final_report = self.review_agent.review_index(repaired_index, embedding_model=embedding_model).to_dict()
+            final_by_id = {review["chunk_id"]: review for review in final_report.get("chunk_reviews", [])}
+            for attempt in attempts:
+                if attempt.status == "ROLLED_BACK":
+                    final_review = final_by_id.get(attempt.chunk_id)
+                    if final_review:
+                        attempt.after_score = final_review.get("final_score")
+                        attempt.after_decision = final_review.get("decision")
 
         repaired_index["chunk_review"] = final_report
         repaired_index["chunk_repair_report"] = self._build_report(
@@ -119,9 +139,32 @@ class ChunkRepairAgent:
             before_summary=initial_report.get("summary", {}),
             after_summary=final_report.get("summary", {}),
             repair_decisions=sorted(decisions),
+            accept_decisions=sorted(accepted),
             embedding_model=embedding_model,
         )
         return repaired_index
+
+    @staticmethod
+    def _accepted_review(attempt: ChunkRepairAttempt, accepted: set[str]) -> bool:
+        if attempt.after_decision not in accepted:
+            return False
+        if attempt.after_score is None or attempt.after_score <= attempt.before_score:
+            return False
+        return True
+
+    @staticmethod
+    def _restore_chunk(
+        chunks: list[dict[str, Any]],
+        original_chunks_by_id: dict[str, dict[str, Any]],
+        chunk_id: str,
+    ) -> None:
+        original = original_chunks_by_id.get(chunk_id)
+        if original is None:
+            return
+        for index, chunk in enumerate(chunks):
+            if chunk.get("chunk_id") == chunk_id:
+                chunks[index] = copy.deepcopy(original)
+                return
 
     def _repair_chunk(self, chunk: dict[str, Any], review: dict[str, Any], embedding_model: str) -> ChunkRepairAttempt:
         original_text = chunk.get("text", "") or ""
@@ -267,19 +310,23 @@ class ChunkRepairAgent:
         before_summary: dict[str, Any],
         after_summary: dict[str, Any],
         repair_decisions: list[str],
+        accept_decisions: list[str],
         embedding_model: str,
     ) -> dict[str, Any]:
         repaired = [attempt for attempt in attempts if attempt.status == "REPAIRED"]
         failed = [attempt for attempt in attempts if attempt.status == "FAILED"]
+        rolled_back = [attempt for attempt in attempts if attempt.status == "ROLLED_BACK"]
         return {
             "agent": "ChunkRepairAgent",
             "enabled": True,
             "model": attempts[0].model if attempts else None,
             "embedding_model": embedding_model,
             "repair_decisions": repair_decisions,
+            "accept_decisions": accept_decisions,
             "attempted_count": len(attempts),
             "repaired_count": len(repaired),
             "failed_count": len(failed),
+            "rolled_back_count": len(rolled_back),
             "before_summary": before_summary,
             "after_summary": after_summary,
             "ready_for_embedding": after_summary.get("ready_for_embedding", False),

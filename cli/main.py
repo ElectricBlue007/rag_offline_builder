@@ -26,6 +26,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--repair-chunks", action="store_true", help="Use an LLM to repair reviewed chunks before final output")
     run.add_argument("--repair-model", default="qwen2.5:7b", help="Local Ollama model used when --repair-chunks is enabled")
     run.add_argument("--repair-decisions", default="REPAIR,RECHUNK", help="Comma-separated decisions to repair")
+    run.add_argument("--repair-accept-decisions", default="APPROVE", help="Comma-separated final decisions accepted after LLM repair")
     run.add_argument("--repair-max-attempts", type=int, default=2, help="Maximum LLM attempts per chunk repair")
     run.add_argument("--pretty", action="store_true", help="Pretty print JSON output")
 
@@ -54,6 +55,7 @@ def build_parser() -> argparse.ArgumentParser:
     full.add_argument("--repair-chunks", action="store_true", help="Use an LLM to repair reviewed chunks before final output")
     full.add_argument("--repair-model", default="qwen2.5:7b", help="Local Ollama model used when --repair-chunks is enabled")
     full.add_argument("--repair-decisions", default="REPAIR,RECHUNK", help="Comma-separated decisions to repair")
+    full.add_argument("--repair-accept-decisions", default="APPROVE", help="Comma-separated final decisions accepted after LLM repair")
     full.add_argument("--repair-max-attempts", type=int, default=2, help="Maximum LLM attempts per chunk repair")
     full.add_argument("--pretty", action="store_true", help="Pretty print JSON output")
 
@@ -86,7 +88,7 @@ def run_phase1(compiler: DocumentCompiler, input_path: Path, output_dir: Path | 
             "phase": 1,
             "status": "success",
             "chunk_count": len(result["chunks"]),
-            "block_count": len(result["analysis"].blocks),
+            "block_count": len(result["analysis"].ordered_blocks),
         }
 
 
@@ -127,10 +129,16 @@ def build_compiler_from_args(args: argparse.Namespace) -> DocumentCompiler:
         for decision in getattr(args, "repair_decisions", "").split(",")
         if decision.strip()
     ]
+    repair_accept_decisions = [
+        decision.strip().upper()
+        for decision in getattr(args, "repair_accept_decisions", "").split(",")
+        if decision.strip()
+    ]
     return DocumentCompiler(
         repair_chunks=getattr(args, "repair_chunks", False),
         repair_model=getattr(args, "repair_model", "qwen2.5:7b"),
         repair_decisions=repair_decisions or None,
+        repair_accept_decisions=repair_accept_decisions or None,
         repair_max_attempts=getattr(args, "repair_max_attempts", 2),
     )
 
@@ -184,8 +192,10 @@ def main(argv: list[str] | None = None) -> int:
             result = compiler.compile_text(markdown)
             output = {
                 "phase": 1,
+                "normalized_markdown": result["markdown"],
                 "structure_tree": result["analysis"].tree.to_dict(),
-                "block_count": len(result["analysis"].blocks),
+                "block_count": len(result["analysis"].ordered_blocks),
+                "ordered_blocks": [block.to_dict() for block in result["analysis"].structured_blocks],
                 "chunk_candidates": [chunk.to_dict() for chunk in result["chunks"]],
                 "semantic_labels": [
                     {"chunk_id": chunk.chunk_id, "intent": chunk.intent, "content_type": chunk.content_type}

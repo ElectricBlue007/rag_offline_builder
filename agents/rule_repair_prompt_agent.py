@@ -120,6 +120,11 @@ FIXED MARKDOWN:
             )
 
         heading_path = " > ".join(chunk.get("heading_path") or [])
+        original_text = chunk.get("text", "") or ""
+        word_count = len(original_text.split())
+        char_count = len(original_text)
+        max_words = max(word_count + 80, int(word_count * 2.5), 80)
+        max_chars = max(char_count + 500, int(char_count * 2.5), 500)
         context = {
             "chunk_id": chunk.get("chunk_id"),
             "heading_path": heading_path,
@@ -128,12 +133,26 @@ FIXED MARKDOWN:
             "embedding_model": embedding_model,
             "before_decision": review.get("decision"),
             "before_score": review.get("final_score"),
+            "target_final_decision": "APPROVE",
+            "output_budget": {
+                "original_words": word_count,
+                "maximum_words": max_words,
+                "original_chars": char_count,
+                "maximum_chars": max_chars,
+            },
             "rule_repair_plan": strategy_lines,
         }
-        feedback_block = f"\nPrevious repair attempt was rejected: {feedback}\n" if feedback else ""
+        feedback_block = (
+            "\nVALIDATOR FEEDBACK FROM PREVIOUS ATTEMPT:\n"
+            f"- Rejection reason: {feedback}\n"
+            "- Correct the next answer by obeying the hard output contract exactly.\n"
+            "- Do not discuss this feedback in your answer.\n"
+            if feedback else ""
+        )
         return f"""
 You are a senior RAG chunk repair operator.
 Repair this chunk for embedding by following the rule-specific repair plan.
+The repaired chunk must be good enough to be APPROVE after automated review.
 
 Context JSON:
 ```json
@@ -153,6 +172,17 @@ GLOBAL CHUNK SAFETY RULES:
 5. Make the chunk standalone and retrievable.
 6. For E5 embeddings, start the returned text with "passage:".
 7. Keep Markdown valid and embedding-safe.
+
+HARD OUTPUT CONTRACT:
+- Output must start directly with the repaired chunk text. No preface such as "Here is", "Fixed chunk", "Explanation", "Note", or similar.
+- Output must not contain commentary about what you changed.
+- Output must not contain markdown fences around the whole answer.
+- Keep output under {max_words} words and {max_chars} characters.
+- If the original contains an HTML table, preserve balanced <table> and </table> tags.
+- If the original contains table rows, do not leave partial <tr>, <td>, or <th> tags.
+- If the original contains code fences, keep them balanced.
+- If the chunk cannot be repaired to APPROVE using only visible context, return the original chunk text with only mandatory formatting fixes such as "passage:" and heading context.
+- Never create a long tutorial, summary, or new documentation page.
 
 REPAIRED CHUNK:
 """

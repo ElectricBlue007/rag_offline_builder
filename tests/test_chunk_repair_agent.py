@@ -32,12 +32,25 @@ def repair_text():
     )
 
 
+def approved_repair_text():
+    return (
+        "passage: Chonkie > Installation\n\n"
+        "SemanticChunker is a component that uses embeddings and creates semantic retrieval chunks for Chonkie. "
+        "It explains how to install, configure, and use Chonkie in a markdown document retrieval pipeline. "
+        "The chunk preserves the Installation heading, the Chonkie entity, and the relationship that "
+        "SemanticChunker uses embeddings to prepare searchable chunks. Use pip install chonkie before indexing "
+        "documents, then configure the chunking pipeline so retrieval queries can find installation guidance. "
+        "This standalone passage includes actionable setup information, a definition, entities, searchable "
+        "keywords, and stable context for E5 embedding models."
+    )
+
+
 def test_chunk_repair_agent_replaces_reviewed_chunk_and_reruns_review():
     prompts = []
 
     def fake_llm(prompt):
         prompts.append(prompt)
-        return repair_text()
+        return approved_repair_text()
 
     bad_chunk = chunk("Install Chonkie.", token_estimate=8)
     index = {"flat_chunk_view": [bad_chunk]}
@@ -54,7 +67,7 @@ def test_chunk_repair_agent_replaces_reviewed_chunk_and_reruns_review():
     assert "Context JSON" in prompts[0]
     assert "Too Small Chunk" in prompts[0] or "Dangerously Small" in prompts[0]
     assert repaired_chunk["text"].startswith("passage:")
-    assert "SemanticChunker is a Chonkie component" in repaired_chunk["text"]
+    assert "SemanticChunker is a component" in repaired_chunk["text"]
     assert repaired_chunk["token_estimate"] >= 50
     assert repaired_chunk["debug_metadata"]["chunk_repair"]["model"] == "fake-model"
     assert report["attempted_count"] == 1
@@ -83,7 +96,7 @@ def test_chunk_repair_agent_skips_rejected_chunks_by_default():
 
 
 def test_chunk_repair_agent_strips_markdown_fence_from_model_output():
-    agent = ChunkRepairAgent(llm_client=lambda prompt: f"```markdown\n{repair_text()}\n```")
+    agent = ChunkRepairAgent(llm_client=lambda prompt: f"```markdown\n{approved_repair_text()}\n```")
     index = {"flat_chunk_view": [chunk("Install Chonkie.", token_estimate=8)]}
 
     repaired = agent.repair_index(index, embedding_model="e5")
@@ -93,7 +106,7 @@ def test_chunk_repair_agent_strips_markdown_fence_from_model_output():
 
 
 def test_chunk_repair_report_is_json_serializable():
-    agent = ChunkRepairAgent(llm_client=lambda prompt: repair_text())
+    agent = ChunkRepairAgent(llm_client=lambda prompt: approved_repair_text())
     index = {"flat_chunk_view": [chunk("Install Chonkie.", token_estimate=8)]}
 
     repaired = agent.repair_index(index, embedding_model="e5")
@@ -118,7 +131,7 @@ def test_ollama_call_forces_utf8_decoding(monkeypatch):
 
 
 def test_chunk_repair_agent_retries_invalid_llm_output():
-    replies = iter(["Here is the fixed chunk: bad", repair_text()])
+    replies = iter(["Here is the fixed chunk: bad", approved_repair_text()])
     prompts = []
 
     def fake_llm(prompt):
@@ -130,6 +143,21 @@ def test_chunk_repair_agent_retries_invalid_llm_output():
     repaired = ChunkRepairAgent(llm_client=fake_llm, max_attempts=2).repair_index(index, embedding_model="e5")
 
     assert len(prompts) == 2
-    assert "Previous repair attempt was rejected" in prompts[1]
+    assert "VALIDATOR FEEDBACK FROM PREVIOUS ATTEMPT" in prompts[1]
     assert repaired["flat_chunk_view"][0]["text"].startswith("passage:")
     assert repaired["chunk_repair_report"]["repaired_count"] == 1
+
+
+def test_chunk_repair_rolls_back_non_approved_repair():
+    index = {"flat_chunk_view": [chunk("Install Chonkie.", token_estimate=8)]}
+    original_text = index["flat_chunk_view"][0]["text"]
+
+    repaired = ChunkRepairAgent(
+        llm_client=lambda prompt: "passage: Chonkie > Installation\n\nInstall Chonkie with pip."
+    ).repair_index(index, embedding_model="e5")
+
+    report = repaired["chunk_repair_report"]
+    assert repaired["flat_chunk_view"][0]["text"] == original_text
+    assert report["repaired_count"] == 0
+    assert report["rolled_back_count"] == 1
+    assert report["repairs"][0]["status"] == "ROLLED_BACK"

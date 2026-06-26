@@ -142,6 +142,20 @@ def test_layer_5_noise_rules_333_to_339():
     assert 339 in rule_ids(near_duplicate_reviews[0])
 
 
+def test_decorative_ocr_caption_is_rejected():
+    result = review_one(
+        chunk(
+            "The Google logo is located in the bottom left corner of the page. "
+            "A large abstract geometric shape is positioned in the bottom right corner.",
+            token_estimate=90,
+        ),
+        embedding_model="e5",
+    )
+
+    assert result.decision == "REJECT"
+    assert 336 in rule_ids(result)
+
+
 def test_layer_6_context_rules_340_to_343():
     missing_heading = review_one(chunk("Install Chonkie.", heading_path=[]))
     missing_section = review_one(chunk("Install Chonkie.", parent_section_id=None))
@@ -195,3 +209,12 @@ def test_decision_thresholds_and_golden_scores():
     assert approved.final_score >= 75
     assert rechunk.decision in {"REPAIR", "RECHUNK", "REJECT"}
     assert reject.decision == "REJECT"
+
+
+def test_repair_decision_is_not_ready_for_embedding():
+    repair_chunk = chunk("Install Chonkie with pip.", token_estimate=30)
+
+    report = ChunkReviewAgent().review_index({"flat_chunk_view": [repair_chunk]}, embedding_model="e5")
+
+    assert report.summary["decisions"].get("REPAIR", 0) or report.summary["decisions"].get("RECHUNK", 0) or report.summary["decisions"].get("REJECT", 0)
+    assert report.summary["ready_for_embedding"] is False

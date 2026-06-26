@@ -625,6 +625,28 @@ class TestDocumentQualificationEngine:
         
         assert len(result.issues) > 0 or len(result.warnings) > 0
         assert result.overall_score < 0.7
+
+    def test_warning_heavy_document_scores_below_perfect_components(self):
+        """Warnings should make scores honest even without critical issues."""
+        engine = DocumentQualificationEngine()
+        doc = create_test_document([
+            create_heading_block("Prompt Engineering", 1, 0),
+            create_heading_block("Acknowledgements", 2, 1),
+            create_paragraph_block("Alice Example", 2),
+            create_paragraph_block("Bob Example", 3),
+            create_heading_block("Introduction", 2, 4),
+            create_paragraph_block(
+                "Prompt engineering is a process for designing model inputs. "
+                "It helps users configure prompts, examples, and output formats.",
+                5,
+            ),
+        ])
+
+        result = engine.qualify(doc)
+
+        assert len(result.warnings) > 0
+        assert result.structural_score < 1.0 or result.semantic_score < 1.0
+        assert result.overall_score < 0.95
     
     def test_chunking_strategy_generation(self):
         """Test that appropriate chunking strategy is generated."""
