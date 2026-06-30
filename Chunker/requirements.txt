@@ -1,0 +1,14 @@
+# ── Core RAG / chunking ──────────────────────────────────────────────────────
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-experimental>=0.0.60
+
+# ── Embeddings (offline, no OpenAI key needed) ───────────────────────────────
+# BAAI/bge-m3 supports English + Spanish (multilingual)
+fastembed>=0.2.6
+
+# ── Vector store (optional — for downstream RAG; not used by the chunker itself)
+# chromadb>=0.5.0
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+# (all other imports are stdlib: re, json, pathlib, dataclasses, etc.)

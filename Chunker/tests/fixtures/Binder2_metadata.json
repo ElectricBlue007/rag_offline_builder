@@ -1,0 +1,33 @@
+{
+  "file_name": "Binder2.pdf",
+  "num_pages": 2,
+  "total_token_count": 2458,
+  "total_chunks": 23,
+  "total_images": 1,
+  "pages": [
+    {
+      "page_num": 0,
+      "page_box": [
+        0,
+        0,
+        1632,
+        2112
+      ],
+      "token_count": 862,
+      "num_chunks": 8,
+      "num_images": 1
+    },
+    {
+      "page_num": 1,
+      "page_box": [
+        0,
+        0,
+        1632,
+        2112
+      ],
+      "token_count": 1596,
+      "num_chunks": 15,
+      "num_images": 0
+    }
+  ]
+}
