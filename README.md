@@ -1,4 +1,4 @@
-# Local-First RAG Document Intelligence Pipeline
+# Local-First RAG Document Intelligence PipeLine
 
 This project runs a complete local-first RAG ingestion and querying workflow:
 
