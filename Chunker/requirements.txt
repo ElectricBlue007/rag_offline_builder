@@ -1,14 +1,64 @@
 # ── Core RAG / chunking ──────────────────────────────────────────────────────
 langchain>=0.2.0
-langchain-community>=0.2.0
+langchain-community>=0.2.0  # see the exact ==0.3.7 pin below if using RAGAS evaluation
 langchain-experimental>=0.0.60
 
 # ── Embeddings (offline, no OpenAI key needed) ───────────────────────────────
-# BAAI/bge-m3 supports English + Spanish (multilingual)
-fastembed>=0.2.6
+# Embeddings are served by a local Ollama instance rather than loaded
+# in-process — see the "LLM generation" entry below for the same `ollama`
+# package, which is used for both. Used internally by semantic_chunker.py
+# (semantic splitting) and by embedding/embed_generator.py (final vector
+# generation for storage). Pull the model before running the pipeline:
+#   ollama pull qwen3-embedding:8b
+# (needs ~5GB VRAM at the default Q4_K_M quantization; qwen3-embedding:4b
+# or :0.6b are lighter alternatives if VRAM is tight.)
 
-# ── Vector store (optional — for downstream RAG; not used by the chunker itself)
-# chromadb>=0.5.0
+# ── Table normalization (HTML tables → embeddable prose) ────────────────────
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+
+# ── LLM generation (fully offline via Ollama) ────────────────────────────────
+# Required for run_answer.py (final answer generation) and optionally for
+# ContextualEnricherConfig.mode = "llm" (richer per-chunk context, default
+# mode is "deterministic" and needs no LLM). Install Ollama itself
+# separately (https://ollama.com) and run `ollama pull llama3.2` (or your
+# preferred model) before using either.
+ollama>=0.3.0
+
+# ── Token-aware chunk sizing, exact counts (optional) ────────────────────────
+# Not required — TokenCounter falls back to a word-count heuristic without
+# this. Install for exact token counts matched to the embedding model.
+# transformers>=4.40.0
+
+# ── Vector store (fully offline, local persistent storage) ──────────────────
+chromadb>=0.5.0
+
+# ── Keyword search (offline, pure Python, no model download) ────────────────
+# Powers storage/bm25_index.py — exact-term matching to complement dense
+# vector search, essential for technical abbreviations (CMI, MAC, GCI...)
+# an embedding model has never seen in training.
+rank-bm25>=0.2.2
+
+# ── Cross-encoder reranking (optional, opt-in via `python run_query.py --rerank`) ──
+# Pulls in torch — a heavier dependency than anything else in this project,
+# hence opt-in rather than default. Not required for normal hybrid retrieval.
+# Default model is Qwen/Qwen3-Reranker-4B (4B params, needs a GPU with a
+# few GB free VRAM) — requires transformers>=4.51.0 for Qwen3 support and
+# a recent sentence-transformers with CrossEncoder prompt support.
+# sentence-transformers>=3.4.0
+# transformers>=4.51.0
+
+# ── Evaluation (RAGAS — measures retrieval + generation quality) ────────────
+# Wired to Ollama for both the judge LLM and embeddings instead of RAGAS's
+# OpenAI defaults — see config.py's RagasEvaluatorConfig for why. A real,
+# non-obvious compatibility issue was hit and resolved while building this:
+# newer langchain-community releases relocated ChatVertexAI, which older
+# ragas versions still import at load time, causing a hard ImportError on
+# `import ragas` with no obvious connection to the actual problem. The pins
+# below are the confirmed-working combination:
+ragas==0.2.15
+langchain-community==0.3.7
+langchain-openai==0.2.14
 
 # ── Utilities ────────────────────────────────────────────────────────────────
 # (all other imports are stdlib: re, json, pathlib, dataclasses, etc.)

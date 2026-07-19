@@ -199,6 +199,269 @@ class TestProcessFile(unittest.TestCase):
         table_chunks = [c for c in result if c.metadata.get("chunk_type") == "table"]
         self.assertEqual(len(table_chunks), 2)
 
+    # ── Table normalization wiring (real TableChunkNormalizer, not mocked) ────
+
+    def test_table_normalized_text_differs_from_raw_html(self):
+        """
+        This is the key end-to-end proof that TableChunkNormalizer is
+        actually wired into process_file — normalized_text must NOT
+        equal the raw HTML content for a table chunk.
+        """
+        content = (
+            "### Actions\n\n"
+            "<table border='1'><thead><tr><th>Action</th><th>Entry</th></tr></thead>"
+            "<tbody><tr><td>Create SOI</td><td>CMI track</td></tr></tbody></table>"
+        )
+        result = self._process(content)
+        table_chunks = [c for c in result if c.metadata.get("chunk_type") == "table"]
+        self.assertGreater(len(table_chunks), 0)
+        self.assertNotEqual(table_chunks[0].content, table_chunks[0].normalized_text)
+
+    def test_table_normalized_text_has_no_html_tags(self):
+        content = (
+            "### Actions\n\n"
+            "<table border='1'><thead><tr><th>Action</th><th>Entry</th></tr></thead>"
+            "<tbody><tr><td>Create SOI</td><td>CMI track</td></tr></tbody></table>"
+        )
+        result = self._process(content)
+        table_chunks = [c for c in result if c.metadata.get("chunk_type") == "table"]
+        self.assertNotIn("<table", table_chunks[0].normalized_text)
+        self.assertNotIn("<td", table_chunks[0].normalized_text)
+        self.assertNotIn("<th", table_chunks[0].normalized_text)
+
+    def test_table_normalized_text_preserves_field_relationship(self):
+        """The header-row normalizer must produce 'field: value' style text."""
+        content = (
+            "### Actions\n\n"
+            "<table border='1'><thead><tr><th>Action</th><th>Entry</th></tr></thead>"
+            "<tbody><tr><td>Create SOI</td><td>CMI track</td></tr></tbody></table>"
+        )
+        result = self._process(content)
+        table_chunks = [c for c in result if c.metadata.get("chunk_type") == "table"]
+        self.assertIn("Create SOI", table_chunks[0].normalized_text)
+        self.assertIn("entry:", table_chunks[0].normalized_text)
+        self.assertIn("CMI track", table_chunks[0].normalized_text)
+
+    def test_table_content_field_still_has_raw_html(self):
+        """content must remain the original HTML — normalized_text is separate."""
+        content = (
+            "### Actions\n\n"
+            "<table border='1'><thead><tr><th>Action</th></tr></thead>"
+            "<tbody><tr><td>Create SOI</td></tr></tbody></table>"
+        )
+        result = self._process(content)
+        table_chunks = [c for c in result if c.metadata.get("chunk_type") == "table"]
+        self.assertIn("<table", table_chunks[0].content)
+        self.assertIn("<td>", table_chunks[0].content)
+
+    def test_text_chunk_normalized_text_equals_content(self):
+        """Non-table chunks must have normalized_text == content, unchanged."""
+        content = "### Header\n\nThis is plain text content with enough length."
+        result = self._process(content)
+        text_chunks = [c for c in result if c.metadata.get("chunk_type") == "text"]
+        self.assertGreater(len(text_chunks), 0)
+        self.assertEqual(text_chunks[0].content, text_chunks[0].normalized_text)
+
+    def test_image_description_normalized_text_equals_content(self):
+        content = (
+            "### MMI Disposition\n\n"
+            "![A screenshot of the interface](img.webp)\n\n"
+            "Some following text here."
+        )
+        result = self._process(content)
+        img_chunks = [c for c in result
+                      if c.metadata.get("chunk_type") == "image_description"]
+        self.assertGreater(len(img_chunks), 0)
+        self.assertEqual(img_chunks[0].content, img_chunks[0].normalized_text)
+
+    def test_key_value_table_normalized_as_single_record(self):
+        """Testing.md-style key-value table (bold label, no <th>) via full pipeline."""
+        content = (
+            "### Example\n\n"
+            "<table border='1'>"
+            "<tr><td><b>Model</b></td><td colspan='3'>gemini-pro</td></tr>"
+            "<tr><td><b>Temperature</b></td><td>0.1</td>"
+            "<td><b>Top-P</b></td><td>1</td></tr>"
+            "</table>"
+        )
+        result = self._process(content)
+        table_chunks = [c for c in result if c.metadata.get("chunk_type") == "table"]
+        self.assertGreater(len(table_chunks), 0)
+        norm = table_chunks[0].normalized_text
+        self.assertIn("Model: gemini-pro", norm)
+        self.assertIn("Temperature: 0.1", norm)
+        self.assertIn("Top-P: 1", norm)
+
+    def test_malformed_table_falls_back_gracefully_not_crash(self):
+        """A pipeline run must never crash on one bad table."""
+        content = "### Broken\n\n<table><tr><td>Unclosed cell</table>"
+        # Should not raise — either normalizes via lenient HTML parsing
+        # or falls back to raw content, but never throws.
+        try:
+            result = self._process(content)
+        except Exception as exc:
+            self.fail(f"Pipeline crashed on malformed table: {exc}")
+        self.assertIsInstance(result, list)
+
+    def test_all_enriched_chunks_have_normalized_text_field(self):
+        content = (
+            "### Section\n\n"
+            "Some text here.\n\n"
+            "<table><tr><td>Data</td></tr></table>\n\n"
+            "![An image](x.webp)"
+        )
+        result = self._process(content)
+        for chunk in result:
+            self.assertTrue(hasattr(chunk, "normalized_text"))
+            self.assertIsInstance(chunk.normalized_text, str)
+
+    def test_to_dict_includes_normalized_text(self):
+        content = "### H\n\n<table><tr><td>Data</td></tr></table>"
+        result = self._process(content)
+        for chunk in result:
+            d = chunk.to_dict()
+            self.assertIn("normalized_text", d)
+
+    # ── Contextual enrichment wiring (real ContextualEnricher, deterministic) ──
+
+    def test_contextualized_text_includes_source_filename(self):
+        content = "### Section\n\nSome content text here."
+        result = self._process(content, filename="MyDoc.md")
+        for chunk in result:
+            self.assertIn("MyDoc.md", chunk.contextualized_text)
+
+    def test_contextualized_text_includes_breadcrumb(self):
+        content = "### System reports\n\nSome content text here long enough."
+        result = self._process(content)
+        text_chunks = [c for c in result if c.metadata.get("chunk_type") == "text"]
+        self.assertGreater(len(text_chunks), 0)
+        self.assertIn("System reports", text_chunks[0].contextualized_text)
+
+    def test_contextualized_text_differs_from_normalized_text(self):
+        """Proves the stage actually ran, not just defaulted through."""
+        content = "### Section\n\nSome content text here."
+        result = self._process(content)
+        for chunk in result:
+            self.assertNotEqual(chunk.contextualized_text, chunk.normalized_text)
+
+    def test_table_contextualized_text_has_both_context_and_prose(self):
+        content = (
+            "### Actions\n\n"
+            "<table border='1'><thead><tr><th>Action</th><th>Entry</th></tr></thead>"
+            "<tbody><tr><td>Create SOI</td><td>CMI track</td></tr></tbody></table>"
+        )
+        result = self._process(content, filename="Ops.md")
+        table_chunks = [c for c in result if c.metadata.get("chunk_type") == "table"]
+        self.assertGreater(len(table_chunks), 0)
+        ctext = table_chunks[0].contextualized_text
+        self.assertIn("Ops.md", ctext)
+        self.assertIn("Create SOI", ctext)
+        self.assertNotIn("<table", ctext)  # must use normalized_text as base, not HTML
+
+    def test_to_dict_includes_contextualized_text(self):
+        content = "### H\n\n<table><tr><td>Data</td></tr></table>"
+        result = self._process(content)
+        for chunk in result:
+            d = chunk.to_dict()
+            self.assertIn("contextualized_text", d)
+
+    # ── Embedding instruction-prefix contract (EmbedTextBuilder wiring) ──────
+    # Current default (qwen3-embedding): no passage-side prefix at all, so
+    # embed_text should exactly equal contextualized_text. These tests
+    # deliberately don't hardcode a prefix string, since that's a
+    # model-dependent choice (see EmbedTextConfig) that will change again
+    # if the embedding model changes — the prefix MECHANISM itself is
+    # covered directly in tests/test_embed_text_builder.py.
+
+    def test_embed_text_equals_contextualized_text_by_default(self):
+        content = "### Section\n\nSome content text here."
+        result = self._process(content)
+        for chunk in result:
+            self.assertEqual(chunk.embed_text, chunk.contextualized_text)
+
+    def test_embed_text_contains_contextualized_content(self):
+        content = "### System reports\n\nSome content text here long enough."
+        result = self._process(content, filename="Ops.md")
+        text_chunks = [c for c in result if c.metadata.get("chunk_type") == "text"]
+        self.assertGreater(len(text_chunks), 0)
+        embed_text = text_chunks[0].embed_text
+        self.assertIn("Ops.md", embed_text)          # from contextual enrichment
+        self.assertIn("System reports", embed_text)   # from contextual enrichment
+
+    def test_embed_text_table_has_no_html(self):
+        content = (
+            "### Actions\n\n"
+            "<table border='1'><thead><tr><th>Action</th></tr></thead>"
+            "<tbody><tr><td>Create SOI</td></tr></tbody></table>"
+        )
+        result = self._process(content)
+        table_chunks = [c for c in result if c.metadata.get("chunk_type") == "table"]
+        self.assertGreater(len(table_chunks), 0)
+        self.assertNotIn("<table", table_chunks[0].embed_text)
+        self.assertEqual(table_chunks[0].embed_text, table_chunks[0].contextualized_text)
+
+    def test_to_dict_includes_embed_text(self):
+        content = "### H\n\n<table><tr><td>Data</td></tr></table>"
+        result = self._process(content)
+        for chunk in result:
+            d = chunk.to_dict()
+            self.assertIn("embed_text", d)
+
+    # ── Stable chunk_id ──────────────────────────────────────────────────────
+
+    def test_chunk_id_present_and_nonempty(self):
+        content = "### Section\n\nSome text content here."
+        result = self._process(content)
+        for chunk in result:
+            self.assertTrue(chunk.chunk_id)
+            self.assertIsInstance(chunk.chunk_id, str)
+
+    def test_chunk_id_unique_within_document(self):
+        content = "### A\n\nText A.\n\n### B\n\nText B.\n\n### C\n\nText C."
+        result = self._process(content)
+        ids = [c.chunk_id for c in result]
+        self.assertEqual(len(ids), len(set(ids)))
+
+    def test_chunk_id_deterministic_across_runs(self):
+        """Same input processed twice must yield identical chunk_ids —
+        this is what makes downstream ChromaDB upserts idempotent."""
+        content = "### Section\n\nStable content for hashing."
+        # Must reuse the SAME temp directory (i.e. the SAME resolved
+        # md_path) across both calls — determinism is about "same path,
+        # same content, same chunk_index" producing the same ID, not
+        # about two different filesystem locations that happen to share
+        # a filename. compute_chunk_id() correctly incorporates the
+        # full source path, so two different temp dirs are expected to
+        # differ; that's not what this test is meant to check.
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp)
+            md_path = p / "Stable.md"
+            md_path.write_text(content, encoding="utf-8")
+            pipeline = make_pipeline(p, p / "out")
+
+            result1 = pipeline.process_file(md_path)
+            result2 = pipeline.process_file(md_path)
+
+        ids1 = [c.chunk_id for c in result1]
+        ids2 = [c.chunk_id for c in result2]
+        self.assertEqual(ids1, ids2)
+
+    def test_chunk_id_differs_across_source_files(self):
+        """Same content, different filename → different chunk_id (since
+        source_file is part of the hash input)."""
+        content = "### Section\n\nSame content here."
+        result_a = self._process(content, filename="A.md")
+        result_b = self._process(content, filename="B.md")
+        self.assertNotEqual(result_a[0].chunk_id, result_b[0].chunk_id)
+
+    def test_to_dict_includes_chunk_id(self):
+        content = "### H\n\n<table><tr><td>Data</td></tr></table>"
+        result = self._process(content)
+        for chunk in result:
+            d = chunk.to_dict()
+            self.assertIn("chunk_id", d)
+            self.assertTrue(d["chunk_id"])
+
     # ── Image descriptions ────────────────────────────────────────────────────
 
     def test_image_description_extracted(self):
@@ -407,6 +670,35 @@ class TestPipelineRun(unittest.TestCase):
             summary = pipeline.run()
             self.assertGreater(summary["total_chunks"], 0)
 
+    def test_run_twice_produces_identical_chunk_ids(self):
+        """
+        The realistic idempotency scenario: same PipelineConfig.input_dir,
+        pipeline run twice (e.g. re-run after adding an unrelated new
+        file) — chunk_ids for unchanged files must come out identical
+        both times, which is what makes ChromaDB .upsert() safe to call
+        repeatedly without accumulating duplicates.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp)
+            input_dir = p / "input"
+            input_dir.mkdir()
+            (input_dir / "doc.md").write_text(
+                "### Section\n\nContent that will not change.", encoding="utf-8"
+            )
+            pipeline = make_pipeline(input_dir, p / "output1")
+            pipeline.run()
+            json_file1 = next((p / "output1").rglob("*.chunks.json"))
+            ids_run1 = [c["chunk_id"] for c in
+                        json.loads(json_file1.read_text())["chunks"]]
+
+            pipeline2 = make_pipeline(input_dir, p / "output2")
+            pipeline2.run()
+            json_file2 = next((p / "output2").rglob("*.chunks.json"))
+            ids_run2 = [c["chunk_id"] for c in
+                        json.loads(json_file2.read_text())["chunks"]]
+
+            self.assertEqual(ids_run1, ids_run2)
+
     def test_run_json_chunks_have_content_field(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp)
@@ -502,6 +794,128 @@ class TestRealFilesIntegration(unittest.TestCase):
                 json.dumps(chunk.to_dict())
             except (TypeError, ValueError) as e:
                 self.fail(f"Chunk not JSON-serialisable: {e}\n{chunk.to_dict()}")
+
+    def test_binder2_table_chunks_normalized_no_html(self):
+        """
+        Every real table in Binder2.md must come out of the FULL pipeline
+        with normalized_text containing no HTML tags — proves the
+        normalizer stage runs on real production data, not just fixtures.
+        """
+        chunks = self._run_on_real_file("Binder2.md")
+        table_chunks = [c for c in chunks if c.metadata.get("chunk_type") == "table"]
+        self.assertGreaterEqual(len(table_chunks), 4)
+        for tc in table_chunks:
+            self.assertNotIn("<table", tc.normalized_text)
+            self.assertNotIn("<td", tc.normalized_text)
+            self.assertNotIn("<tr", tc.normalized_text)
+
+    def test_binder2_table_normalized_text_differs_from_content(self):
+        chunks = self._run_on_real_file("Binder2.md")
+        table_chunks = [c for c in chunks if c.metadata.get("chunk_type") == "table"]
+        for tc in table_chunks:
+            self.assertNotEqual(tc.content, tc.normalized_text)
+
+    def test_binder2_table_content_still_raw_html(self):
+        """content must be untouched — still the original HTML for display."""
+        chunks = self._run_on_real_file("Binder2.md")
+        table_chunks = [c for c in chunks if c.metadata.get("chunk_type") == "table"]
+        for tc in table_chunks:
+            self.assertIn("<table", tc.content)
+
+    def test_binder2_key_action_preserved_in_normalized_text(self):
+        """Spot-check: 'Create SOI' must survive normalization somewhere."""
+        chunks = self._run_on_real_file("Binder2.md")
+        table_chunks = [c for c in chunks if c.metadata.get("chunk_type") == "table"]
+        all_normalized = " ".join(tc.normalized_text for tc in table_chunks)
+        self.assertIn("Create SOI", all_normalized)
+
+    def test_testing_table_chunks_normalized_no_html(self):
+        chunks = self._run_on_real_file("Testing.md")
+        table_chunks = [c for c in chunks if c.metadata.get("chunk_type") == "table"]
+        self.assertGreaterEqual(len(table_chunks), 2)
+        for tc in table_chunks:
+            self.assertNotIn("<table", tc.normalized_text)
+            self.assertNotIn("<td", tc.normalized_text)
+
+    def test_testing_key_value_table_content_preserved_in_normalized(self):
+        """Testing.md tables are key-value style — spot-check gemini-pro survives."""
+        chunks = self._run_on_real_file("Testing.md")
+        table_chunks = [c for c in chunks if c.metadata.get("chunk_type") == "table"]
+        all_normalized = " ".join(tc.normalized_text for tc in table_chunks)
+        self.assertIn("gemini-pro", all_normalized)
+
+    def test_testing_all_chunks_json_serialisable_with_normalized_text(self):
+        chunks = self._run_on_real_file("Testing.md")
+        for chunk in chunks:
+            d = chunk.to_dict()
+            self.assertIn("normalized_text", d)
+            json.dumps(d)  # must not raise
+
+    def test_binder2_contextualized_text_has_filename(self):
+        chunks = self._run_on_real_file("Binder2.md")
+        for chunk in chunks:
+            self.assertIn("Binder2.md", chunk.contextualized_text)
+
+    def test_binder2_contextualized_text_has_breadcrumb_context(self):
+        chunks = self._run_on_real_file("Binder2.md")
+        table_chunks = [c for c in chunks if c.metadata.get("chunk_type") == "table"]
+        self.assertGreater(len(table_chunks), 0)
+        # At least one table chunk's breadcrumb section name should appear
+        # in its own contextualized_text
+        matched = 0
+        for tc in table_chunks:
+            section_header = tc.metadata.get("section_header", "")
+            if section_header and section_header in tc.contextualized_text:
+                matched += 1
+        self.assertGreater(matched, 0)
+
+    def test_binder2_table_contextualized_text_no_html(self):
+        """Contextual text must be built from normalized_text, never raw HTML."""
+        chunks = self._run_on_real_file("Binder2.md")
+        table_chunks = [c for c in chunks if c.metadata.get("chunk_type") == "table"]
+        for tc in table_chunks:
+            self.assertNotIn("<table", tc.contextualized_text)
+            self.assertNotIn("<td", tc.contextualized_text)
+
+    def test_testing_contextualized_text_has_filename(self):
+        chunks = self._run_on_real_file("Testing.md")
+        for chunk in chunks:
+            self.assertIn("Testing.md", chunk.contextualized_text)
+
+    def test_all_real_chunks_json_serialisable_with_contextualized_text(self):
+        for fname in ["Binder2.md", "Testing.md"]:
+            chunks = self._run_on_real_file(fname)
+            for chunk in chunks:
+                d = chunk.to_dict()
+                self.assertIn("contextualized_text", d)
+                json.dumps(d)  # must not raise
+
+    def test_binder2_all_embed_text_equal_contextualized_text(self):
+        chunks = self._run_on_real_file("Binder2.md")
+        for chunk in chunks:
+            self.assertEqual(chunk.embed_text, chunk.contextualized_text)
+
+    def test_binder2_all_chunk_ids_unique(self):
+        chunks = self._run_on_real_file("Binder2.md")
+        ids = [c.chunk_id for c in chunks]
+        self.assertEqual(len(ids), len(set(ids)))
+
+    def test_testing_all_embed_text_equal_contextualized_text(self):
+        chunks = self._run_on_real_file("Testing.md")
+        for chunk in chunks:
+            self.assertEqual(chunk.embed_text, chunk.contextualized_text)
+
+    def test_testing_all_chunk_ids_unique(self):
+        chunks = self._run_on_real_file("Testing.md")
+        ids = [c.chunk_id for c in chunks]
+        self.assertEqual(len(ids), len(set(ids)))
+
+    def test_binder2_and_testing_chunk_ids_do_not_collide(self):
+        """Chunk IDs must be unique ACROSS files too, not just within one."""
+        binder_chunks = self._run_on_real_file("Binder2.md")
+        testing_chunks = self._run_on_real_file("Testing.md")
+        all_ids = [c.chunk_id for c in binder_chunks] + [c.chunk_id for c in testing_chunks]
+        self.assertEqual(len(all_ids), len(set(all_ids)))
 
     def test_testing_produces_chunks(self):
         chunks = self._run_on_real_file("Testing.md")

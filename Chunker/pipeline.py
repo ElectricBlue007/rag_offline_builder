@@ -6,8 +6,12 @@ Chains:
     → MarkdownPreprocessor
       → StructureSplitter
         → SemanticChunker
-          → MetadataEnricher
-            → JSON output (one file per .md input)
+          → LlmChunkRefiner        (optional: LLM-judged merge of split-too-early chunks)
+            → TableChunkNormalizer      (HTML tables → embeddable prose)
+              → ContextualEnricher      (situates each chunk in its document)
+                → EmbedTextBuilder      (applies the embedding model's prefix)
+                  → MetadataEnricher    (adds chunk_id + descriptive metadata)
+                    → JSON output (one file per .md input)
 
 Each stage is independent and can be swapped or extended without touching
 the others.
@@ -22,6 +26,10 @@ from Chunker.config import PipelineConfig
 from Chunker.preprocessors.md_preprocessor import MarkdownPreprocessor
 from Chunker.splitters.structure_splitter import StructureSplitter
 from Chunker.splitters.semantic_chunker import SemanticChunker
+from Chunker.splitters.llm_chunk_refiner import LlmChunkRefiner
+from Chunker.normalizers.chunk_normalizer import TableChunkNormalizer
+from Chunker.enrichers.contextual_enricher import ContextualEnricher
+from Chunker.enrichers.embed_text_builder import EmbedTextBuilder
 from Chunker.enrichers.metadata_enricher import MetadataEnricher, EnrichedChunk
 
 
@@ -55,10 +63,14 @@ class MarkdownChunkingPipeline:
         self.cfg = config
 
         # Instantiate each stage with its sub-config
-        self.preprocessor  = MarkdownPreprocessor(config.preprocessor)
-        self.struct_split  = StructureSplitter(config.structure)
-        self.sem_chunker   = SemanticChunker(config.semantic)
-        self.enricher      = MetadataEnricher(config.metadata)
+        self.preprocessor     = MarkdownPreprocessor(config.preprocessor)
+        self.struct_split     = StructureSplitter(config.structure)
+        self.sem_chunker      = SemanticChunker(config.semantic)
+        self.llm_refiner      = LlmChunkRefiner(config.llm_chunk_refiner)
+        self.table_normalizer = TableChunkNormalizer(config.table_normalizer)
+        self.contextual       = ContextualEnricher(config.contextual)
+        self.embed_text_bldr  = EmbedTextBuilder(config.embed_text)
+        self.enricher         = MetadataEnricher(config.metadata)
 
     # ── Public ────────────────────────────────────────────────────────────────
 
@@ -144,7 +156,40 @@ class MarkdownChunkingPipeline:
         # 4. Semantic chunking within each section
         sem_chunks = self.sem_chunker.chunk_sections(sections)
 
-        # 5. Metadata enrichment
+        # 4b. Optional: LLM-judged merge of chunks that got split before a
+        #     complete, independently-answerable thought was finished.
+        #     No-op (returns chunks unchanged) unless explicitly enabled —
+        #     see LlmChunkRefinerConfig for the full rationale.
+        sem_chunks = self.llm_refiner.refine(sem_chunks)
+        # Merging changes the chunk count, so chunk_index must be
+        # reassigned — MetadataEnricher relies on it being correctly
+        # sequential for both chunk_id hashing and page-number estimation.
+        for i, chunk in enumerate(sem_chunks):
+            chunk.chunk_index = i
+
+        # 5. Normalize table chunks: HTML → embeddable natural-language
+        #    prose in normalized_text, while content keeps the raw HTML
+        #    for display. Text/image_description chunks pass through
+        #    unchanged (their normalized_text already equals content).
+        sem_chunks = self.table_normalizer.normalize_chunks(sem_chunks)
+
+        # 6. Contextual enrichment: prepend a situating blurb to each
+        #    chunk (breadcrumb+filename by default, or LLM-written prose
+        #    if configured) so isolated fragments don't lose the context
+        #    that makes them meaningful once embedded.
+        sem_chunks = self.contextual.enrich_chunks(
+            sem_chunks,
+            document_text=preprocessed.cleaned_text,
+            source_filename=md_path.name,
+        )
+
+        # 7. Apply the E5 "passage: " instruction prefix — embed_text is
+        #    the exact string that must be sent to the embedding model.
+        sem_chunks = self.embed_text_bldr.build(sem_chunks)
+
+        # 8. Metadata enrichment (also assigns each chunk its stable
+        #    chunk_id, used by embedding/embed_generator.py and the
+        #    future ChromaDB ingestion step)
         enriched = self.enricher.enrich(sem_chunks, md_path)
 
         return enriched

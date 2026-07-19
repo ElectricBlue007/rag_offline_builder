@@ -323,15 +323,23 @@ class TestMetadataEnricher(unittest.TestCase):
             self.assertEqual(result[0].metadata["total_pages"], 2)
             self.assertIn("page_numbers", result[0].metadata)
 
-    def test_page_metadata_absent_when_no_json(self):
+    def test_page_metadata_falls_back_to_derived_values_when_no_json(self):
+        """
+        With no sidecar file at all, source_pdf/total_pages are no longer
+        just silently omitted — they fall back to values derived from the
+        markdown filename itself, so citations still have something
+        useful to show even for OCR tools that don't emit a metadata
+        sidecar (or when a document simply has no page markers).
+        """
         with tempfile.TemporaryDirectory() as tmp:
             md_path = Path(tmp) / "NoMeta.md"
             md_path.write_text("# content", encoding="utf-8")
 
             enricher = self._make_enricher(include_page_metadata=True)
             result = enricher.enrich([make_chunk()], md_path)
-            self.assertNotIn("source_pdf", result[0].metadata)
-            self.assertNotIn("total_pages", result[0].metadata)
+            self.assertEqual(result[0].metadata["source_pdf"], "NoMeta.pdf")
+            self.assertEqual(result[0].metadata["total_pages"], 0)
+            self.assertEqual(result[0].metadata["page_numbers"], [])
 
     def test_page_metadata_flag_false_no_page_fields(self):
         with tempfile.TemporaryDirectory() as tmp:

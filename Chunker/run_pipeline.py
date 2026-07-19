@@ -42,7 +42,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--embedding-model", "-e",
         default=None,
-        help="FastEmbed model name (default: BAAI/bge-m3).",
+        help="Ollama embedding model tag (default: qwen3-embedding:8b).",
     )
     parser.add_argument(
         "--threshold-type", "-t",
@@ -55,6 +55,22 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=None,
         help="Numeric value for the threshold (default: 85.0 for percentile).",
+    )
+    parser.add_argument(
+        "--llm-refine-chunks",
+        action="store_true",
+        help=(
+            "Enable an extra LLM pass after semantic chunking that merges "
+            "chunks judged to be split before a complete, independently "
+            "answerable thought was finished. Off by default — adds real "
+            "wall-clock time (roughly doubles chunking time on CPU-only "
+            "local hardware). Requires Ollama running locally."
+        ),
+    )
+    parser.add_argument(
+        "--llm-refine-model",
+        default=None,
+        help="Ollama model tag for --llm-refine-chunks (default: llama3.2).",
     )
     parser.add_argument(
         "--quiet", "-q",
@@ -80,6 +96,10 @@ def main():
         cfg.semantic.breakpoint_threshold_type = args.threshold_type
     if args.threshold_amount is not None:
         cfg.semantic.breakpoint_threshold_amount = args.threshold_amount
+    if args.llm_refine_chunks:
+        cfg.llm_chunk_refiner.enabled = True
+    if args.llm_refine_model:
+        cfg.llm_chunk_refiner.llm_model = args.llm_refine_model
     if args.quiet:
         cfg.verbose = False
 

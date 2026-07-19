@@ -1,0 +1,74 @@
+[
+  {
+    "question": "What is the maximum number of CMI that can be created for a track?",
+    "ground_truth": "The maximum number of CMI is 10.",
+    "language": "en",
+    "category": "table"
+  },
+  {
+    "question": "What restriction applies to creating an SOI (Create SOI action)?",
+    "ground_truth": "Create SOI is only allowed for lost surface point tracks and reference positions, with a maximum of 10 CMI.",
+    "language": "en",
+    "category": "table"
+  },
+  {
+    "question": "What fields can be entered when creating or changing a CMI?",
+    "ground_truth": "NT, Vel.MAC, Sec.vel.MAC, Hora activaci\u00f3n, and/or TiempFMAC.",
+    "language": "en",
+    "category": "table"
+  },
+  {
+    "question": "What restriction applies to eliminating a CMI?",
+    "ground_truth": "Eliminating the CMI is only allowed for manually initiated tracks.",
+    "language": "en",
+    "category": "table"
+  },
+  {
+    "question": "\u00bfQu\u00e9 sucede con la posici\u00f3n de las definiciones de bot\u00f3n de conjunto de trabajo cuando ya existe una definici\u00f3n de posici\u00f3n nueva?",
+    "ground_truth": "La posici\u00f3n de todas las definiciones de bot\u00f3n de conjunto de trabajo con el mismo nombre de funci\u00f3n y con una posici\u00f3n igual o superior a la nueva aumentar\u00e1 en uno.",
+    "language": "es",
+    "category": "prose"
+  },
+  {
+    "question": "\u00bfQu\u00e9 par\u00e1metro del sistema controla si el bot\u00f3n de impresi\u00f3n est\u00e1 disponible?",
+    "ground_truth": "El par\u00e1metro del sistema con nombre de grupo LSSCONF y nombre de elemento Impresi\u00f3n_habilitada controla si el bot\u00f3n de imprimir est\u00e1 disponible.",
+    "language": "es",
+    "category": "table"
+  },
+  {
+    "question": "What does the MMI Disposition screenshot show?",
+    "ground_truth": "A screenshot of the MAC (Great Circle) menu interface, with tabs for N\u00b0T, Vel, Radio, and Time res, input fields for NT, Vel.MAC, Sec.vel.MAC, Hora Activaci\u00f3n, and TiempFMAC, and buttons for OK, Aplicar, Reinc, Cancelar, and Ayuda.",
+    "language": "en",
+    "category": "image_description"
+  },
+  {
+    "question": "What embedding/generation model is used in the movie classification prompting example?",
+    "ground_truth": "gemini-pro",
+    "language": "en",
+    "category": "table"
+  },
+  {
+    "question": "What temperature setting is used in the movie classification example?",
+    "ground_truth": "0.1",
+    "language": "en",
+    "category": "table"
+  },
+  {
+    "question": "What is the goal of the pizza order parsing example?",
+    "ground_truth": "To parse a customer's pizza order into valid JSON.",
+    "language": "en",
+    "category": "table"
+  },
+  {
+    "question": "What is the difference between one-shot and few-shot prompting?",
+    "ground_truth": "A one-shot prompt provides a single example for the model to imitate, while a few-shot prompt provides multiple examples showing a pattern the model should follow.",
+    "language": "en",
+    "category": "prose"
+  },
+  {
+    "question": "As a general rule of thumb, how many examples should be used for few-shot prompting?",
+    "ground_truth": "At least three to five examples, though more may be needed for complex tasks and fewer may be used due to input length limitations.",
+    "language": "en",
+    "category": "prose"
+  }
+]

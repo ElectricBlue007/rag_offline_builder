@@ -62,17 +62,17 @@ class TestHardSplit(unittest.TestCase):
 
     def test_text_within_limit_returned_as_is(self):
         text = "Short text."
-        result = _hard_split(text, max_chars=100)
+        result = _hard_split(text, max_units=100)
         self.assertEqual(result, [text])
 
     def test_text_exactly_at_limit(self):
         text = "A" * 100
-        result = _hard_split(text, max_chars=100)
+        result = _hard_split(text, max_units=100)
         self.assertEqual(result, [text])
 
     def test_splits_at_sentence_boundary(self):
         text = "First sentence. Second sentence. Third sentence."
-        result = _hard_split(text, max_chars=30)
+        result = _hard_split(text, max_units=30)
         self.assertGreater(len(result), 1)
         # Reassembled must equal original (modulo spacing)
         joined = " ".join(result)
@@ -81,29 +81,29 @@ class TestHardSplit(unittest.TestCase):
     def test_single_long_sentence_kept_whole(self):
         """If one sentence exceeds max_chars, it must not be cut mid-sentence."""
         long_sent = "A" * 200
-        result = _hard_split(long_sent, max_chars=50)
+        result = _hard_split(long_sent, max_units=50)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0], long_sent)
 
     def test_empty_string_returns_single_empty(self):
-        result = _hard_split("", max_chars=100)
+        result = _hard_split("", max_units=100)
         self.assertEqual(result, [""])
 
     def test_multiple_sentences_split_correctly(self):
         text = "Sentence one. Sentence two. Sentence three. Sentence four."
-        result = _hard_split(text, max_chars=25)
+        result = _hard_split(text, max_units=25)
         for chunk in result:
             # Each chunk must be a complete sentence or combination
             self.assertTrue(len(chunk) > 0)
 
     def test_exclamation_and_question_marks_as_boundaries(self):
         text = "Is this right? Yes it is! And another sentence follows."
-        result = _hard_split(text, max_chars=20)
+        result = _hard_split(text, max_units=20)
         self.assertGreater(len(result), 1)
 
     def test_no_content_lost(self):
         text = "Part one. Part two. Part three."
-        result = _hard_split(text, max_chars=15)
+        result = _hard_split(text, max_units=15)
         reassembled = " ".join(result)
         # All words present
         for word in ["Part", "one", "two", "three"]:
@@ -169,7 +169,7 @@ class TestSemanticChunkerSmallSections(unittest.TestCase):
     """Text sections below min_chunk_chars skip semantic splitting."""
 
     def test_small_text_returns_single_chunk_no_lc_call(self):
-        cfg = SemanticChunkerConfig(min_chunk_chars=200, skip_semantic_if_small=True)
+        cfg = SemanticChunkerConfig(min_chunk_chars=200, skip_semantic_if_small=True, use_token_based_sizing=False)
         chunker = SemanticChunker(cfg)
         mock_lc = make_mock_lc_chunker(["irrelevant"])
         chunker._lc_chunker = mock_lc
@@ -183,7 +183,7 @@ class TestSemanticChunkerSmallSections(unittest.TestCase):
 
     def test_small_text_flag_false_calls_lc(self):
         """When skip_semantic_if_small=False, even small text goes through LangChain."""
-        cfg = SemanticChunkerConfig(min_chunk_chars=200, skip_semantic_if_small=False)
+        cfg = SemanticChunkerConfig(min_chunk_chars=200, skip_semantic_if_small=False, use_token_based_sizing=False)
         chunker = SemanticChunker(cfg)
         mock_lc = make_mock_lc_chunker(["Short text."])
         chunker._lc_chunker = mock_lc
@@ -194,14 +194,14 @@ class TestSemanticChunkerSmallSections(unittest.TestCase):
         mock_lc.create_documents.assert_called_once()
 
     def test_empty_content_returns_empty_list(self):
-        cfg = SemanticChunkerConfig(min_chunk_chars=5, skip_semantic_if_small=True)
+        cfg = SemanticChunkerConfig(min_chunk_chars=5, skip_semantic_if_small=True, use_token_based_sizing=False)
         chunker = SemanticChunker(cfg)
         section = make_section("", section_type="text")
         chunks = chunker.chunk_section(section)
         self.assertEqual(chunks, [])
 
     def test_whitespace_only_content_returns_empty(self):
-        cfg = SemanticChunkerConfig(min_chunk_chars=5, skip_semantic_if_small=True)
+        cfg = SemanticChunkerConfig(min_chunk_chars=5, skip_semantic_if_small=True, use_token_based_sizing=False)
         chunker = SemanticChunker(cfg)
         section = make_section("   \n\n  ", section_type="text")
         chunks = chunker.chunk_section(section)
@@ -216,6 +216,7 @@ class TestSemanticChunkerWithMockLangChain(unittest.TestCase):
             min_chunk_chars=10,
             max_chunk_chars=2000,
             skip_semantic_if_small=False,
+            use_token_based_sizing=False,
             **cfg_kwargs
         )
         chunker = SemanticChunker(cfg)
@@ -258,7 +259,8 @@ class TestSemanticChunkerWithMockLangChain(unittest.TestCase):
     def test_fallback_to_hard_split_on_lc_error(self):
         """If LangChain raises, must fall back to hard split gracefully."""
         cfg = SemanticChunkerConfig(min_chunk_chars=5, max_chunk_chars=50,
-                                    skip_semantic_if_small=False)
+                                    skip_semantic_if_small=False,
+                                    use_token_based_sizing=False)
         chunker = SemanticChunker(cfg)
         mock_lc = MagicMock()
         mock_lc.create_documents.side_effect = RuntimeError("model error")
@@ -284,7 +286,7 @@ class TestChunkSections(unittest.TestCase):
     """Tests for chunk_sections() — the batch method."""
 
     def setUp(self):
-        cfg = SemanticChunkerConfig(min_chunk_chars=5, skip_semantic_if_small=True)
+        cfg = SemanticChunkerConfig(min_chunk_chars=5, skip_semantic_if_small=True, use_token_based_sizing=False)
         self.chunker = SemanticChunker(cfg)
 
     def test_chunk_index_sequential(self):
@@ -323,7 +325,7 @@ class TestEnforceSizeLimits(unittest.TestCase):
     """Tests for _enforce_size_limits() internal method."""
 
     def setUp(self):
-        cfg = SemanticChunkerConfig(min_chunk_chars=20, max_chunk_chars=100)
+        cfg = SemanticChunkerConfig(min_chunk_chars=20, max_chunk_chars=100, use_token_based_sizing=False)
         self.chunker = SemanticChunker(cfg)
 
     def test_normal_chunks_returned_unchanged(self):
@@ -392,6 +394,117 @@ class TestSemanticChunkDataclass(unittest.TestCase):
         self.assertEqual(chunk.section_type, "table")
         self.assertEqual(chunk.chunk_index, 42)
         self.assertEqual(chunk.header_texts, ["Root", "Sub"])
+
+
+class TestTokenBasedSizing(unittest.TestCase):
+    """
+    Tests for the NEW default sizing mode (use_token_based_sizing=True).
+    `transformers` isn't installed in this environment, so these tests
+    exercise TokenCounter's heuristic fallback path — deterministic and
+    fully offline, exactly like a real fully-offline deployment.
+    """
+
+    def test_default_config_uses_token_based_sizing(self):
+        cfg = SemanticChunkerConfig()
+        self.assertTrue(cfg.use_token_based_sizing)
+
+    def test_count_fn_is_token_counter_by_default(self):
+        """
+        Verifies _count_fn delegates to TokenCounter by default (as
+        opposed to len()). Forces attempt_real_tokenizer=False so the
+        assertion is checking against the heuristic's specific math
+        deterministically — without this, an environment that happens
+        to have `transformers` installed (common as a transitive
+        dependency of sentence-transformers, langchain, etc.) would
+        silently use the real tokenizer instead and produce a different,
+        equally-valid-but-different count, failing this assertion for
+        reasons unrelated to what the test is actually checking.
+        """
+        cfg = SemanticChunkerConfig(attempt_real_tokenizer=False)
+        chunker = SemanticChunker(cfg)
+        # heuristic: word_count * 1.4, rounded
+        result = chunker._count_fn("one two three four five")
+        self.assertEqual(result, round(5 * 1.4))
+
+    def test_count_fn_is_len_when_disabled(self):
+        cfg = SemanticChunkerConfig(use_token_based_sizing=False)
+        chunker = SemanticChunker(cfg)
+        self.assertIs(chunker._count_fn, len)
+
+    def test_min_units_resolves_to_token_config(self):
+        cfg = SemanticChunkerConfig(min_chunk_tokens=42, min_chunk_chars=999)
+        chunker = SemanticChunker(cfg)
+        self.assertEqual(chunker._min_units, 42)
+
+    def test_min_units_resolves_to_char_config_when_disabled(self):
+        cfg = SemanticChunkerConfig(
+            use_token_based_sizing=False, min_chunk_tokens=42, min_chunk_chars=999
+        )
+        chunker = SemanticChunker(cfg)
+        self.assertEqual(chunker._min_units, 999)
+
+    def test_max_units_resolves_to_token_config(self):
+        cfg = SemanticChunkerConfig(max_chunk_tokens=123, max_chunk_chars=9999)
+        chunker = SemanticChunker(cfg)
+        self.assertEqual(chunker._max_units, 123)
+
+    def test_small_text_skips_semantic_split_using_tokens(self):
+        """A short section should skip splitting based on TOKEN count, not chars."""
+        cfg = SemanticChunkerConfig(
+            min_chunk_tokens=100,  # high threshold in tokens
+            skip_semantic_if_small=True,
+        )
+        chunker = SemanticChunker(cfg)
+        section = make_section("Only a few words here.", section_type="text")
+        chunks = chunker.chunk_section(section)
+        # Should skip splitting (content is well under 100 tokens) and
+        # return as a single chunk without ever calling LangChain.
+        self.assertEqual(len(chunks), 1)
+        self.assertEqual(chunks[0].content, "Only a few words here.")
+
+    def test_oversized_text_hard_split_respects_token_limit(self):
+        cfg = SemanticChunkerConfig(
+            max_chunk_tokens=10,   # ~7 words at 1.4 tokens/word heuristic
+            min_chunk_tokens=1,
+            skip_semantic_if_small=False,
+        )
+        chunker = SemanticChunker(cfg)
+        # Force fallback to hard split (no real LangChain chunker available)
+        text = (
+            "First sentence here. Second sentence follows here. "
+            "Third sentence also appears. Fourth sentence ends it."
+        )
+        section = make_section(text, section_type="text")
+        chunks = chunker.chunk_section(section)
+        self.assertGreater(len(chunks), 1)
+        for chunk in chunks:
+            token_count = chunker._count_fn(chunk.content)
+            # Allow some slack since hard_split works sentence-by-sentence
+            # and a single sentence may exceed the limit if it must be
+            # kept whole — but no chunk should be wildly over.
+            self.assertLessEqual(token_count, 30)
+
+    def test_token_counter_shared_across_calls(self):
+        """The TokenCounter instance should be created once and reused."""
+        chunker = SemanticChunker()
+        counter1 = chunker._token_counter
+        _ = chunker._count_fn
+        counter2 = chunker._token_counter
+        self.assertIsNotNone(counter2)
+        if counter1 is not None:
+            self.assertIs(counter1, counter2)
+
+    def test_attempt_real_tokenizer_propagated_to_token_counter(self):
+        cfg = SemanticChunkerConfig(attempt_real_tokenizer=False)
+        chunker = SemanticChunker(cfg)
+        _ = chunker._count_fn  # triggers TokenCounter creation
+        self.assertFalse(chunker._token_counter.attempt_real_tokenizer)
+
+    def test_tokenizer_hf_id_propagated_to_token_counter(self):
+        cfg = SemanticChunkerConfig(tokenizer_hf_id="BAAI/bge-m3")
+        chunker = SemanticChunker(cfg)
+        _ = chunker._count_fn
+        self.assertEqual(chunker._token_counter.model_name, "BAAI/bge-m3")
 
 
 if __name__ == "__main__":
