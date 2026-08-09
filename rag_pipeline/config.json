@@ -1,0 +1,175 @@
+{
+  "_readme": "Single source of truth for every setting in this RAG pipeline. Edit values here, then run 'python run_pipeline.py --config config.json' (or the other run_*.py scripts, once loaded via config_loader.py). Every '_about' key is just documentation and is ignored by the loader.",
+  "pipeline": {
+    "_about": "Top-level chunking pipeline: reads .md files, writes chunk JSON files.",
+    "input_dir": "./outputs",
+    "output_dir": "./chunks",
+    "md_glob": "**/*.md",
+    "verbose": true
+  },
+  "preprocessor": {
+    "_about": "Cleans raw markdown before splitting (image handling, TOC tables, footnotes, decoration).",
+    "image_alt_strategy": "separate",
+    "image_alt_strategy_options": [
+      "keep",
+      "drop",
+      "separate"
+    ],
+    "drop_toc_tables": true,
+    "strip_superscripts": true,
+    "fix_adjacent_tables": true,
+    "strip_decorative_lines": true
+  },
+  "structure_splitter": {
+    "_about": "Splits markdown into sections using header levels before semantic chunking.",
+    "header_levels": [
+      1,
+      2,
+      3
+    ],
+    "tables_atomic": true,
+    "min_section_chars": 20
+  },
+  "semantic_chunker": {
+    "_about": "Splits each section into chunks based on embedding-similarity breakpoints. Uses a local Ollama model for embeddings.",
+    "embedding_model": "qwen3-embedding:8b",
+    "embedding_model_note": "Ollama model tag. Lighter options: qwen3-embedding:4b, qwen3-embedding:0.6b. Must be pulled first: ollama pull qwen3-embedding:8b",
+    "embedding_host": "http://localhost:11434",
+    "tokenizer_hf_id": "Qwen/Qwen3-Embedding-8B",
+    "tokenizer_hf_id_note": "HuggingFace repo id used ONLY to fetch a tokenizer for accurate token counts. Falls back to word-count heuristic automatically if unavailable.",
+    "breakpoint_threshold_type": "percentile",
+    "breakpoint_threshold_type_options": [
+      "percentile",
+      "standard_deviation",
+      "interquartile"
+    ],
+    "breakpoint_threshold_amount": 85.0,
+    "use_token_based_sizing": true,
+    "min_chunk_tokens": 15,
+    "max_chunk_tokens": 1024,
+    "min_chunk_chars": 80,
+    "max_chunk_chars": 2000,
+    "chars_note": "Legacy character-based limits, only used when use_token_based_sizing is false.",
+    "attempt_real_tokenizer": true,
+    "skip_semantic_if_small": true
+  },
+  "llm_chunk_refiner": {
+    "_about": "OPTIONAL post-chunking pass: asks a local LLM whether adjacent chunks should be merged so an answer isn't orphaned across a chunk boundary. Off by default; roughly doubles chunking time on CPU when enabled.",
+    "enabled": false,
+    "llm_model": "Qwen-AgentWorld-35B-A3B-UD-Q4_K_XL",
+    "llm_host": "http://localhost:11434",
+    "llm_timeout_seconds": 30,
+    "min_chunks_to_consider": 2,
+    "max_chunks_per_call": 12,
+    "fallback_on_error": true,
+    "warn_on_fallback": true
+  },
+  "table_normalizer": {
+    "_about": "Converts HTML tables into natural-language prose before embedding.",
+    "enabled": true,
+    "fallback_to_raw_on_error": true,
+    "warn_on_fallback": true
+  },
+  "contextual_enricher": {
+    "_about": "Prepends a situating blurb to each chunk (breadcrumb/filename, or an LLM-written summary) so isolated fragments keep their document context. This is 'Contextual Retrieval'.",
+    "mode": "deterministic",
+    "mode_options": [
+      "deterministic",
+      "llm",
+      "off"
+    ],
+    "llm_model": "Qwen-AgentWorld-35B-A3B-UD-Q4_K_XL",
+    "llm_host": "http://localhost:11434",
+    "llm_timeout_seconds": 30,
+    "max_document_chars_for_llm": 3000,
+    "fallback_to_deterministic_on_error": true,
+    "warn_on_fallback": true,
+    "include_breadcrumb": true,
+    "include_source_filename": true
+  },
+  "embed_text": {
+    "_about": "The embedding model's instruction-prefix contract. Same values used on both the storage (chunking) side and the query (retrieval) side, so they can never drift apart.",
+    "enabled": true,
+    "passage_prefix": "",
+    "query_prefix": "Instruct: Given a search query, retrieve relevant passages that answer the query\nQuery: "
+  },
+  "metadata": {
+    "_about": "Controls which metadata fields get attached to every chunk.",
+    "include_source_file": true,
+    "include_breadcrumb": true,
+    "include_chunk_type": true,
+    "include_page_metadata": true,
+    "include_language": true,
+    "include_chunk_index": true
+  },
+  "embed_generator": {
+    "_about": "Turns embed_text strings into vectors via Ollama. Used by run_ingestion.py.",
+    "model_name": "qwen3-embedding:8b",
+    "host": "http://localhost:11434",
+    "batch_size": 16
+  },
+  "chroma_ingestion": {
+    "_about": "Writes embedded chunks into a local persistent ChromaDB collection. Used by run_ingestion.py.",
+    "persist_directory": "./chroma_db",
+    "collection_name": "rag_docs",
+    "batch_size": 200
+  },
+  "bm25_index": {
+    "_about": "Keyword/exact-term search index, complements dense vector search for domain-specific abbreviations. Used by run_bm25_index.py.",
+    "persist_path": "./bm25_index.pkl",
+    "k1": 1.5,
+    "b": 0.75
+  },
+  "hybrid_retriever": {
+    "_about": "Combines dense (ChromaDB) + sparse (BM25) search via Reciprocal Rank Fusion. Used by run_query.py / run_answer.py.",
+    "dense_n_results": 30,
+    "sparse_n_results": 30,
+    "final_n_results": 10,
+    "rrf_k": 60,
+    "language_filter": true
+  },
+  "reranker": {
+    "_about": "OPTIONAL cross-encoder precision pass on the hybrid retriever's top candidates. Needs 'pip install sentence-transformers' + a GPU with free VRAM. Enable with --rerank on run_query.py / run_answer.py.",
+    "model_name": "Qwen/Qwen3-Reranker-0.6B",
+    "model_name_note": "Heavier alternatives for more accuracy: Qwen/Qwen3-Reranker-4B, Qwen/Qwen3-Reranker-8B",
+    "task_instruction": "Given a search query, determine whether this document contains information that answers the query.",
+    "max_length": 4096,
+    "final_n_results": 8,
+    "device": null,
+    "model_kwargs": {
+      "torch_dtype": "float16"
+    }
+  },
+  "context_builder": {
+    "_about": "Formats retrieved chunks into the context block the answer-generation LLM reads.",
+    "include_type_label": true,
+    "include_source": true,
+    "include_breadcrumb": true,
+    "max_chunks": 5,
+    "max_chars_per_chunk": 1500
+  },
+  "llm_client": {
+    "_about": "Wraps Ollama for offline answer generation. Used by run_answer.py.",
+    "model": "Qwen-AgentWorld-35B-A3B-UD-Q4_K_XL",
+    "host": "http://localhost:11434",
+    "temperature": 0.1,
+    "timeout_seconds": 60
+  },
+  "ragas_evaluator": {
+    "_about": "Measures whether retrieval + generation are actually working, using RAGAS metrics. Fully offline (Ollama for judge LLM + embeddings, never OpenAI). Used by run_evaluation.py.",
+    "judge_llm_model": "Qwen-AgentWorld-35B-A3B-UD-Q4_K_XL",
+    "judge_llm_host": "http://localhost:11434",
+    "embedding_model": "qwen3-embedding:8b",
+    "embedding_host": "http://localhost:11434",
+    "metrics": [
+      "context_precision",
+      "context_recall",
+      "faithfulness",
+      "answer_relevancy"
+    ],
+    "context_recall_warning_threshold": 0.8,
+    "faithfulness_warning_threshold": 0.85,
+    "judge_max_workers": 2,
+    "judge_timeout_seconds": 300
+  }
+}

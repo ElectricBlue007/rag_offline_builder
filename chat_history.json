@@ -1,0 +1,581 @@
+{
+  "abb44b10d4da": {
+    "id": "abb44b10d4da",
+    "title": "hello",
+    "created_at": "2026-08-08T13:09:59.187295+00:00",
+    "updated_at": "2026-08-08T13:21:52.090394+00:00",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hello",
+        "sources": [],
+        "timestamp": "2026-08-08T13:10:02.128729+00:00"
+      },
+      {
+        "role": "assistant",
+        "content": "Hello! It seems like your message is brief and doesn't contain a specific question. If you're interested in learning about prompt engineering for large language models, the provided context offers an introduction to how prompts are used as inputs to generate desired outputs from these models [2]. Would you like more detailed information on any aspect of prompt engineering or guidance on getting started with it?",
+        "sources": [
+          {
+            "chunk_id": "78daecc2d8bc917a",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "13a17a081b916e5f",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "ad8a51007f76a83e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": "8"
+          },
+          {
+            "chunk_id": "0251dba717e9ecbb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "51fd05848fb06f19",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering** > ## **Table of contents**",
+            "page_numbers": "6"
+          }
+        ],
+        "timestamp": "2026-08-08T13:10:14.530556+00:00"
+      },
+      {
+        "role": "user",
+        "content": "hello",
+        "sources": [],
+        "timestamp": "2026-08-08T13:15:04.591560+00:00"
+      },
+      {
+        "role": "assistant",
+        "content": "Hello! It seems your message is brief and doesn't include a specific question. If you're interested in learning about prompt engineering for large language models, the provided context offers an introduction to this topic [2], discusses various prompting techniques [4], and provides a detailed table of contents outlining different aspects of prompt engineering [5]. How can I assist you further with this information?",
+        "sources": [
+          {
+            "chunk_id": "78daecc2d8bc917a",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "13a17a081b916e5f",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "ad8a51007f76a83e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": "8"
+          },
+          {
+            "chunk_id": "0251dba717e9ecbb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "51fd05848fb06f19",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering** > ## **Table of contents**",
+            "page_numbers": "6"
+          }
+        ],
+        "timestamp": "2026-08-08T13:15:15.140158+00:00"
+      },
+      {
+        "role": "user",
+        "content": "hello",
+        "sources": [],
+        "timestamp": "2026-08-08T13:18:32.335284+00:00"
+      },
+      {
+        "role": "assistant",
+        "content": "Hello! It seems like your message is brief and doesn't include a specific question. If you're interested in learning about prompt engineering for large language models, the provided context offers an introduction to this topic [2] and outlines various techniques and challenges involved in crafting effective prompts [4]. How can I assist you further with respect to prompt engineering or any other related information from the given sources?",
+        "sources": [
+          {
+            "chunk_id": "78daecc2d8bc917a",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "13a17a081b916e5f",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "ad8a51007f76a83e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": "8"
+          },
+          {
+            "chunk_id": "0251dba717e9ecbb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "51fd05848fb06f19",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering** > ## **Table of contents**",
+            "page_numbers": "6"
+          }
+        ],
+        "timestamp": "2026-08-08T13:18:44.771681+00:00"
+      },
+      {
+        "role": "user",
+        "content": "hello",
+        "sources": [],
+        "timestamp": "2026-08-08T13:19:10.530424+00:00"
+      },
+      {
+        "role": "assistant",
+        "content": "Hello! It seems like your message is brief and doesn't include a specific question. If you're interested in learning about prompt engineering for large language models, the provided context offers an introduction to this topic [2], discusses various prompting techniques [4], and includes a detailed table of contents that outlines different aspects of prompt engineering [5]. How can I assist you further with this information?",
+        "sources": [
+          {
+            "chunk_id": "78daecc2d8bc917a",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "13a17a081b916e5f",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "ad8a51007f76a83e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": "8"
+          },
+          {
+            "chunk_id": "0251dba717e9ecbb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "51fd05848fb06f19",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering** > ## **Table of contents**",
+            "page_numbers": "6"
+          }
+        ],
+        "timestamp": "2026-08-08T13:19:22.159772+00:00"
+      },
+      {
+        "role": "user",
+        "content": "hello",
+        "sources": [],
+        "timestamp": "2026-08-08T13:19:47.726750+00:00"
+      },
+      {
+        "role": "assistant",
+        "content": "The email provided does not explicitly state its importance level but contains a casual tone and mentions a minor issue (a bug) with some humor. Given this context, the classification would be:\n\nNOT IMPORTANT\n\nThis conclusion is based on the friendly and somewhat humorous nature of the communication rather than an urgent or critical message.[8]",
+        "sources": [
+          {
+            "chunk_id": "78daecc2d8bc917a",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "13a17a081b916e5f",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "ad8a51007f76a83e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": "8"
+          },
+          {
+            "chunk_id": "0251dba717e9ecbb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "51fd05848fb06f19",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering** > ## **Table of contents**",
+            "page_numbers": "6"
+          },
+          {
+            "chunk_id": "2ce49bbcfe013c5d",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **LLM output configuration**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "d3dafb1520116aff",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "120f3361c8e2e6d3",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques**",
+            "page_numbers": "13"
+          },
+          {
+            "chunk_id": "48ab83968ca4e15e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "6e16d495963ba563",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "473e25ac95a04032",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **Self-consistency**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "5bd98a484311bfd7",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "76c5e880c4941694",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": "7"
+          },
+          {
+            "chunk_id": "152d096cc8411953",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# Get a list of all files in the folder",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "9fe84f819bffdeeb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "97231ed2e178e356",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Summary**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "1bbf7b8cffbfeb40",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "f6569ce59b8015a2",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **Self-consistency**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "052a93e94f81d79d",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices**",
+            "page_numbers": "56"
+          },
+          {
+            "chunk_id": "7e177a7a11bb1a47",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **LLM output configuration**",
+            "page_numbers": "9"
+          }
+        ],
+        "timestamp": "2026-08-08T13:20:00.331923+00:00"
+      },
+      {
+        "role": "user",
+        "content": "what is the prompt engineering exactly please an article of it please",
+        "sources": [],
+        "timestamp": "2026-08-08T13:20:48.609089+00:00"
+      },
+      {
+        "role": "assistant",
+        "content": "Prompt engineering involves designing high-quality prompts that guide large language models (LLMs) to produce accurate and desired outputs. This process includes optimizing prompt length, evaluating writing style and content, and setting appropriate configurations such as token limits and temperature settings for the model's responses.\n\nThe goal of prompt engineering is to ensure that LLMs generate text that aligns closely with specific tasks or goals, whether it’s generating coherent stories, answering questions accurately, translating languages, classifying reviews, or any other language-related task. Effective prompts provide clear instructions and context, often including examples (one-shot or few-shot) to help the model understand what kind of output is expected.\n\nKey techniques in prompt engineering include:\n- **System Prompting**: Setting up an overarching framework for the model's behavior.\n- **Contextual Prompting**: Providing specific details relevant to the task at hand.\n- **Role Prompting**: Assigning a role or identity to guide the model’s responses.\n- **Chain of Thought (CoT)**: Encouraging the model to explain its reasoning process.\n- **ReAct (Reason and Act)**: Combining reasoning with action in prompts.\n\nBest practices for prompt engineering include:\n1. Documenting all attempts meticulously, including iterations and results.\n2. Using variables within prompts to make them more flexible and reusable.\n3. Testing prompts across different models and configurations to ensure robustness.\n4. Providing high-quality examples to guide the model’s output accurately.\n\nBy mastering these techniques and adhering to best practices, one can become proficient in crafting effective prompts that yield optimal results from LLMs.",
+        "sources": [
+          {
+            "chunk_id": "9fe84f819bffdeeb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "ad8a51007f76a83e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": "8"
+          },
+          {
+            "chunk_id": "120f3361c8e2e6d3",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques**",
+            "page_numbers": "13"
+          },
+          {
+            "chunk_id": "21550c61ceeab562",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": "32"
+          },
+          {
+            "chunk_id": "1bbf7b8cffbfeb40",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "b1c0332af5cefb40",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **ReAct (reason & act)**",
+            "page_numbers": "40"
+          },
+          {
+            "chunk_id": "76c5e880c4941694",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": "7"
+          },
+          {
+            "chunk_id": "5593b07778b6a062",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use variables in prompts**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "b498c5b1d1931b59",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Summary**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "51fd05848fb06f19",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering** > ## **Table of contents**",
+            "page_numbers": "6"
+          },
+          {
+            "chunk_id": "77d0e82b8febe0f0",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": "17"
+          },
+          {
+            "chunk_id": "4b23b46f827ff345",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use variables in prompts**",
+            "page_numbers": "62"
+          },
+          {
+            "chunk_id": "7e177a7a11bb1a47",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **LLM output configuration**",
+            "page_numbers": "9"
+          },
+          {
+            "chunk_id": "c50091e1127622cd",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use variables in prompts**",
+            "page_numbers": "63"
+          },
+          {
+            "chunk_id": "947affff58e2298b",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "4be8603921bc7718",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **ReAct (reason & act)**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "0251dba717e9ecbb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "78daecc2d8bc917a",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "7da0635e36924808",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Summary**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "4a0b8c317f0e0ec0",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices**",
+            "page_numbers": "55"
+          }
+        ],
+        "timestamp": "2026-08-08T13:21:04.358756+00:00"
+      },
+      {
+        "role": "user",
+        "content": "i want you please based on this documentation create a generally with its refrences article please",
+        "sources": [],
+        "timestamp": "2026-08-08T13:21:32.626878+00:00"
+      },
+      {
+        "role": "assistant",
+        "content": "Certainly! Below is an article summarizing the key points from the provided documentation about prompt engineering techniques and best practices:\n\n---\n\n**Prompt Engineering Techniques and Best Practices**\n\nPrompt engineering is a powerful method to control and enhance the output generated by AI models. This technique involves crafting specific prompts that guide the model's responses, ensuring they are relevant, informative, and tailored to your needs.\n\n### Role Prompting\n\nRole prompting assigns a specific role or persona to the AI model, such as a travel guide, teacher, or editor. By specifying this role, you can direct the model’s output to be more contextually appropriate and engaging. For instance, if you want the model to act as a travel guide for New York City with young children in mind, you would instruct it accordingly.\n\n### ReAct (Reason & Act)\n\nReAct is another technique that involves prompting the AI to reason through a problem before acting on it. This method helps in generating more accurate and contextually relevant responses by breaking down complex tasks into manageable steps. For example, if you need to generate various ways to order a Metallica t-shirt from a webshop, ReAct can be used to create multiple variations of the same request.\n\n### Contextual Prompting\n\nContextual prompting involves providing detailed background information or setting up specific scenarios for the AI model. This helps in generating more accurate and relevant responses by giving the model enough context to understand your requirements better. For instance, if you want suggestions for blog articles about retro games, contextual prompts can guide the model to generate ideas that are both engaging and informative.\n\n### Best Practices\n\n1. **Be Specific About Output**: Clearly define what kind of output you expect from the AI model. A concise instruction might not be enough; it needs to be detailed and specific.\n   \n2. **Use Variables in Prompts**: Incorporating variables into your prompts can make them more flexible and adaptable, allowing for a wider range of outputs.\n\n3. **Mix Up Response Classes**: When dealing with classification tasks, ensure that the few-shot examples include a mix of different response classes to avoid overfitting.\n\n4. **Experiment Together**: Collaborate with other prompt engineers to refine your prompts and improve their effectiveness through collective feedback and iteration.\n\n5. **Adapt to Model Updates**: Stay informed about updates in model architecture and capabilities, and adjust your prompts accordingly to leverage new features effectively.\n\n### Automatic Prompt Engineering (APE)\n\nAutomatic Prompt Engineering (APE) is a method that automates the process of generating prompts for AI models. This technique not only reduces human input but also enhances the performance of the model across various tasks by iteratively evaluating and refining generated prompts.\n\n---\n\n**References:**\n\n- [1] Role prompting techniques in prompt engineering.\n- [2] ReAct (reason & act) method explained with examples.\n- [3] Best practices for effective prompt engineering, including use of variables.\n- [4] Contextual prompting strategies to enhance AI model output relevance.\n- [5] Importance of being specific about desired output in prompts.\n- [6] Automatic Prompt Engineering (APE) methodology and benefits.\n\n---\n\nThis article provides a comprehensive overview of how to effectively utilize prompt engineering techniques to optimize the performance and utility of AI models. By following these guidelines, you can create more accurate, relevant, and engaging outputs tailored to your specific needs.\n\n---",
+        "sources": [
+          {
+            "chunk_id": "48ab83968ca4e15e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "4be8603921bc7718",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **ReAct (reason & act)**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "ad8a51007f76a83e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": "8"
+          },
+          {
+            "chunk_id": "947affff58e2298b",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "5bd98a484311bfd7",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "b1c0332af5cefb40",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **ReAct (reason & act)**",
+            "page_numbers": "40"
+          },
+          {
+            "chunk_id": "0fc8d2c517bd961d",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use variables in prompts**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "7be05da0ca910e67",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": "23"
+          },
+          {
+            "chunk_id": "2196ebd29c2151a8",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": "18"
+          },
+          {
+            "chunk_id": "052a93e94f81d79d",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices**",
+            "page_numbers": "56"
+          },
+          {
+            "chunk_id": "0abb0c4573a71689",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "78daecc2d8bc917a",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt Engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "e67e09ef23ca5758",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use variables in prompts**",
+            "page_numbers": "61"
+          },
+          {
+            "chunk_id": "6e16d495963ba563",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "21550c61ceeab562",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": "32"
+          },
+          {
+            "chunk_id": "473e25ac95a04032",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **Self-consistency**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "1e7245e30f6286fd",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "63f7c2749986043e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "0251dba717e9ecbb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "7d5a3b2998159dff",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use variables in prompts**",
+            "page_numbers": "60"
+          }
+        ],
+        "timestamp": "2026-08-08T13:21:52.090394+00:00"
+      }
+    ]
+  }
+}

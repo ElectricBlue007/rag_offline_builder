@@ -19,7 +19,7 @@ RUN IT
     # then open http://localhost:5000 in a browser
 
     Optional flags mirror run_query.py:
-    python webapp/app.py --rerank --model qwen3-embedding:8b --gen-model llama3.2
+    python webapp/app.py --rerank --model qwen3-embedding8b:latest --gen-model llama3.2
 
 Everything else (Ollama running locally, ChromaDB + BM25 index already
 built via run_ingestion.py / run_bm25_index.py) must already be in place,
@@ -45,6 +45,7 @@ from rag_pipeline.config import (  # noqa: E402
     LlmClientConfig,
     ContextBuilderConfig,
 )
+from rag_pipeline.settings import load_settings  # noqa: E402
 from rag_pipeline.embedding.embed_generator import EmbedGenerator  # noqa: E402
 from rag_pipeline.storage.chroma_ingestion import ChromaIngestor  # noqa: E402
 from rag_pipeline.storage.bm25_index import BM25Index  # noqa: E402
@@ -55,23 +56,27 @@ from rag_pipeline.generation.rag_answerer import RagAnswerer  # noqa: E402
 
 from chat_store import ChatStore  # noqa: E402
 
+_S = load_settings()
+
 
 def parse_args():
     p = argparse.ArgumentParser(description="Chat web UI for the RAG pipeline.")
-    p.add_argument("--chroma-dir", default="./chroma_db")
-    p.add_argument("--collection", default="rag_docs")
-    p.add_argument("--bm25-index", default="./bm25_index.pkl")
-    p.add_argument("--model", default="qwen3-embedding:8b", help="Embedding model tag.")
-    p.add_argument("--gen-model", default="llama3.2", help="Ollama generation model tag.")
-    p.add_argument("--ollama-host", default="http://localhost:11434")
-    p.add_argument("--n-results", type=int, default=5)
-    p.add_argument("--rerank", action="store_true")
-    p.add_argument("--rerank-model", default="Qwen/Qwen3-Reranker-4B")
-    p.add_argument("--candidate-pool", type=int, default=10)
-    p.add_argument("--history-file", default="./chat_history.json")
-    p.add_argument("--host", default="127.0.0.1")
-    p.add_argument("--port", type=int, default=5000)
-    p.add_argument("--debug", action="store_true")
+    p.add_argument("--chroma-dir", default=_S.paths.chroma_dir)
+    p.add_argument("--collection", default=_S.paths.collection_name)
+    p.add_argument("--bm25-index", default=_S.paths.bm25_index_path)
+    p.add_argument("--model", default=_S.embed_generator.model_name,
+                    help="Embedding model tag. Default: settings.yaml models.embedding.")
+    p.add_argument("--gen-model", default=_S.llm_client.model,
+                    help="Ollama generation model tag. Default: settings.yaml models.generation.")
+    p.add_argument("--ollama-host", default=_S.llm_client.host)
+    p.add_argument("--n-results", type=int, default=_S.n_results)
+    p.add_argument("--rerank", action="store_true", default=_S.rerank_runtime.enabled)
+    p.add_argument("--rerank-model", default=_S.reranker.model_name)
+    p.add_argument("--candidate-pool", type=int, default=_S.rerank_runtime.candidate_pool)
+    p.add_argument("--history-file", default=_S.paths.chat_history_file)
+    p.add_argument("--host", default=_S.webapp.host)
+    p.add_argument("--port", type=int, default=_S.webapp.port)
+    p.add_argument("--debug", action="store_true", default=_S.webapp.debug)
     return p.parse_args()
 
 
@@ -100,7 +105,13 @@ def build_answerer(args) -> RagAnswerer:
         retriever=retriever,
         llm_client=llm_client,
         reranker=reranker,
-        context_config=ContextBuilderConfig(),
+        context_config=ContextBuilderConfig(
+            include_type_label=_S.context_builder.include_type_label,
+            include_source=_S.context_builder.include_source,
+            include_breadcrumb=_S.context_builder.include_breadcrumb,
+            max_chunks=args.n_results,
+            max_chars_per_chunk=_S.context_builder.max_chars_per_chunk,
+        ),
     )
 
 

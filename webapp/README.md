@@ -35,7 +35,7 @@ Useful flags (same defaults as `run_query.py`):
 
 ```bash
 python webapp/app.py \
-  --model qwen3-embedding:8b \
+  --model qwen3-embedding8b:latest \
   --gen-model llama3.2 \
   --chroma-dir ./chroma_db \
   --bm25-index ./bm25_index.pkl \
