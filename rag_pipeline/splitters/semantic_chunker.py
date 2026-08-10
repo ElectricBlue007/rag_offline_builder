@@ -23,7 +23,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from rag_pipeline.config import SemanticChunkerConfig
+from rag_pipeline.config import SemanticChunkerConfig, RuntimeConfig
+from rag_pipeline import model_manager
 from rag_pipeline.splitters.structure_splitter import StructuralSection
 from rag_pipeline.splitters.token_counter import TokenCounter
 
@@ -112,8 +113,13 @@ class SemanticChunker:
     so that importing this module has zero startup cost.
     """
 
-    def __init__(self, config: Optional[SemanticChunkerConfig] = None):
+    def __init__(
+        self,
+        config: Optional[SemanticChunkerConfig] = None,
+        runtime: Optional[RuntimeConfig] = None,
+    ):
         self.cfg = config or SemanticChunkerConfig()
+        self.runtime = runtime or RuntimeConfig()
         self._lc_chunker = None     # lazy-loaded
         self._token_counter: Optional[TokenCounter] = None  # lazy-loaded
 
@@ -204,6 +210,9 @@ class SemanticChunker:
 
         # Apply semantic chunking
         try:
+            model_manager.ensure_active(
+                self.cfg.embedding_host, self.cfg.embedding_model, self.runtime
+            )
             chunker = self._get_chunker()
             lc_docs = chunker.create_documents([section.content])
             raw_texts = [doc.page_content for doc in lc_docs]

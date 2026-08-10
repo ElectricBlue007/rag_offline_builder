@@ -15,7 +15,8 @@ makes it trivial to test with fakes.
 from dataclasses import dataclass, field
 from typing import Optional, Protocol
 
-from rag_pipeline.config import ContextBuilderConfig
+from rag_pipeline.config import ContextBuilderConfig, RuntimeConfig
+from rag_pipeline import model_manager
 from rag_pipeline.generation.context_builder import build_context
 
 
@@ -58,11 +59,13 @@ class RagAnswerer:
         llm_client: _LlmClient,
         reranker: Optional[_Reranker] = None,
         context_config: Optional[ContextBuilderConfig] = None,
+        runtime: Optional[RuntimeConfig] = None,
     ):
         self.retriever = retriever
         self.llm_client = llm_client
         self.reranker = reranker
         self.context_cfg = context_config or ContextBuilderConfig()
+        self.runtime = runtime or RuntimeConfig()
 
     def answer(self, query: str) -> RagAnswer:
         if not query or not query.strip():
@@ -80,6 +83,17 @@ class RagAnswerer:
         user_prompt = self._build_user_prompt(query, context)
 
         answer_text = self.llm_client.generate(system_prompt, user_prompt)
+
+        # End-of-request cleanup: a single answer() call walks through
+        # up to three different models (embedding -> reranker ->
+        # generation), each of which already unloads itself the moment
+        # its OWN step finishes (see model_manager.ensure_active calls
+        # in EmbedGenerator/CrossEncoderReranker/LlmClient). This is
+        # just a final safety net so nothing at all is left resident in
+        # VRAM once the whole question-answer cycle is done — matters
+        # most for a long-running process like webapp/app.py sitting
+        # idle between chat messages.
+        self._release_all_used_hosts()
 
         sources = [
             {
@@ -104,6 +118,35 @@ class RagAnswerer:
 
     def _chunk_metadata(self, chunk) -> dict:
         return self._get_field(chunk, "metadata", {}) or {}
+
+    def _release_all_used_hosts(self) -> None:
+        """
+        Best-effort final unload across every Ollama host this answer()
+        call may have touched (embedder, ollama-backend reranker, LLM
+        client). Silently skips anything that isn't a real Ollama-backed
+        component (e.g. a test fake, or a huggingface-backend reranker,
+        which was already cleaned up per-call by its own lifecycle
+        helper) — this is cleanup, not something that should ever raise
+        and break an answer that already succeeded.
+        """
+        hosts = set()
+        for component in (getattr(self.retriever, "embedder", None), self.reranker, self.llm_client):
+            cfg = getattr(component, "cfg", None)
+            host = getattr(cfg, "host", None) or getattr(cfg, "ollama_host", None)
+            if host:
+                hosts.add(host)
+        for host in hosts:
+            try:
+                model_manager.release_all(host, self.runtime)
+            except Exception as e:
+                # model_manager itself already warns to stderr on
+                # unload/connection failures (see _safe_unload) — this
+                # outer catch is only for something unexpected (e.g. a
+                # bug in a caller's custom cfg object), and still
+                # surfaces it rather than hiding it, while never
+                # letting cleanup break an answer that already
+                # succeeded.
+                print(f"  [RagAnswerer] WARNING: model cleanup failed for {host}: {e}")
 
     def _build_system_prompt(self, query: str) -> str:
         # detect_language() only discriminates English vs. Spanish (see

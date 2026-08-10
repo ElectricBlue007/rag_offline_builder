@@ -133,7 +133,7 @@ def main():
     if args.quiet:
         cfg.verbose = False
 
-    pipeline = MarkdownChunkingPipeline(cfg)
+    pipeline = MarkdownChunkingPipeline(cfg, runtime=_S.runtime)
     summary = pipeline.run()
 
     sys.exit(0 if not summary["failed"] else 1)

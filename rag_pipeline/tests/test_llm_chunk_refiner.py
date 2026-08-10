@@ -146,7 +146,7 @@ class TestMergeApplication(unittest.TestCase):
         text joined, never anything the LLM wrote itself."""
         cfg = LlmChunkRefinerConfig(enabled=True, min_chunks_to_consider=2)
         refiner = LlmChunkRefiner(cfg)
-        refiner._ollama_client = mock_ollama_client('{"merge_groups": [[0, 1]]}')
+        refiner._ollama_client = mock_ollama_client('{"group_ids": [0, 0]}')
 
         chunks = [
             make_chunk("Step 1: open the panel."),
@@ -161,7 +161,7 @@ class TestMergeApplication(unittest.TestCase):
     def test_no_merge_when_all_groups_are_singletons(self):
         cfg = LlmChunkRefinerConfig(enabled=True, min_chunks_to_consider=2)
         refiner = LlmChunkRefiner(cfg)
-        refiner._ollama_client = mock_ollama_client('{"merge_groups": [[0], [1]]}')
+        refiner._ollama_client = mock_ollama_client('{"group_ids": [0, 1]}')
 
         chunks = [make_chunk("Complete thought one."), make_chunk("Complete thought two.")]
         result = refiner.refine(chunks)
@@ -173,7 +173,7 @@ class TestMergeApplication(unittest.TestCase):
     def test_three_way_merge(self):
         cfg = LlmChunkRefinerConfig(enabled=True, min_chunks_to_consider=2)
         refiner = LlmChunkRefiner(cfg)
-        refiner._ollama_client = mock_ollama_client('{"merge_groups": [[0, 1, 2]]}')
+        refiner._ollama_client = mock_ollama_client('{"group_ids": [0, 0, 0]}')
 
         chunks = [make_chunk("A."), make_chunk("B."), make_chunk("C.")]
         result = refiner.refine(chunks)
@@ -185,7 +185,7 @@ class TestMergeApplication(unittest.TestCase):
     def test_merged_chunk_inherits_metadata_from_first_piece(self):
         cfg = LlmChunkRefinerConfig(enabled=True, min_chunks_to_consider=2)
         refiner = LlmChunkRefiner(cfg)
-        refiner._ollama_client = mock_ollama_client('{"merge_groups": [[0, 1]]}')
+        refiner._ollama_client = mock_ollama_client('{"group_ids": [0, 0]}')
 
         chunks = [
             make_chunk("A.", breadcrumb="### My Section"),
@@ -201,7 +201,7 @@ class TestMergeApplication(unittest.TestCase):
         cfg = LlmChunkRefinerConfig(enabled=True, min_chunks_to_consider=2)
         refiner = LlmChunkRefiner(cfg)
         refiner._ollama_client = mock_ollama_client(
-            'Sure, here is my analysis: {"merge_groups": [[0, 1]]} Hope that helps!'
+            'Sure, here is my analysis: {"group_ids": [0, 0]} Hope that helps!'
         )
         chunks = [make_chunk("Original A."), make_chunk("Original B.")]
         result = refiner.refine(chunks)
@@ -227,41 +227,45 @@ class TestResponseValidationFallback(unittest.TestCase):
         result = refiner.refine(chunks)
         self.assertEqual([c.content for c in result], ["A.", "B."])
 
-    def test_missing_index_falls_back(self):
-        # Only covers index 0, index 1 is missing entirely
-        refiner = self._refiner_with_reply('{"merge_groups": [[0]]}')
+    def test_wrong_length_falls_back(self):
+        # Only 1 id given, but there are 2 chunks in the batch
+        refiner = self._refiner_with_reply('{"group_ids": [0]}')
         chunks = [make_chunk("A."), make_chunk("B.")]
         result = refiner.refine(chunks)
         self.assertEqual([c.content for c in result], ["A.", "B."])
 
-    def test_duplicate_index_falls_back(self):
-        refiner = self._refiner_with_reply('{"merge_groups": [[0, 1], [1]]}')
+    def test_non_integer_id_falls_back(self):
+        refiner = self._refiner_with_reply('{"group_ids": [0, "1"]}')
         chunks = [make_chunk("A."), make_chunk("B.")]
         result = refiner.refine(chunks)
         self.assertEqual([c.content for c in result], ["A.", "B."])
 
-    def test_out_of_range_index_falls_back(self):
-        refiner = self._refiner_with_reply('{"merge_groups": [[0, 1, 5]]}')
+    def test_does_not_start_at_zero_falls_back(self):
+        refiner = self._refiner_with_reply('{"group_ids": [1, 1]}')
         chunks = [make_chunk("A."), make_chunk("B.")]
         result = refiner.refine(chunks)
         self.assertEqual([c.content for c in result], ["A.", "B."])
 
     def test_non_adjacent_group_falls_back(self):
-        """Prompt explicitly requires contiguous adjacency — [0, 2] skips
-        index 1 and must be rejected, not silently reordered."""
-        refiner = self._refiner_with_reply('{"merge_groups": [[0, 2], [1]]}')
+        """Each id must repeat the previous one or step up by exactly 1 —
+        [0, 2, 2] jumps from group 0 straight to group 2, skipping group 1,
+        and must be rejected rather than silently reordered."""
+        refiner = self._refiner_with_reply('{"group_ids": [0, 2, 2]}')
         chunks = [make_chunk("A."), make_chunk("B."), make_chunk("C.")]
         result = refiner.refine(chunks)
         self.assertEqual([c.content for c in result], ["A.", "B.", "C."])
 
-    def test_empty_group_falls_back(self):
-        refiner = self._refiner_with_reply('{"merge_groups": [[], [0, 1]]}')
-        chunks = [make_chunk("A."), make_chunk("B.")]
+    def test_steps_backward_falls_back(self):
+        """[0, 1, 0] steps back down to group 0 after already moving on to
+        group 1 — ids may only ever repeat or increase by 1, never drop
+        back to an earlier group."""
+        refiner = self._refiner_with_reply('{"group_ids": [0, 1, 0]}')
+        chunks = [make_chunk("A."), make_chunk("B."), make_chunk("C.")]
         result = refiner.refine(chunks)
-        self.assertEqual([c.content for c in result], ["A.", "B."])
+        self.assertEqual([c.content for c in result], ["A.", "B.", "C."])
 
     def test_malformed_json_falls_back(self):
-        refiner = self._refiner_with_reply('{"merge_groups": [[0, 1]')  # truncated
+        refiner = self._refiner_with_reply('{"group_ids": [0, 1]')  # truncated
         chunks = [make_chunk("A."), make_chunk("B.")]
         result = refiner.refine(chunks)
         self.assertEqual([c.content for c in result], ["A.", "B."])
@@ -311,7 +315,7 @@ class TestBatching(unittest.TestCase):
         )
         refiner = LlmChunkRefiner(cfg)
         # Every batch reply says "keep everything separate" for simplicity
-        refiner._ollama_client = mock_ollama_client('{"merge_groups": [[0], [1]]}')
+        refiner._ollama_client = mock_ollama_client('{"group_ids": [0, 1]}')
 
         chunks = [make_chunk(f"chunk {i}") for i in range(6)]  # 6 chunks, batches of 2 → 3 calls
         result = refiner.refine(chunks)
@@ -327,9 +331,9 @@ class TestBatching(unittest.TestCase):
         # Always tries to merge everything in whatever batch it sees
         refiner._ollama_client = MagicMock()
         refiner._ollama_client.chat.side_effect = [
-            {"message": {"content": '{"merge_groups": [[0, 1]]}'}},
-            {"message": {"content": '{"merge_groups": [[0, 1]]}'}},
-            {"message": {"content": '{"merge_groups": [[0, 1]]}'}},
+            {"message": {"content": '{"group_ids": [0, 0]}'}},
+            {"message": {"content": '{"group_ids": [0, 0]}'}},
+            {"message": {"content": '{"group_ids": [0, 0]}'}},
         ]
 
         chunks = [make_chunk(f"chunk {i}") for i in range(6)]
@@ -344,7 +348,7 @@ class TestOversizedMergeSafetyNet(unittest.TestCase):
     def test_merge_exceeding_char_limit_is_resplit(self):
         cfg = LlmChunkRefinerConfig(enabled=True, min_chunks_to_consider=2)
         refiner = LlmChunkRefiner(cfg)
-        refiner._ollama_client = mock_ollama_client('{"merge_groups": [[0, 1]]}')
+        refiner._ollama_client = mock_ollama_client('{"group_ids": [0, 0]}')
 
         # Two large chunks whose combined length exceeds the 4000-char safety net
         big_a = "Sentence A. " * 300   # ~3600 chars
@@ -361,7 +365,7 @@ class TestOversizedMergeSafetyNet(unittest.TestCase):
     def test_normal_sized_merge_not_split(self):
         cfg = LlmChunkRefinerConfig(enabled=True, min_chunks_to_consider=2)
         refiner = LlmChunkRefiner(cfg)
-        refiner._ollama_client = mock_ollama_client('{"merge_groups": [[0, 1]]}')
+        refiner._ollama_client = mock_ollama_client('{"group_ids": [0, 0]}')
         chunks = [make_chunk("Short A."), make_chunk("Short B.")]
         result = refiner.refine(chunks)
         self.assertEqual(len(result), 1)

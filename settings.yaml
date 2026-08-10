@@ -41,15 +41,59 @@ paths:
 ollama:
   host: "http://localhost:11434"
 
-  # Context window (in tokens) requested from Ollama for every model call
-  # in this project (embeddings, generation, chunk refiner, contextual
-  # enricher, RAGAS judge). Ollama defaults this fairly low (commonly
-  # 2048) regardless of what the underlying model actually supports, so
-  # long inputs can be silently truncated or rejected with a
-  # "context length exceeded" error. null = don't override, let Ollama
-  # use its own default. Raise this (e.g. 8192 or higher) if you see
-  # that error, or set a custom Modelfile default instead.
-  num_ctx: 16384
+  # PROJECT-WIDE FALLBACK context window (in tokens), used by any step
+  # below that doesn't set its own `num_ctx` in its own section. Ollama
+  # defaults this fairly low (commonly 2048) regardless of what the
+  # underlying model actually supports, so long inputs can be silently
+  # truncated or rejected with a "context length exceeded" error.
+  # null = don't override, let Ollama use its own default.
+  #
+  # Each step's context window is ALSO independently tunable — see
+  # models.embedding's `num_ctx` next to it in chunking.semantic_chunker,
+  # embedding.num_ctx, chunking.llm_chunk_refiner.num_ctx,
+  # chunking.contextual_enricher.num_ctx, generation.num_ctx,
+  # retrieval.reranker.ollama_num_ctx, evaluation.judge_num_ctx /
+  # evaluation.embedding_num_ctx below. Setting one of those wins over
+  # this project-wide default for that one step only — e.g. give the
+  # generation model a bigger window than the embedding model without
+  # raising every model's window at once.
+  num_ctx: 65536
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Runtime — sequential model loading. This is the "only ONE model lives
+# on the GPU at a time" switch: every step below (embedding, generation,
+# chunk refiner, contextual enricher, reranker, RAGAS judge) loads its
+# model, does its work, and is explicitly unloaded again before the NEXT
+# step's model is allowed to load — never two models resident together.
+# See rag_pipeline/model_manager.py for the mechanism.
+# ──────────────────────────────────────────────────────────────────────────────
+runtime:
+  # Master switch. true (default) = strict one-model-at-a-time; a step
+  # switching models always unloads whatever else is loaded first.
+  # false = fall back to plain Ollama caching (its own keep_alive
+  # heuristics decide what stays resident) — use this on a box with
+  # enough VRAM/multiple GPUs where you'd rather avoid reload latency.
+  sequential_model_loading: true
+
+  # When a step/request finishes, explicitly unload the model it used
+  # rather than waiting out Ollama's keep_alive window. Also controls
+  # whether the in-process HuggingFace reranker frees its GPU memory
+  # after each use.
+  unload_after_step: true
+
+  # After requesting an unload, block until Ollama's /api/ps confirms
+  # the model is actually gone before letting the next model load —
+  # this is what guarantees the two never briefly overlap in VRAM.
+  verify_unload: true
+
+  # How long (seconds) to wait for an unload to be confirmed before
+  # giving up and proceeding anyway, so a stuck unload can never hang
+  # the pipeline forever.
+  unload_timeout_seconds: 30
+
+  # How often (seconds) to re-poll /api/ps while waiting for an unload.
+  unload_poll_interval_seconds: 0.5
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -136,6 +180,10 @@ chunking:
     attempt_real_tokenizer: true    # try the real HF tokenizer; falls back to word-count heuristic
     skip_semantic_if_small: true    # skip semantic splitting for already-small sections
 
+    # Context window (tokens) for THIS step's embedding calls only.
+    # null = fall back to ollama.num_ctx above.
+    num_ctx: null
+
   llm_chunk_refiner:
     enabled: false            # opt-in — roughly doubles chunking time on CPU-only hardware
     timeout_seconds: 30
@@ -143,6 +191,12 @@ chunking:
     max_chunks_per_call: 12     # batch size sent to the LLM per call
     fallback_on_error: true     # keep original boundaries if the LLM call fails
     warn_on_fallback: true
+
+    # Context window (tokens) for THIS step's LLM calls only. null =
+    # fall back to ollama.num_ctx above. A batch of max_chunks_per_call
+    # chunks can add up to a fairly long prompt — raise this if calls
+    # start failing with a context-length error.
+    num_ctx: null
 
   table_normalizer:
     enabled: true                    # convert HTML tables to embeddable prose
@@ -158,6 +212,11 @@ chunking:
     warn_on_fallback: true
     include_breadcrumb: true
     include_source_filename: true
+
+    # Context window (tokens) for THIS step's LLM calls only (mode:
+    # "llm" only — ignored in "deterministic"/"off" mode). null = fall
+    # back to ollama.num_ctx above.
+    num_ctx: null
 
   embed_text:
     enabled: true
@@ -181,6 +240,10 @@ chunking:
 # ──────────────────────────────────────────────────────────────────────────────
 embedding:
   batch_size: 16     # lower for tighter VRAM, raise if you have headroom
+
+  # Context window (tokens) for THIS step's embedding calls only. null =
+  # fall back to ollama.num_ctx above.
+  num_ctx: null
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -230,6 +293,21 @@ retrieval:
       information that answers the query.
     ollama_top_logprobs: 20  # how many alternative tokens to request per answer position (ollama backend)
 
+    # Context window (tokens) for THIS step's calls only (ollama backend
+    # only — ignored by huggingface backend). null = fall back to
+    # ollama.num_ctx above.
+    ollama_num_ctx: 4096
+
+    # In-process (huggingface backend) reranker lifecycle: load the
+    # model fresh for each rerank() call and free its GPU memory
+    # immediately after, rather than keeping it resident between
+    # queries. Matches the same "one model on the GPU at a time" intent
+    # as the runtime: block above, applied to a non-Ollama model. Set to
+    # false to keep the huggingface reranker warm/resident across
+    # queries instead (faster repeated queries, costs VRAM the whole
+    # time the process is up).
+    huggingface_unload_after_use: true
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Answer generation (run_answer.py / webapp)
@@ -237,6 +315,10 @@ retrieval:
 generation:
   temperature: 0.1     # low = stick close to retrieved context, not creative
   timeout_seconds: 60
+
+  # Context window (tokens) for THIS step's calls only. null = fall
+  # back to ollama.num_ctx above.
+  num_ctx: 129024
 
   context_builder:
     include_type_label: true
@@ -259,6 +341,18 @@ evaluation:
   judge_timeout_seconds: 300
   questions_path: "./rag_pipeline/evaluation/sample_eval_questions.json"
   save_results_path: null      # e.g. "./eval_results.json" to persist per-question results
+
+  # Context window (tokens) for the judge LLM's and the embedding
+  # model's calls in THIS step only. null = fall back to ollama.num_ctx
+  # above. Note: RAGAS's own library internally interleaves calls to
+  # the judge LLM and the embedding model while scoring a question (it
+  # doesn't expose stage boundaries this project can hook into), so
+  # sequential loading is best-effort here — see
+  # rag_pipeline/evaluation/ragas_evaluator.py's module docstring. If
+  # your GPU can't hold both at once, point judge and embedding at the
+  # same model, or run generation and evaluation as separate passes.
+  judge_num_ctx: null
+  embedding_num_ctx: null
 
 
 # ──────────────────────────────────────────────────────────────────────────────

@@ -20,9 +20,10 @@ the others.
 import json
 import time
 from pathlib import Path
-from typing import Iterator
+from typing import Iterator, Optional
 
-from rag_pipeline.config import PipelineConfig
+from rag_pipeline.config import PipelineConfig, RuntimeConfig
+from rag_pipeline import model_manager
 from rag_pipeline.preprocessors.md_preprocessor import MarkdownPreprocessor
 from rag_pipeline.splitters.structure_splitter import StructureSplitter
 from rag_pipeline.splitters.semantic_chunker import SemanticChunker
@@ -59,16 +60,25 @@ class MarkdownChunkingPipeline:
         pipeline.run()
     """
 
-    def __init__(self, config: PipelineConfig):
+    def __init__(self, config: PipelineConfig, runtime: Optional[RuntimeConfig] = None):
         self.cfg = config
+        self.runtime = runtime or RuntimeConfig()
 
-        # Instantiate each stage with its sub-config
+        # Instantiate each stage with its sub-config. `runtime` is
+        # threaded through to every stage that calls a model, so they
+        # all share the same "only one model on the GPU at a time"
+        # policy from settings.yaml's runtime: block.
         self.preprocessor     = MarkdownPreprocessor(config.preprocessor)
         self.struct_split     = StructureSplitter(config.structure)
-        self.sem_chunker      = SemanticChunker(config.semantic)
-        self.llm_refiner      = LlmChunkRefiner(config.llm_chunk_refiner)
+        self.sem_chunker      = SemanticChunker(config.semantic, runtime=self.runtime)
+        # semantic_config is passed through so the refiner's post-merge
+        # resplit safety net uses the SAME chunk-size ceiling as the
+        # initial semantic split, instead of a hardcoded value of its own.
+        self.llm_refiner      = LlmChunkRefiner(
+            config.llm_chunk_refiner, semantic_config=config.semantic, runtime=self.runtime
+        )
         self.table_normalizer = TableChunkNormalizer(config.table_normalizer)
-        self.contextual       = ContextualEnricher(config.contextual)
+        self.contextual       = ContextualEnricher(config.contextual, runtime=self.runtime)
         self.embed_text_bldr  = EmbedTextBuilder(config.embed_text)
         self.enricher         = MetadataEnricher(config.metadata)
 
@@ -141,6 +151,15 @@ class MarkdownChunkingPipeline:
         # triggers no model load at all in the default configuration.
         if self.cfg.llm_chunk_refiner.enabled and staged:
             self._log(f"\n[{len(staged)} file(s)] Refining chunks with LLM...")
+            # Stage 1 is fully done for every file at this point — release
+            # the embedding model NOW rather than waiting for the refiner
+            # model's own ensure_active() call to evict it implicitly.
+            # Same "load it, use it, explicitly stop it, then load the
+            # next one" flow the pipeline module docstring promises,
+            # made visible at the orchestration level too.
+            model_manager.release(
+                self.cfg.semantic.embedding_host, self.cfg.semantic.embedding_model, self.runtime
+            )
         for entry in staged:
             t0 = time.time()
             try:
@@ -155,6 +174,13 @@ class MarkdownChunkingPipeline:
         # ── Stage 3 — everything else (no model, or whatever model the
         # contextual enricher uses if --contextual-mode llm is set) —
         # run per file and save. No embedding/refiner calls happen here.
+        if self.cfg.llm_chunk_refiner.enabled and staged:
+            # Refiner stage is done for every file — release its model
+            # before stage 3 potentially loads yet another one (the
+            # contextual enricher's LLM, if --contextual-mode llm).
+            model_manager.release(
+                self.cfg.llm_chunk_refiner.llm_host, self.cfg.llm_chunk_refiner.llm_model, self.runtime
+            )
         for entry in staged:
             if entry.get("skip"):
                 continue
@@ -181,6 +207,17 @@ class MarkdownChunkingPipeline:
         if failed:
             self._log(f"  Failed: {failed}")
         self._log(f"{'='*55}\n")
+
+        # Final safety net: whatever model was active last (embedding,
+        # refiner, or the contextual enricher's LLM if mode="llm") is
+        # explicitly released so nothing is left resident in VRAM once
+        # the whole chunking run is done.
+        if self.cfg.contextual.mode == "llm":
+            model_manager.release(self.cfg.contextual.llm_host, self.cfg.contextual.llm_model, self.runtime)
+        else:
+            model_manager.release(
+                self.cfg.semantic.embedding_host, self.cfg.semantic.embedding_model, self.runtime
+            )
 
         return {
             "files_processed": len(md_files) - len(failed),

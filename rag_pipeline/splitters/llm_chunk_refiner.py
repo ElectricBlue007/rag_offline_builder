@@ -19,10 +19,12 @@ a far worse failure than an imperfect chunk boundary.
 
 import json
 import re
-from typing import Optional
+from typing import Callable, Optional
 
-from rag_pipeline.config import LlmChunkRefinerConfig
+from rag_pipeline.config import LlmChunkRefinerConfig, SemanticChunkerConfig, RuntimeConfig
+from rag_pipeline import model_manager
 from rag_pipeline.splitters.semantic_chunker import SemanticChunk, _hard_split
+from rag_pipeline.splitters.token_counter import TokenCounter
 
 
 class LlmChunkRefiner:
@@ -36,10 +38,49 @@ class LlmChunkRefiner:
     atomic-unit rule SemanticChunker itself already applies to them.
     """
 
-    def __init__(self, config: Optional[LlmChunkRefinerConfig] = None):
+    def __init__(
+        self,
+        config: Optional[LlmChunkRefinerConfig] = None,
+        semantic_config: Optional[SemanticChunkerConfig] = None,
+        runtime: Optional[RuntimeConfig] = None,
+    ):
         self.cfg = config or LlmChunkRefinerConfig()
+        self.runtime = runtime or RuntimeConfig()
+        # Sizing for the post-merge resplit safety net below deliberately
+        # comes from the SAME config SemanticChunker itself uses
+        # (settings.yaml's chunking.semantic_chunker), not a value of its
+        # own — a merge is undone by the exact same size ceiling the
+        # initial split was built to respect. Previously this stage had
+        # no way to see that config at all and fell back to a hardcoded
+        # 4000-character limit, so raising/lowering chunk size in
+        # settings.yaml only affected the initial semantic split and
+        # silently stopped applying the moment llm_chunk_refiner merged
+        # chunks back together.
+        self._semantic_cfg = semantic_config or SemanticChunkerConfig()
+        self._token_counter: Optional[TokenCounter] = None
         self._ollama_client = None    # lazy-loaded; settable directly in tests
         self._fallback_count = 0
+
+    # ── Size measurement — mirrors SemanticChunker._count_fn/_max_units ────
+
+    @property
+    def _count_fn(self) -> Callable[[str], int]:
+        if not self._semantic_cfg.use_token_based_sizing:
+            return len
+        if self._token_counter is None:
+            self._token_counter = TokenCounter(
+                model_name=self._semantic_cfg.tokenizer_hf_id,
+                attempt_real_tokenizer=self._semantic_cfg.attempt_real_tokenizer,
+            )
+        return self._token_counter.count_tokens
+
+    @property
+    def _max_units(self) -> int:
+        return (
+            self._semantic_cfg.max_chunk_tokens
+            if self._semantic_cfg.use_token_based_sizing
+            else self._semantic_cfg.max_chunk_chars
+        )
 
     # ── Public API ───────────────────────────────────────────────────────────
 
@@ -171,6 +212,7 @@ class LlmChunkRefiner:
     # ── Ollama client (lazy, mockable — mirrors contextual_enricher.py) ─────
 
     def _call_ollama(self, prompt: str) -> str:
+        model_manager.ensure_active(self.cfg.llm_host, self.cfg.llm_model, self.runtime)
         if self._ollama_client is None:
             try:
                 import ollama
@@ -308,21 +350,20 @@ class LlmChunkRefiner:
 
     def _resplit_if_oversized(self, chunk: SemanticChunk) -> list[SemanticChunk]:
         """
-        A merge can push a chunk above max_chunk_tokens. Re-applies the
-        SAME deterministic sentence-boundary hard-split SemanticChunker
-        uses as its own safety net — this is a size safeguard, not a
-        content decision, so it stays deterministic rather than going
-        back to the LLM.
+        A merge can push a chunk above the configured max size. Re-applies
+        the SAME deterministic sentence-boundary hard-split SemanticChunker
+        uses as its own safety net, against the SAME ceiling
+        (settings.yaml's chunking.semantic_chunker.max_chunk_tokens, or
+        max_chunk_chars if use_token_based_sizing is off) — this is a size
+        safeguard, not a content decision, so it stays deterministic
+        rather than going back to the LLM, and stays in sync with
+        whatever chunk size is actually configured rather than a value
+        of its own.
         """
-        # Uses character count (len) here deliberately: this module has no
-        # tokenizer wiring of its own, and a generous character ceiling is
-        # a reasonable safety net for the rare case a merge overshoots —
-        # exact token-precision isn't the point of this fallback.
-        max_chars = 4000
-        if len(chunk.content) <= max_chars:
+        if self._count_fn(chunk.content) <= self._max_units:
             return [chunk]
 
-        pieces = _hard_split(chunk.content, max_chars, len)
+        pieces = _hard_split(chunk.content, self._max_units, self._count_fn)
         return [
             SemanticChunk(
                 content=piece,

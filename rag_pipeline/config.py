@@ -9,6 +9,56 @@ from typing import Optional
 
 
 @dataclass
+class RuntimeConfig:
+    """
+    Controls model residency on the GPU across the WHOLE project — see
+    rag_pipeline/model_manager.py for the full mechanism. This is the
+    "only one model loaded at a time, load it → use it → stop it →
+    load the next one" switch.
+
+    Every module that calls an Ollama model (embedding, generation,
+    chunk refiner, contextual enricher, ollama-backend reranker, RAGAS
+    judge) calls model_manager.ensure_active() with this config right
+    before it does, and the various run_*.py / webapp entry points call
+    release()/release_all() at the natural end of a step or request.
+    """
+    # Master switch. True (default) = never let two different models
+    # sit resident on the same Ollama host at once — switching models
+    # always unloads whatever else was loaded first. False = fall back
+    # to plain Ollama caching behaviour (its own keep_alive heuristics
+    # decide what stays resident); useful on a multi-GPU box or a box
+    # with enough VRAM to comfortably hold everything at once.
+    sequential_model_loading: bool = True
+
+    # When a step/request finishes, explicitly unload the model it was
+    # using rather than leaving it resident until Ollama's keep_alive
+    # window naturally expires. Also governs whether the in-process
+    # HuggingFace reranker frees its GPU memory after each use. Turn
+    # this off if you'd rather let Ollama's own keep_alive/back-to-back
+    # calls to the SAME model avoid a reload — e.g. a chat webapp that
+    # expects the next question to reuse the generation model again
+    # within seconds.
+    unload_after_step: bool = True
+
+    # After asking Ollama to unload a model, poll /api/ps until it's
+    # actually gone before letting the NEXT model's call proceed — this
+    # is what guarantees the two never briefly overlap in VRAM. False
+    # = fire-and-forget the unload request and move on immediately
+    # (faster, but the next model's load could race the previous one's
+    # eviction on a slow unload).
+    verify_unload: bool = True
+
+    # How long to wait for /api/ps to confirm a model is gone before
+    # giving up and proceeding anyway (never hangs the pipeline
+    # indefinitely over a slow/stuck unload).
+    unload_timeout_seconds: float = 30.0
+
+    # How often to re-check /api/ps while waiting for an unload to be
+    # confirmed.
+    unload_poll_interval_seconds: float = 0.5
+
+
+@dataclass
 class PreprocessorConfig:
     # Image alt-text: "keep" | "drop" | "separate"
     #   keep       → inline with surrounding text
@@ -534,6 +584,17 @@ class RerankerConfig:
     # match it. Raise only if you have a specific reason to send much
     # longer candidates through reranking.
     max_length: int = 4096
+
+    # In-process (huggingface backend) reranker lifecycle: when True
+    # (default), the CrossEncoder is loaded fresh on every rerank()
+    # call and its GPU memory is explicitly freed immediately
+    # afterward, matching the "only one model on the GPU at a time"
+    # policy in RuntimeConfig for this project's one in-process (i.e.
+    # non-Ollama) model. Set False to keep it resident/cached across
+    # calls instead — faster for back-to-back queries, at the cost of
+    # permanent VRAM usage for the life of the process. Ignored by the
+    # "ollama" backend, which is governed by RuntimeConfig directly.
+    huggingface_unload_after_use: bool = True
 
     # How many of the reranked candidates to keep. Typically smaller
     # than HybridRetrieverConfig.final_n_results — the point of

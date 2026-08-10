@@ -65,6 +65,7 @@ from rag_pipeline.config import (
     ContextBuilderConfig,
     LlmClientConfig,
     RagasEvaluatorConfig,
+    RuntimeConfig,
 )
 
 # settings.yaml lives at the project root, one level above rag_pipeline/.
@@ -157,6 +158,7 @@ class Settings:
     bm25_index: BM25IndexConfig
     ragas_evaluator: RagasEvaluatorConfig
     webapp: WebappSettings
+    runtime: RuntimeConfig
     n_results: int = 5
     evaluation_questions_path: str = "./rag_pipeline/evaluation/sample_eval_questions.json"
     evaluation_save_results_path: Optional[str] = None
@@ -181,8 +183,26 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
     # None = leave every Ollama call at its own default. Set ollama.num_ctx
     # in settings.yaml to raise the context window across every model call
     # in the project at once (embeddings, generation, chunk refiner,
-    # contextual enricher, RAGAS judge/embeddings).
+    # contextual enricher, RAGAS judge/embeddings) — this is only the
+    # FALLBACK, though: any step below that sets its OWN `num_ctx` in its
+    # own settings.yaml section wins over this project-wide default, so
+    # each model's context window is independently tunable per step.
     ollama_num_ctx = _get(raw, "ollama.num_ctx", None)
+
+    def _step_num_ctx(dotted_path: str) -> Optional[int]:
+        """
+        A step's own num_ctx (settings.yaml `<section>.num_ctx`) if set,
+        else the project-wide ollama.num_ctx fallback above. `null`/
+        missing at the step level both mean "use the fallback" — only an
+        actual integer at the step level overrides it.
+        """
+        value = _get(raw, dotted_path, None)
+        return value if value is not None else ollama_num_ctx
+
+    # ── Runtime — sequential ("one model on the GPU at a time") model
+    # loading, shared by every Ollama-backed step and the in-process
+    # HuggingFace reranker. See RuntimeConfig in config.py.
+    runtime = _build(RuntimeConfig, _get(raw, "runtime"))
 
     paths = Paths(
         input_dir=_get(raw, "paths.input_dir", Paths.input_dir),
@@ -214,7 +234,7 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
             "embedding_model": embedding_model,
             "embedding_host": ollama_host,
             "tokenizer_hf_id": embedding_tokenizer_hf_id,
-            "num_ctx": ollama_num_ctx,
+            "num_ctx": _step_num_ctx("chunking.semantic_chunker.num_ctx"),
         },
     )
 
@@ -230,7 +250,7 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
             # in the same dataclass family) — named explicitly here since
             # the generic name-matching in _build() can't infer a rename.
             "llm_timeout_seconds": _refiner_section.get("timeout_seconds"),
-            "num_ctx": ollama_num_ctx,
+            "num_ctx": _step_num_ctx("chunking.llm_chunk_refiner.num_ctx"),
         },
     )
 
@@ -242,7 +262,7 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
         overrides={
             "llm_model": contextual_enricher_model,
             "llm_host": ollama_host,
-            "num_ctx": ollama_num_ctx,
+            "num_ctx": _step_num_ctx("chunking.contextual_enricher.num_ctx"),
         },
     )
 
@@ -269,7 +289,11 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
     embed_generator = _build(
         EmbedGeneratorConfig,
         _get(raw, "embedding"),
-        overrides={"model_name": embedding_model, "host": ollama_host, "num_ctx": ollama_num_ctx},
+        overrides={
+            "model_name": embedding_model,
+            "host": ollama_host,
+            "num_ctx": _step_num_ctx("embedding.num_ctx"),
+        },
     )
 
     # ── Storage ──────────────────────────────────────────────────────────
@@ -298,7 +322,11 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
             "model_name": reranker_model,
             "ollama_model": reranker_ollama_model,
             "ollama_host": ollama_host,
-            "ollama_num_ctx": ollama_num_ctx,
+            "ollama_num_ctx": _step_num_ctx("retrieval.reranker.ollama_num_ctx"),
+            # huggingface_unload_after_use is NOT overridden here — its
+            # yaml key already matches the dataclass field name, so
+            # _build()'s generic field-matching picks it up straight
+            # from the retrieval.reranker section above.
         },
     )
 
@@ -311,7 +339,11 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
     llm_client = _build(
         LlmClientConfig,
         _get(raw, "generation"),
-        overrides={"model": generation_model, "host": ollama_host, "num_ctx": ollama_num_ctx},
+        overrides={
+            "model": generation_model,
+            "host": ollama_host,
+            "num_ctx": _step_num_ctx("generation.num_ctx"),
+        },
     )
 
     context_builder = _build(ContextBuilderConfig, _get(raw, "generation.context_builder"))
@@ -323,10 +355,10 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
         overrides={
             "judge_llm_model": ragas_judge_model,
             "judge_llm_host": ollama_host,
-            "judge_num_ctx": ollama_num_ctx,
+            "judge_num_ctx": _step_num_ctx("evaluation.judge_num_ctx"),
             "embedding_model": embedding_model,
             "embedding_host": ollama_host,
-            "embedding_num_ctx": ollama_num_ctx,
+            "embedding_num_ctx": _step_num_ctx("evaluation.embedding_num_ctx"),
         },
     )
 
@@ -349,6 +381,7 @@ def load_settings(path: Union[str, Path] = _DEFAULT_SETTINGS_PATH) -> Settings:
         bm25_index=bm25_index,
         ragas_evaluator=ragas_evaluator,
         webapp=webapp,
+        runtime=runtime,
         n_results=_get(raw, "generation.n_results", 5),
         evaluation_questions_path=_get(
             raw, "evaluation.questions_path",
@@ -370,3 +403,8 @@ if __name__ == "__main__":
     print(f"Chroma dir        : {s.paths.chroma_dir}")
     print(f"BM25 index        : {s.paths.bm25_index_path}")
     print(f"Webapp            : http://{s.webapp.host}:{s.webapp.port}")
+    print(
+        f"Sequential loading: {s.runtime.sequential_model_loading} "
+        f"(unload_after_step={s.runtime.unload_after_step}, "
+        f"verify_unload={s.runtime.verify_unload})"
+    )

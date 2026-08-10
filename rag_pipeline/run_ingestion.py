@@ -31,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from rag_pipeline.settings import load_settings
 from rag_pipeline.config import EmbedGeneratorConfig, ChromaIngestionConfig
+from rag_pipeline import model_manager
 from rag_pipeline.embedding.embed_generator import EmbedGenerator, load_all_chunks
 from rag_pipeline.storage.chroma_ingestion import ChromaIngestor
 
@@ -105,12 +106,17 @@ def main():
     embed_cfg = EmbedGeneratorConfig(
         model_name=args.model, batch_size=args.batch_size, host=args.host
     )
-    generator = EmbedGenerator(embed_cfg)
+    generator = EmbedGenerator(embed_cfg, runtime=_S.runtime)
 
     log(f"🧠 Embedding {len(chunks)} chunk(s) with {args.model}...", args.quiet)
     embedding_results = generator.embed_chunks(chunks)
     embed_elapsed = time.time() - t0
     log(f"   Done in {embed_elapsed:.1f}s\n", args.quiet)
+
+    # Embedding is done — explicitly release the model from VRAM before
+    # the (model-free) ChromaDB ingestion step below, rather than
+    # leaving it resident until Ollama's keep_alive window expires.
+    model_manager.release(embed_cfg.host, embed_cfg.model_name, _S.runtime)
 
     # ── Ingest ───────────────────────────────────────────────────────────────
     t0 = time.time()

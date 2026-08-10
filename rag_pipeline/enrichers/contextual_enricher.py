@@ -49,7 +49,8 @@ import re
 from dataclasses import dataclass
 from typing import Optional
 
-from rag_pipeline.config import ContextualEnricherConfig
+from rag_pipeline.config import ContextualEnricherConfig, RuntimeConfig
+from rag_pipeline import model_manager
 from rag_pipeline.splitters.semantic_chunker import SemanticChunk
 
 
@@ -63,8 +64,13 @@ class ContextualEnricher:
         chunks = enricher.enrich_chunks(chunks, document_text, source_filename)
     """
 
-    def __init__(self, config: Optional[ContextualEnricherConfig] = None):
+    def __init__(
+        self,
+        config: Optional[ContextualEnricherConfig] = None,
+        runtime: Optional[RuntimeConfig] = None,
+    ):
         self.cfg = config or ContextualEnricherConfig()
+        self.runtime = runtime or RuntimeConfig()
         if self.cfg.mode not in _VALID_MODES:
             raise ValueError(
                 f"ContextualEnricherConfig.mode must be one of {_VALID_MODES}, "
@@ -164,6 +170,7 @@ class ContextualEnricher:
     # ── Ollama client (lazy, mockable) ──────────────────────────────────────
 
     def _call_ollama(self, prompt: str) -> str:
+        model_manager.ensure_active(self.cfg.llm_host, self.cfg.llm_model, self.runtime)
         if self._ollama_client is None:
             try:
                 import ollama

@@ -13,13 +13,31 @@ pipeline outputs — question, generated answer, retrieved contexts —
 before spending judge-LLM calls on scoring them. Each RAGAS metric
 costs its own round of LLM calls, so this separation matters in
 practice, not just architecturally.
+
+A note on sequential model loading (see rag_pipeline/model_manager.py):
+run_pipeline_on_questions() already gets strict one-model-at-a-time
+behaviour for free, since it just calls RagAnswerer.answer() per
+question (retrieve -> rerank -> generate), and each of those already
+claims/releases its own model via model_manager. score(), however,
+hands both the judge LLM AND the embedding model to the `ragas`
+library's own evaluate() call, which decides internally which metric
+needs which model and can interleave calls to both while scoring a
+single question (e.g. answer_relevancy needs both). That internal
+interleaving isn't something this module can hook into from the
+outside, so score() only claims the judge model up front as a
+best-effort default — if your GPU can't hold the judge and embedding
+models in VRAM at once, either point judge_llm_model and
+embedding_model at the SAME model, or run generation
+(run_pipeline_on_questions) and scoring (score) as separate process
+invocations with different runtime settings.
 """
 
 import re
 from dataclasses import dataclass, field
 from typing import Optional
 
-from rag_pipeline.config import RagasEvaluatorConfig
+from rag_pipeline.config import RagasEvaluatorConfig, RuntimeConfig
+from rag_pipeline import model_manager
 from rag_pipeline.evaluation.eval_dataset import EvalQuestion
 from rag_pipeline.generation.rag_answerer import RagAnswerer, RagAnswer
 
@@ -76,9 +94,11 @@ class RagasEvaluator:
         self,
         answerer: RagAnswerer,
         config: Optional[RagasEvaluatorConfig] = None,
+        runtime: Optional[RuntimeConfig] = None,
     ):
         self.answerer = answerer
         self.cfg = config or RagasEvaluatorConfig()
+        self.runtime = runtime or RuntimeConfig()
         self._ragas_llm = None
         self._ragas_embeddings = None
 
@@ -130,6 +150,14 @@ class RagasEvaluator:
         if not records:
             return EvaluationSummary(metric_means={m: None for m in self.cfg.metrics})
 
+        # Best-effort claim (see module docstring's note on why this
+        # can't be a hard guarantee once ragas.evaluate() takes over):
+        # if judge and embedding models differ, this at least ensures
+        # whatever was active from run_pipeline_on_questions() (the
+        # generation model) is unloaded before scoring starts, and the
+        # judge model gets first claim on VRAM.
+        model_manager.ensure_active(self.cfg.judge_llm_host, self.cfg.judge_llm_model, self.runtime)
+
         samples = [
             SingleTurnSample(
                 user_input=r["question"],
@@ -154,6 +182,14 @@ class RagasEvaluator:
             embeddings=self._get_ragas_embeddings(),
             run_config=RunConfig(max_workers=self.cfg.judge_max_workers, timeout=self.cfg.judge_timeout_seconds),
         )
+
+        # Best-effort cleanup: force-unload everything on both hosts now
+        # that scoring is done, since ragas may have loaded the
+        # embedding model alongside the judge model partway through
+        # (see the module docstring).
+        model_manager.release_all(self.cfg.judge_llm_host, self.runtime)
+        if self.cfg.embedding_host != self.cfg.judge_llm_host:
+            model_manager.release_all(self.cfg.embedding_host, self.runtime)
 
         return self._build_summary(result)
 

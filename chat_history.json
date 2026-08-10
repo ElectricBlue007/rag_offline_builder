@@ -3,7 +3,7 @@
     "id": "abb44b10d4da",
     "title": "hello",
     "created_at": "2026-08-08T13:09:59.187295+00:00",
-    "updated_at": "2026-08-08T13:21:52.090394+00:00",
+    "updated_at": "2026-08-10T15:01:08.710634+00:00",
     "messages": [
       {
         "role": "user",
@@ -575,6 +575,139 @@
           }
         ],
         "timestamp": "2026-08-08T13:21:52.090394+00:00"
+      },
+      {
+        "role": "user",
+        "content": "i want you as best article wroter please create perfect article of everything of what is the Prompt Engineering",
+        "sources": [],
+        "timestamp": "2026-08-10T15:00:18.042625+00:00"
+      },
+      {
+        "role": "assistant",
+        "content": "Certainly! Here's a comprehensive article on prompt engineering:\n\n---\n\n**Prompt Engineering: A Comprehensive Guide**\n\nWhen working with large language models (LLMs), understanding and mastering the art of prompt engineering can significantly enhance your ability to generate accurate, relevant, and high-quality outputs. This guide delves into what prompt engineering entails, its importance, various techniques, best practices, and challenges.\n\n### What is Prompt Engineering?\n\nPrompt engineering involves designing input prompts that effectively guide LLMs to produce desired responses or predictions [1]. An LLM operates as a prediction engine, taking sequential text inputs and predicting the next token based on patterns learned during training. By crafting precise and effective prompts, you can influence the model's output to better match your expectations.\n\n### Importance of Prompt Engineering\n\nCrafting an optimal prompt is crucial because inadequate or poorly designed prompts can lead to ambiguous, inaccurate responses [14]. Effective prompts ensure that LLMs generate outputs that are relevant, coherent, and aligned with specific tasks or requirements. This process is iterative, requiring continuous refinement based on model performance.\n\n### Techniques in Prompt Engineering\n\n#### Zero-shot Prompting\nZero-shot prompting involves providing a task description without examples. It's straightforward but may require more context for the LLM to understand [3].\n\n#### One-shot & Few-shot Prompting\nThese techniques involve providing one or multiple example inputs and outputs, guiding the model on how to respond to similar queries [5]. This method is highly effective as it acts as a teaching tool, allowing the model to learn from examples.\n\n#### Role Prompting\nAssigning specific roles to the LLM (e.g., travel guide, teacher) can help generate more relevant and contextually appropriate responses. The role guides the model's output style and content [5].\n\n#### System Prompting\nSystem prompting involves specifying additional instructions on how the output should be returned, such as setting creativity levels or token limits [12]. This technique allows for fine-tuning of the LLM’s behavior.\n\n### Best Practices\n\n- **Provide Examples**: Including examples within prompts helps guide the model towards desired outputs. These examples serve as reference points for the model to tailor its responses accordingly.\n  \n- **Design with Simplicity**: Prompts should be clear and concise, avoiding confusion both for you and the LLM [2].\n  \n- **Be Specific About Output**: Clearly define what you expect from the output to avoid ambiguity and ensure that the model understands your requirements [8].\n\n- **Use Instructions Over Constraints**: Prioritize instructions over constraints. Use constraints only when necessary for safety or specific requirements [17].\n  \n- **Control Max Token Length**: Set a maximum token limit in configurations or explicitly request a specific length in prompts to control output size [17].\n\n### Challenges\n\nInadequate prompts can lead to ambiguous, inaccurate responses and hinder the model's ability to provide meaningful output. Prompt engineering is an iterative process that requires continuous refinement based on feedback from LLM outputs.\n\n### Conclusion\n\nPrompt engineering is essential for anyone working with large language models. By understanding various techniques such as zero-shot, one-shot/few-shot prompting, role prompting, system prompting, and adhering to best practices like providing examples and designing simple prompts, you can significantly improve the quality of your interactions with LLMs.\n\n---\n\nThis guide aims to equip readers with a solid foundation in prompt engineering, enabling them to craft effective prompts that yield accurate and relevant outputs from large language models.",
+        "sources": [
+          {
+            "chunk_id": "9fe84f819bffdeeb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "4a0b8c317f0e0ec0",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices**",
+            "page_numbers": "55"
+          },
+          {
+            "chunk_id": "120f3361c8e2e6d3",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques**",
+            "page_numbers": "13"
+          },
+          {
+            "chunk_id": "0b3888824f359dfc",
+            "source_file": "inputs/2025-01-18-pdf-1-TechAI-Goolge-whitepaper_Prompt Engineering_v4-af36dcc7a49bb7269a58b1c9b89a8ae1.md",
+            "breadcrumb": "# Google \\\\ ,JJ",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "48ab83968ca4e15e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "b498c5b1d1931b59",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Summary**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "5593b07778b6a062",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use variables in prompts**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "052a93e94f81d79d",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices**",
+            "page_numbers": "56"
+          },
+          {
+            "chunk_id": "ad8a51007f76a83e",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": "8"
+          },
+          {
+            "chunk_id": "b1c0332af5cefb40",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **ReAct (reason & act)**",
+            "page_numbers": "40"
+          },
+          {
+            "chunk_id": "e67e09ef23ca5758",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use variables in prompts**",
+            "page_numbers": "61"
+          },
+          {
+            "chunk_id": "2196ebd29c2151a8",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": "18"
+          },
+          {
+            "chunk_id": "947affff58e2298b",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "76c5e880c4941694",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": "7"
+          },
+          {
+            "chunk_id": "21550c61ceeab562",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **One-shot & few-shot**",
+            "page_numbers": "32"
+          },
+          {
+            "chunk_id": "0251dba717e9ecbb",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "e72eecefb34e6748",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Best Practices** > ## **Use Instructions over Constraints**",
+            "page_numbers": "58"
+          },
+          {
+            "chunk_id": "8a3ad60a21460e38",
+            "source_file": "inputs/2025-01-18-pdf-1-TechAI-Goolge-whitepaper_Prompt Engineering_v4-af36dcc7a49bb7269a58b1c9b89a8ae1.md",
+            "breadcrumb": "# Google \\\\ ,JJ > ## **Introduction**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "1bbf7b8cffbfeb40",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompt engineering**",
+            "page_numbers": ""
+          },
+          {
+            "chunk_id": "4be8603921bc7718",
+            "source_file": "outputs\\Prompt Engineering\\Prompt Engineering.md",
+            "breadcrumb": "# **Prompting techniques** > ## **ReAct (reason & act)**",
+            "page_numbers": ""
+          }
+        ],
+        "timestamp": "2026-08-10T15:01:08.710127+00:00"
       }
     ]
   }

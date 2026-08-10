@@ -97,7 +97,10 @@ def log(msg: str, quiet: bool) -> None:
 
 
 def build_answerer(args: argparse.Namespace) -> RagAnswerer:
-    embedder = EmbedGenerator(EmbedGeneratorConfig(model_name=args.model))
+    embedder = EmbedGenerator(
+        EmbedGeneratorConfig(model_name=args.model, num_ctx=_S.embed_generator.num_ctx),
+        runtime=_S.runtime,
+    )
     chroma = ChromaIngestor(ChromaIngestionConfig(
         persist_directory=args.chroma_dir, collection_name=args.collection
     ))
@@ -110,10 +113,18 @@ def build_answerer(args: argparse.Namespace) -> RagAnswerer:
     reranker = None
     if args.rerank:
         reranker = CrossEncoderReranker(
-            RerankerConfig(model_name=args.rerank_model, final_n_results=args.n_results)
+            RerankerConfig(
+                model_name=args.rerank_model,
+                final_n_results=args.n_results,
+                ollama_num_ctx=_S.reranker.ollama_num_ctx,
+            ),
+            runtime=_S.runtime,
         )
 
-    llm_client = LlmClient(LlmClientConfig(model=args.llm_model, host=args.llm_host))
+    llm_client = LlmClient(
+        LlmClientConfig(model=args.llm_model, host=args.llm_host, num_ctx=_S.llm_client.num_ctx),
+        runtime=_S.runtime,
+    )
     context_cfg = ContextBuilderConfig(
         include_type_label=_S.context_builder.include_type_label,
         include_source=_S.context_builder.include_source,
@@ -121,7 +132,9 @@ def build_answerer(args: argparse.Namespace) -> RagAnswerer:
         max_chunks=args.n_results,
         max_chars_per_chunk=_S.context_builder.max_chars_per_chunk,
     )
-    return RagAnswerer(retriever, llm_client, reranker=reranker, context_config=context_cfg)
+    return RagAnswerer(
+        retriever, llm_client, reranker=reranker, context_config=context_cfg, runtime=_S.runtime
+    )
 
 
 def main():
@@ -158,7 +171,7 @@ def main():
         judge_max_workers=_S.ragas_evaluator.judge_max_workers,
         judge_timeout_seconds=_S.ragas_evaluator.judge_timeout_seconds,
     )
-    evaluator = RagasEvaluator(answerer, ragas_cfg)
+    evaluator = RagasEvaluator(answerer, ragas_cfg, runtime=_S.runtime)
 
     log("🧠 Running pipeline on each question (retrieval + generation)...", args.quiet)
     records = evaluator.run_pipeline_on_questions(questions)

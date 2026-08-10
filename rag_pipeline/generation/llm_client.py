@@ -12,7 +12,8 @@ utility layers for a handful of lines of logic).
 
 from typing import Optional
 
-from rag_pipeline.config import LlmClientConfig
+from rag_pipeline.config import LlmClientConfig, RuntimeConfig
+from rag_pipeline import model_manager
 
 
 class LlmClient:
@@ -20,10 +21,23 @@ class LlmClient:
     Usage:
         client = LlmClient(config)
         answer = client.generate(system_prompt, user_prompt)
+
+    Every call to generate() claims this model as the sole resident
+    model on cfg.host first (model_manager.ensure_active) — if a
+    different model was loaded (e.g. the embedding model that just ran
+    for retrieval), it's unloaded and confirmed gone before this call
+    proceeds. Pass `runtime` (from settings.yaml's `runtime:` block via
+    Settings.runtime) to control/disable this; defaults to strict
+    sequential loading if omitted.
     """
 
-    def __init__(self, config: Optional[LlmClientConfig] = None):
+    def __init__(
+        self,
+        config: Optional[LlmClientConfig] = None,
+        runtime: Optional[RuntimeConfig] = None,
+    ):
         self.cfg = config or LlmClientConfig()
+        self.runtime = runtime or RuntimeConfig()
         self._client = None  # lazy-loaded; settable directly in tests
 
     def _get_client(self):
@@ -45,6 +59,7 @@ class LlmClient:
         Send a system + user prompt pair to the configured Ollama model
         and return the generated text.
         """
+        model_manager.ensure_active(self.cfg.host, self.cfg.model, self.runtime)
         client = self._get_client()
         options = {"temperature": self.cfg.temperature}
         if self.cfg.num_ctx is not None:

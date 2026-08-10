@@ -39,6 +39,7 @@ from rag_pipeline.config import (
     RerankerConfig,
 )
 from rag_pipeline.embedding.embed_generator import EmbedGenerator
+from rag_pipeline import model_manager
 from rag_pipeline.storage.chroma_ingestion import ChromaIngestor
 from rag_pipeline.storage.bm25_index import BM25Index
 from rag_pipeline.retrieval.hybrid_retriever import HybridRetriever, RetrievedChunk
@@ -74,7 +75,10 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_retriever(args: argparse.Namespace) -> HybridRetriever:
-    embedder = EmbedGenerator(EmbedGeneratorConfig(model_name=args.model))
+    embedder = EmbedGenerator(
+        EmbedGeneratorConfig(model_name=args.model, num_ctx=_S.embed_generator.num_ctx),
+        runtime=_S.runtime,
+    )
     chroma = ChromaIngestor(ChromaIngestionConfig(
         persist_directory=args.chroma_dir, collection_name=args.collection
     ))
@@ -90,8 +94,12 @@ def build_retriever(args: argparse.Namespace) -> HybridRetriever:
 
 
 def build_reranker(args: argparse.Namespace) -> CrossEncoderReranker:
-    cfg = RerankerConfig(model_name=args.rerank_model, final_n_results=args.n_results)
-    return CrossEncoderReranker(cfg)
+    cfg = RerankerConfig(
+        model_name=args.rerank_model,
+        final_n_results=args.n_results,
+        ollama_num_ctx=_S.reranker.ollama_num_ctx,
+    )
+    return CrossEncoderReranker(cfg, runtime=_S.runtime)
 
 
 def format_results(results: list) -> str:
@@ -147,6 +155,14 @@ def main():
         if reranker is not None:
             results = reranker.rerank(query, results)
         print(format_results(results))
+        # No RagAnswerer here to do this automatically (there's no
+        # generation step in this script) — explicitly release the
+        # embedding model (and ollama-backend reranker model, if any)
+        # after each query so nothing lingers in VRAM between queries
+        # in interactive mode.
+        model_manager.release_all(retriever.embedder.cfg.host, _S.runtime)
+        if reranker is not None and getattr(reranker.cfg, "ollama_host", None):
+            model_manager.release_all(reranker.cfg.ollama_host, _S.runtime)
 
     if args.query:
         run_query(args.query)

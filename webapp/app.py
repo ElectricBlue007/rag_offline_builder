@@ -81,7 +81,10 @@ def parse_args():
 
 
 def build_answerer(args) -> RagAnswerer:
-    embedder = EmbedGenerator(EmbedGeneratorConfig(model_name=args.model, host=args.ollama_host))
+    embedder = EmbedGenerator(
+        EmbedGeneratorConfig(model_name=args.model, host=args.ollama_host, num_ctx=_S.embed_generator.num_ctx),
+        runtime=_S.runtime,
+    )
     chroma = ChromaIngestor(ChromaIngestionConfig(
         persist_directory=args.chroma_dir, collection_name=args.collection
     ))
@@ -96,10 +99,18 @@ def build_answerer(args) -> RagAnswerer:
     reranker = None
     if args.rerank:
         reranker = CrossEncoderReranker(
-            RerankerConfig(model_name=args.rerank_model, final_n_results=args.n_results)
+            RerankerConfig(
+                model_name=args.rerank_model,
+                final_n_results=args.n_results,
+                ollama_num_ctx=_S.reranker.ollama_num_ctx,
+            ),
+            runtime=_S.runtime,
         )
 
-    llm_client = LlmClient(LlmClientConfig(model=args.gen_model, host=args.ollama_host))
+    llm_client = LlmClient(
+        LlmClientConfig(model=args.gen_model, host=args.ollama_host, num_ctx=_S.llm_client.num_ctx),
+        runtime=_S.runtime,
+    )
 
     return RagAnswerer(
         retriever=retriever,
@@ -112,6 +123,7 @@ def build_answerer(args) -> RagAnswerer:
             max_chunks=args.n_results,
             max_chars_per_chunk=_S.context_builder.max_chars_per_chunk,
         ),
+        runtime=_S.runtime,
     )
 
 

@@ -25,7 +25,8 @@ import math
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from rag_pipeline.config import RerankerConfig
+from rag_pipeline.config import RerankerConfig, RuntimeConfig
+from rag_pipeline import model_manager
 from rag_pipeline.retrieval.hybrid_retriever import RetrievedChunk
 
 
@@ -65,14 +66,20 @@ class CrossEncoderReranker:
         results = reranker.rerank(query, candidates)  # candidates: list[RetrievedChunk]
     """
 
-    def __init__(self, config: Optional[RerankerConfig] = None):
+    def __init__(
+        self,
+        config: Optional[RerankerConfig] = None,
+        runtime: Optional[RuntimeConfig] = None,
+    ):
         self.cfg = config or RerankerConfig()
+        self.runtime = runtime or RuntimeConfig()
         self._model = None  # lazy-loaded; settable directly in tests (huggingface backend)
         self._ollama_client = None  # lazy-loaded (ollama backend)
 
-    def _get_model(self):
-        if self._model is not None:
-            return self._model
+    def _load_hf_model(self):
+        """Build a fresh CrossEncoder — the actual loading logic used by
+        both the persistent cache path (_get_model) and the
+        load-fresh-every-call path (model_manager.hf_model_session)."""
         try:
             from sentence_transformers import CrossEncoder
         except ImportError as e:
@@ -96,14 +103,24 @@ class CrossEncoderReranker:
             # Harmless to pass for cross-encoders that don't use prompts
             # at all (they simply ignore the kwarg), so this isn't
             # gated behind a Qwen-specific model-name check.
-            self._model = CrossEncoder(
+            return CrossEncoder(
                 self.cfg.model_name,
                 prompts={"task": self.cfg.task_instruction},
                 default_prompt_name="task",
                 **common_kwargs,
             )
-        else:
-            self._model = CrossEncoder(self.cfg.model_name, **common_kwargs)
+        return CrossEncoder(self.cfg.model_name, **common_kwargs)
+
+    def _get_model(self):
+        """
+        Persistent-cache path: only used when
+        cfg.huggingface_unload_after_use is False (i.e. the person
+        explicitly opted OUT of per-call unload for this in-process
+        model and wants it to stay warm across calls instead).
+        """
+        if self._model is not None:
+            return self._model
+        self._model = self._load_hf_model()
         return self._model
 
     def _get_ollama_client(self):
@@ -156,8 +173,23 @@ class CrossEncoderReranker:
         return reranked[: self.cfg.final_n_results]
 
     def _score_huggingface(self, query: str, candidates: list) -> list[float]:
-        model = self._get_model()
         pairs = [(query, self._get_text(c)) for c in candidates]
+        if self._model is not None:
+            # Already loaded (either a previous call cached it under
+            # huggingface_unload_after_use=False, or a test/caller
+            # injected one directly via reranker._model = ... — same
+            # escape hatch _get_client()/_get_ollama_client() use
+            # elsewhere in this project) — use it as-is.
+            return list(self._model.predict(pairs))
+        if self.cfg.huggingface_unload_after_use:
+            # Load fresh, score, and explicitly free GPU memory again —
+            # this in-process model gets the same "not resident when
+            # not in use" treatment the Ollama-served models get via
+            # model_manager, just via its own lifecycle helper since
+            # it isn't served by Ollama at all.
+            with model_manager.hf_model_session(self._load_hf_model, self.runtime) as model:
+                return list(model.predict(pairs))
+        model = self._get_model()
         return list(model.predict(pairs))
 
     def _score_ollama(self, query: str, candidates: list) -> list[float]:
@@ -171,6 +203,7 @@ class CrossEncoderReranker:
         model directly — works with any instruct model already pulled
         into Ollama, not only dedicated reranker models.
         """
+        model_manager.ensure_active(self.cfg.ollama_host, self.cfg.ollama_model, self.runtime)
         client = self._get_ollama_client()
         options = {"temperature": 0.0, "num_predict": 1}
         if self.cfg.ollama_num_ctx is not None:

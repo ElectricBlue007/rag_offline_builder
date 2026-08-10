@@ -29,7 +29,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Union
 
-from rag_pipeline.config import EmbedGeneratorConfig
+from rag_pipeline.config import EmbedGeneratorConfig, RuntimeConfig
+from rag_pipeline import model_manager
 
 
 @dataclass
@@ -75,8 +76,13 @@ class EmbedGenerator:
         results = gen.embed_chunks(chunks)
     """
 
-    def __init__(self, config: Optional[EmbedGeneratorConfig] = None):
+    def __init__(
+        self,
+        config: Optional[EmbedGeneratorConfig] = None,
+        runtime: Optional[RuntimeConfig] = None,
+    ):
         self.cfg = config or EmbedGeneratorConfig()
+        self.runtime = runtime or RuntimeConfig()
         self._client = None  # lazy-loaded; settable directly in tests
 
     def _get_client(self):
@@ -110,6 +116,7 @@ class EmbedGenerator:
         if not texts:
             return []
 
+        model_manager.ensure_active(self.cfg.host, self.cfg.model_name, self.runtime)
         client = self._get_client()
         options = {}
         if self.cfg.num_ctx is not None:

@@ -87,7 +87,10 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_retriever(args: argparse.Namespace) -> HybridRetriever:
-    embedder = EmbedGenerator(EmbedGeneratorConfig(model_name=args.model))
+    embedder = EmbedGenerator(
+        EmbedGeneratorConfig(model_name=args.model, num_ctx=_S.embed_generator.num_ctx),
+        runtime=_S.runtime,
+    )
     chroma = ChromaIngestor(ChromaIngestionConfig(
         persist_directory=args.chroma_dir, collection_name=args.collection
     ))
@@ -99,8 +102,12 @@ def build_retriever(args: argparse.Namespace) -> HybridRetriever:
 
 
 def build_reranker(args: argparse.Namespace) -> CrossEncoderReranker:
-    cfg = RerankerConfig(model_name=args.rerank_model, final_n_results=args.n_results)
-    return CrossEncoderReranker(cfg)
+    cfg = RerankerConfig(
+        model_name=args.rerank_model,
+        final_n_results=args.n_results,
+        ollama_num_ctx=_S.reranker.ollama_num_ctx,
+    )
+    return CrossEncoderReranker(cfg, runtime=_S.runtime)
 
 
 def build_answerer(args: argparse.Namespace) -> RagAnswerer:
@@ -108,7 +115,8 @@ def build_answerer(args: argparse.Namespace) -> RagAnswerer:
     reranker = build_reranker(args) if args.rerank else None
     llm_client = LlmClient(LlmClientConfig(
         model=args.llm_model, host=args.llm_host, temperature=args.temperature,
-    ))
+        num_ctx=_S.llm_client.num_ctx,
+    ), runtime=_S.runtime)
     context_cfg = ContextBuilderConfig(
         include_type_label=_S.context_builder.include_type_label,
         include_source=_S.context_builder.include_source,
@@ -116,7 +124,9 @@ def build_answerer(args: argparse.Namespace) -> RagAnswerer:
         max_chunks=args.n_results,
         max_chars_per_chunk=_S.context_builder.max_chars_per_chunk,
     )
-    return RagAnswerer(retriever, llm_client, reranker=reranker, context_config=context_cfg)
+    return RagAnswerer(
+        retriever, llm_client, reranker=reranker, context_config=context_cfg, runtime=_S.runtime
+    )
 
 
 def print_answer(result: RagAnswer, show_sources: bool) -> None:

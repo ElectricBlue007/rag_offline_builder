@@ -155,7 +155,15 @@ class TestCrossEncoderRerankerModelLoading(unittest.TestCase):
                 reranker.rerank("query", candidates)
 
     def test_model_loaded_lazily_once(self):
-        reranker = CrossEncoderReranker()
+        """
+        With huggingface_unload_after_use=False, the CrossEncoder is
+        cached in self._model after its first load and reused across
+        calls — the classic "lazy, loaded once" pattern. (The default,
+        huggingface_unload_after_use=True, deliberately does NOT cache
+        — see test_unload_after_use_reloads_every_call below — this
+        test covers the opt-out.)
+        """
+        reranker = CrossEncoderReranker(RerankerConfig(huggingface_unload_after_use=False))
         mock_module = MagicMock()
         mock_cross_encoder_cls = MagicMock()
         mock_instance = MagicMock()
@@ -169,6 +177,33 @@ class TestCrossEncoderRerankerModelLoading(unittest.TestCase):
             reranker.rerank("query two", candidates)
 
         mock_cross_encoder_cls.assert_called_once()
+
+    def test_unload_after_use_reloads_every_call(self):
+        """
+        Default behavior (huggingface_unload_after_use=True, matching
+        RuntimeConfig's "only one model on the GPU at a time" policy):
+        the CrossEncoder is loaded fresh for EVERY rerank() call rather
+        than cached, since model_manager.hf_model_session() frees it
+        again on exit each time.
+        """
+        reranker = CrossEncoderReranker()  # huggingface_unload_after_use=True by default
+        mock_module = MagicMock()
+        mock_cross_encoder_cls = MagicMock()
+        mock_instance = MagicMock()
+        mock_instance.predict.return_value = [0.5]
+        mock_cross_encoder_cls.return_value = mock_instance
+        mock_module.CrossEncoder = mock_cross_encoder_cls
+
+        candidates = [make_candidate("a", "Content A")]
+        with patch.dict(sys.modules, {"sentence_transformers": mock_module}):
+            reranker.rerank("query one", candidates)
+            reranker.rerank("query two", candidates)
+
+        self.assertEqual(mock_cross_encoder_cls.call_count, 2)
+        # And self._model is never left populated in this mode — the
+        # lifecycle helper's cleanup only touches its own local
+        # reference, but the reranker itself never caches it either.
+        self.assertIsNone(reranker._model)
 
     def test_model_name_and_max_length_passed_to_constructor(self):
         cfg = RerankerConfig(
