@@ -1,0 +1,28 @@
+# ============================================================================
+#  OPTIONAL: quality evaluation with RAGAS
+#
+#    pip install -r rag_pipeline/requirements-eval.txt
+#
+#  YOU ONLY NEED THIS IF you run:
+#      python rag_pipeline/run_evaluation.py
+#
+#  Without it, the pipeline, retrieval, answering and the web UI all work.
+#  Nine tests in tests/test_ragas_evaluator.py are skipped instead of run.
+#
+#  These pins are EXACT on purpose. A real, hard-to-diagnose failure:
+#  newer langchain-community releases moved ChatVertexAI, which older ragas
+#  versions still import at load time. The symptom is an ImportError on
+#  `import ragas` that mentions Vertex AI and has nothing visibly to do with
+#  your code. The combination below is the confirmed-working one.
+#
+#  langchain-openai is required by ragas at import time even though this
+#  project never calls OpenAI: evaluation/ragas_evaluator.py replaces both the
+#  judge LLM and the embeddings with local Ollama ones. No API key is needed
+#  and no request leaves your machine.
+# ============================================================================
+
+ragas==0.2.15
+langchain-openai==0.2.14
+
+# Must match the pin in requirements.txt exactly. If you change one, change both.
+langchain-community==0.3.7

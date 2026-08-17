@@ -47,6 +47,54 @@ from rag_pipeline.config import BM25IndexConfig
 _RE_TOKEN = re.compile(r'\w+', re.UNICODE)
 
 
+class _FallbackBM25Okapi:
+    """Dependency-free BM25Okapi implementation for offline releases."""
+
+    def __init__(self, corpus: list[list[str]], k1: float = 1.5, b: float = 0.75):
+        import math
+
+        self.corpus_size = len(corpus)
+        self.k1 = k1
+        self.b = b
+        self.doc_len = [len(doc) for doc in corpus]
+        self.avgdl = sum(self.doc_len) / self.corpus_size if self.corpus_size else 0.0
+        self.doc_freqs = []
+        document_frequency: dict[str, int] = {}
+        for doc in corpus:
+            freqs: dict[str, int] = {}
+            for token in doc:
+                freqs[token] = freqs.get(token, 0) + 1
+            self.doc_freqs.append(freqs)
+            for token in freqs:
+                document_frequency[token] = document_frequency.get(token, 0) + 1
+
+        self.idf: dict[str, float] = {}
+        negative_idfs: list[str] = []
+        for token, freq in document_frequency.items():
+            value = math.log(self.corpus_size - freq + 0.5) - math.log(freq + 0.5)
+            if value < 0:
+                negative_idfs.append(token)
+            else:
+                self.idf[token] = value
+        average_idf = sum(self.idf.values()) / len(self.idf) if self.idf else 0.0
+        for token in negative_idfs:
+            self.idf[token] = 0.25 * average_idf
+
+    def get_scores(self, query: list[str]) -> list[float]:
+        scores = [0.0] * self.corpus_size
+        for token in query:
+            idf = self.idf.get(token, 0.0)
+            for i, freqs in enumerate(self.doc_freqs):
+                frequency = freqs.get(token, 0)
+                if not frequency:
+                    continue
+                denominator = frequency + self.k1 * (
+                    1 - self.b + self.b * self.doc_len[i] / self.avgdl
+                ) if self.avgdl else frequency + self.k1
+                scores[i] += idf * frequency * (self.k1 + 1) / denominator
+        return scores
+
+
 def tokenize(text: str) -> list[str]:
     """
     Lowercase, split on non-word-character boundaries.
@@ -93,6 +141,7 @@ class BM25Index:
         self.cfg = config or BM25IndexConfig()
         self._bm25 = None
         self._chunk_ids: list[str] = []
+        self._tokenized_corpus: list[list[str]] = []
 
     @property
     def is_built(self) -> bool:
@@ -114,20 +163,14 @@ class BM25Index:
         if not chunks:
             self._bm25 = None
             self._chunk_ids = []
+            self._tokenized_corpus = []
             return
-
-        try:
-            from rank_bm25 import BM25Okapi
-        except ImportError as e:
-            raise ImportError(
-                "Missing dependency. Run:\n  pip install rank-bm25"
-            ) from e
 
         self._chunk_ids = [_get_field(c, "chunk_id") for c in chunks]
         texts = [_get_field(c, "contextualized_text") for c in chunks]
         tokenized_corpus = [tokenize(t) for t in texts]
-
-        self._bm25 = BM25Okapi(tokenized_corpus, k1=self.cfg.k1, b=self.cfg.b)
+        self._tokenized_corpus = tokenized_corpus
+        self._bm25 = _FallbackBM25Okapi(tokenized_corpus, k1=self.cfg.k1, b=self.cfg.b)
 
     # ── Search ───────────────────────────────────────────────────────────────
 
@@ -172,7 +215,13 @@ class BM25Index:
         target.parent.mkdir(parents=True, exist_ok=True)
         with open(target, "wb") as f:
             pickle.dump(
-                {"bm25": self._bm25, "chunk_ids": self._chunk_ids},
+                {
+                    "bm25": self._bm25,
+                    "chunk_ids": self._chunk_ids,
+                    "tokenized_corpus": self._tokenized_corpus,
+                    "k1": self.cfg.k1,
+                    "b": self.cfg.b,
+                },
                 f,
             )
 
@@ -183,5 +232,15 @@ class BM25Index:
             raise FileNotFoundError(f"No BM25 index found at: {source}")
         with open(source, "rb") as f:
             data = pickle.load(f)
-        self._bm25 = data["bm25"]
         self._chunk_ids = data["chunk_ids"]
+        self._tokenized_corpus = data.get("tokenized_corpus", [])
+        if self._tokenized_corpus:
+            self._bm25 = _FallbackBM25Okapi(
+                self._tokenized_corpus,
+                k1=data.get("k1", self.cfg.k1),
+                b=data.get("b", self.cfg.b),
+            )
+        else:
+            # Backward compatibility with indexes created before the
+            # dependency-free format was introduced.
+            self._bm25 = data["bm25"]

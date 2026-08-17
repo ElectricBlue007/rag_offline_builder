@@ -1,231 +1,81 @@
-# ==============================================================================
-#  settings.yaml — the ONE file to edit for this project.
-#
-#  Every model name, chunk size, path, and toggle used anywhere in
-#  rag_pipeline/ or webapp/ is set here. You should not need to open any
-#  .py file just to change a model or a number.
-#
-#  How it's wired:
-#    rag_pipeline/settings.py loads this file and turns it into the typed
-#    config objects each module already expects (see rag_pipeline/config.py
-#    for the full field-by-field documentation/rationale of every setting
-#    below — this file only has the short version).
-#
-#  Every script (run_pipeline.py, run_ingestion.py, run_bm25_index.py,
-#  run_query.py, run_answer.py, run_evaluation.py, webapp/app.py) reads its
-#  defaults from here. Command-line flags still work and always win over
-#  whatever is written here, for one-off overrides.
-#
-#  Precedence: CLI flag > this file > hard-coded fallback (only used if a
-#  key is missing from this file entirely).
-# ==============================================================================
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Shared paths — used by more than one script, kept in one place so e.g.
-# --chroma-dir never silently drifts between run_ingestion.py and run_query.py.
-# ──────────────────────────────────────────────────────────────────────────────
 paths:
-  input_dir: "./outputs"          # where Chandra OCR .md files live (run_pipeline.py input)
-  chunks_dir: "./chunks"          # where chunk JSONs are written/read
-  chroma_dir: "./chroma_db"       # ChromaDB persistent storage directory
-  bm25_index_path: "./bm25_index.pkl"
-  collection_name: "rag_docs"     # ChromaDB collection name
-  chat_history_file: "./chat_history.json"   # webapp chat history store
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Ollama connection — one place to point every model call at your Ollama
-# instance. All model-specific hosts below default to this unless overridden.
-# ──────────────────────────────────────────────────────────────────────────────
+  input_dir: ./outputs
+  chunks_dir: ./chunks
+  chroma_dir: ./chroma_db
+  bm25_index_path: ./bm25_index.pkl
+  collection_name: rag_docs
+  chat_history_file: ./chat_history.json
 ollama:
-  host: "http://localhost:11434"
-
-  # PROJECT-WIDE FALLBACK context window (in tokens), used by any step
-  # below that doesn't set its own `num_ctx` in its own section. Ollama
-  # defaults this fairly low (commonly 2048) regardless of what the
-  # underlying model actually supports, so long inputs can be silently
-  # truncated or rejected with a "context length exceeded" error.
-  # null = don't override, let Ollama use its own default.
-  #
-  # Each step's context window is ALSO independently tunable — see
-  # models.embedding's `num_ctx` next to it in chunking.semantic_chunker,
-  # embedding.num_ctx, chunking.llm_chunk_refiner.num_ctx,
-  # chunking.contextual_enricher.num_ctx, generation.num_ctx,
-  # retrieval.reranker.ollama_num_ctx, evaluation.judge_num_ctx /
-  # evaluation.embedding_num_ctx below. Setting one of those wins over
-  # this project-wide default for that one step only — e.g. give the
-  # generation model a bigger window than the embedding model without
-  # raising every model's window at once.
+  host: http://localhost:11434
   num_ctx: 65536
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Runtime — sequential model loading. This is the "only ONE model lives
-# on the GPU at a time" switch: every step below (embedding, generation,
-# chunk refiner, contextual enricher, reranker, RAGAS judge) loads its
-# model, does its work, and is explicitly unloaded again before the NEXT
-# step's model is allowed to load — never two models resident together.
-# See rag_pipeline/model_manager.py for the mechanism.
-# ──────────────────────────────────────────────────────────────────────────────
 runtime:
-  # Master switch. true (default) = strict one-model-at-a-time; a step
-  # switching models always unloads whatever else is loaded first.
-  # false = fall back to plain Ollama caching (its own keep_alive
-  # heuristics decide what stays resident) — use this on a box with
-  # enough VRAM/multiple GPUs where you'd rather avoid reload latency.
   sequential_model_loading: true
-
-  # When a step/request finishes, explicitly unload the model it used
-  # rather than waiting out Ollama's keep_alive window. Also controls
-  # whether the in-process HuggingFace reranker frees its GPU memory
-  # after each use.
   unload_after_step: true
-
-  # After requesting an unload, block until Ollama's /api/ps confirms
-  # the model is actually gone before letting the next model load —
-  # this is what guarantees the two never briefly overlap in VRAM.
   verify_unload: true
-
-  # How long (seconds) to wait for an unload to be confirmed before
-  # giving up and proceeding anyway, so a stuck unload can never hang
-  # the pipeline forever.
   unload_timeout_seconds: 30
-
-  # How often (seconds) to re-poll /api/ps while waiting for an unload.
   unload_poll_interval_seconds: 0.5
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Models — every model name used anywhere in the project, in one spot.
-# ──────────────────────────────────────────────────────────────────────────────
 models:
-  # Embedding model — Ollama tag. Must be `ollama pull`-ed first.
-  # Lighter alternatives if VRAM is tight: qwen3-embedding:4b, qwen3-embedding:0.6b
-  embedding: "qwen3-embedding:8b"
-
-  # HF repo id used ONLY to fetch a matching tokenizer for exact token counts.
-  # Falls back to a word-count heuristic automatically if this can't be resolved.	
-  embedding_tokenizer_hf_id: "qwen3-embedding:8b"
-
-  # Answer-generation LLM (Ollama tag) — used by run_answer.py / webapp.
-  generation: "qwen2.5:14b"
-
-  # Optional LLM-based chunk-merge refiner (splitters/llm_chunk_refiner.py).
-  # Only used if chunking.llm_chunk_refiner.enabled is true below.
-  chunk_refiner: "qwen2.5:14b"
-
-  # Optional LLM mode for contextual_enricher.py (situates each chunk).
-  # Only used if chunking.contextual_enricher.mode is "llm" below.
-  contextual_enricher: "qwen2.5:14b"
-
-  # Cross-encoder reranker — a HuggingFace model id, NOT an Ollama tag.
-  # Only used when retrieval.reranker.backend is "huggingface" (the
-  # default). Loaded in-process via sentence-transformers
-  # (`pip install sentence-transformers`, heavier, pulls in torch).
-  # Heavier alternatives if you want more accuracy at the cost of
-  # speed/VRAM: Qwen/Qwen3-Reranker-4B, Qwen/Qwen3-Reranker-8B
-  reranker: "Qwen/Qwen3-Reranker-0.6B"
-
-  # Reranker model when retrieval.reranker.backend is "ollama" instead —
-  # a plain Ollama library tag (must already be pulled), NOT a
-  # Hugging Face repo id. Any decent instruct model works here (this
-  # doesn't have to be a model specifically trained as a reranker); a
-  # dedicated reranker model will generally score better if you have one
-  # available in Ollama.
-  reranker_ollama: "B-A-M-N/qwen3-reranker-0.6b-fp16:latest"
-
-  # RAGAS evaluation judge LLM — can be the same or a different (larger /
-  # more careful) model than `generation` above.
-  ragas_judge: "qwen2.5:14b"
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Chunking pipeline (run_pipeline.py) — preprocessing → structure split →
-# semantic split → optional LLM refine → table normalize → contextual
-# enrich → embed-text build → metadata.
-# ──────────────────────────────────────────────────────────────────────────────
+  embedding: qwen3-embedding:8b
+  embedding_tokenizer_hf_id: Qwen/Qwen3-Embedding-8B
+  generation: qwen2.5:14b
+  chunk_refiner: qwen2.5:14b
+  contextual_enricher: qwen2.5:14b
+  reranker: Qwen/Qwen3-Reranker-0.6B
+  reranker_ollama: B-A-M-N/qwen3-reranker-0.6b-fp16:latest
+  ragas_judge: qwen2.5:14b
 chunking:
-
-  md_glob: "**/*.md"        # glob (relative to paths.input_dir) to find markdown files
-  verbose: true             # print progress to stdout
-
+  md_glob: '**/*.md'
+  verbose: true
   preprocessor:
-    # "keep" (inline) | "drop" (remove) | "separate" (own chunk)
-    image_alt_strategy: "separate"
+    image_alt_strategy: separate
     drop_toc_tables: true
     strip_superscripts: true
     fix_adjacent_tables: true
     strip_decorative_lines: true
-
   structure_splitter:
-    header_levels: [1, 2, 3]     # which markdown header levels are section boundaries
-    tables_atomic: true          # tables are never split across chunks
-    min_section_chars: 20        # drop empty header-only sections below this size
-
+    header_levels:
+    - 1
+    - 2
+    - 3
+    tables_atomic: true
+    min_section_chars: 20
   semantic_chunker:
-    # Breakpoint strategy: "percentile" | "standard_deviation" | "interquartile"
-    breakpoint_threshold_type: "percentile"
-    breakpoint_threshold_amount: 85.0   # 0-100 for percentile; only very large jumps split
-
-    # Legacy character-based limits — only used if use_token_based_sizing: false
+    breakpoint_threshold_type: percentile
+    breakpoint_threshold_amount: 85.0
     min_chunk_chars: 80
     max_chunk_chars: 2000
-
-    # Token-based sizing (recommended default — character count is an
-    # unreliable proxy for what the embedding model actually truncates at)
     use_token_based_sizing: true
-    min_chunk_tokens: 15     # chunks below this are merged upward
-    max_chunk_tokens: 1024   # chunks above this are hard-split
-    attempt_real_tokenizer: true    # try the real HF tokenizer; falls back to word-count heuristic
-    skip_semantic_if_small: true    # skip semantic splitting for already-small sections
-
-    # Context window (tokens) for THIS step's embedding calls only.
-    # null = fall back to ollama.num_ctx above.
+    min_chunk_tokens: 15
+    max_chunk_tokens: 1024
+    attempt_real_tokenizer: true
+    skip_semantic_if_small: true
     num_ctx: null
-
   llm_chunk_refiner:
-    enabled: false            # opt-in — roughly doubles chunking time on CPU-only hardware
+    enabled: false
     timeout_seconds: 30
-    min_chunks_to_consider: 2   # sections with fewer chunks skip the LLM call
-    max_chunks_per_call: 12     # batch size sent to the LLM per call
-    fallback_on_error: true     # keep original boundaries if the LLM call fails
+    min_chunks_to_consider: 2
+    max_chunks_per_call: 12
+    fallback_on_error: true
     warn_on_fallback: true
-
-    # Context window (tokens) for THIS step's LLM calls only. null =
-    # fall back to ollama.num_ctx above. A batch of max_chunks_per_call
-    # chunks can add up to a fairly long prompt — raise this if calls
-    # start failing with a context-length error.
     num_ctx: null
-
   table_normalizer:
-    enabled: true                    # convert HTML tables to embeddable prose
-    fallback_to_raw_on_error: true   # keep raw HTML if a table fails to parse
+    enabled: true
+    fallback_to_raw_on_error: true
     warn_on_fallback: true
-
   contextual_enricher:
-    # "deterministic" (free, instant) | "llm" (slower, higher quality) | "off"
-    mode: "deterministic"
+    mode: deterministic
     llm_timeout_seconds: 30
     max_document_chars_for_llm: 3000
     fallback_to_deterministic_on_error: true
     warn_on_fallback: true
     include_breadcrumb: true
     include_source_filename: true
-
-    # Context window (tokens) for THIS step's LLM calls only (mode:
-    # "llm" only — ignored in "deterministic"/"off" mode). null = fall
-    # back to ollama.num_ctx above.
     num_ctx: null
-
   embed_text:
     enabled: true
-    passage_prefix: ""
-    query_prefix: >-
-      Instruct: Given a search query, retrieve relevant passages that answer
-      the query
-      Query:
-
+    passage_prefix: ''
+    query_prefix: 'Instruct: Given a search query, retrieve relevant passages that
+      answer the query Query:'
   metadata:
     include_source_file: true
     include_breadcrumb: true
@@ -233,132 +83,68 @@ chunking:
     include_page_metadata: true
     include_language: true
     include_chunk_index: true
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Embedding generation (run_ingestion.py) — turns embed_text into vectors.
-# ──────────────────────────────────────────────────────────────────────────────
 embedding:
-  batch_size: 16     # lower for tighter VRAM, raise if you have headroom
-
-  # Context window (tokens) for THIS step's embedding calls only. null =
-  # fall back to ollama.num_ctx above.
+  batch_size: 16
   num_ctx: null
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Storage
-# ──────────────────────────────────────────────────────────────────────────────
 storage:
   chroma:
-    batch_size: 200      # batch size for ChromaDB .upsert() calls
-
+    batch_size: 200
   bm25:
-    k1: 1.5    # term-frequency saturation (standard Okapi BM25 default)
-    b: 0.75    # document-length normalization (standard Okapi BM25 default)
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Retrieval (run_query.py / run_answer.py / webapp)
-# ──────────────────────────────────────────────────────────────────────────────
+    k1: 1.5
+    b: 0.75
 retrieval:
   hybrid:
-    dense_n_results: 30    # candidates contributed by dense (Chroma) search before fusion
-    sparse_n_results: 30   # candidates contributed by sparse (BM25) search before fusion
-    final_n_results: 10    # results returned after Reciprocal Rank Fusion
-    rrf_k: 60              # RRF smoothing constant (standard value from the RRF paper)
-    language_filter: true  # pre-filter dense search to the query's detected language
-
+    dense_n_results: 30
+    sparse_n_results: 30
+    final_n_results: 10
+    rrf_k: 60
+    language_filter: true
   reranker:
-    enabled: false          # opt-in — requires `pip install sentence-transformers` (huggingface backend only)
-
-    # "huggingface" (default): real cross-encoder via sentence-transformers,
-    #   uses models.reranker (a HF repo id) above.
-    # "ollama": no extra install needed beyond the `ollama` package already
-    #   used elsewhere in this pipeline — scores candidates by asking a
-    #   model already pulled into Ollama a yes/no relevance question per
-    #   pair. Uses models.reranker_ollama above. Slower for a large
-    #   candidate_pool (one Ollama call per candidate, not batched), and
-    #   needs an Ollama build recent enough to return logprobs on /api/chat.
-    backend: "ollama"
-
-    max_length: 4096        # max tokens per (query, document) pair sent to the reranker (huggingface backend)
-    final_n_results: 8      # how many reranked candidates to keep
-    candidate_pool: 20      # how many candidates retrieval fetches before reranking narrows down
-    device: null             # null = auto-pick (cuda if available). e.g. "cuda:0" to pin a GPU (huggingface backend)
+    enabled: false
+    backend: ollama
+    max_length: 4096
+    final_n_results: 8
+    candidate_pool: 20
+    device: null
     model_kwargs:
-      torch_dtype: "float16"  # fp16 halves VRAM/speeds up inference; use "float32" on CPU-only (huggingface backend)
-    task_instruction: >-
-      Given a search query, determine whether this document contains
+      torch_dtype: float16
+    task_instruction: Given a search query, determine whether this document contains
       information that answers the query.
-    ollama_top_logprobs: 20  # how many alternative tokens to request per answer position (ollama backend)
-
-    # Context window (tokens) for THIS step's calls only (ollama backend
-    # only — ignored by huggingface backend). null = fall back to
-    # ollama.num_ctx above.
+    ollama_top_logprobs: 20
     ollama_num_ctx: 4096
-
-    # In-process (huggingface backend) reranker lifecycle: load the
-    # model fresh for each rerank() call and free its GPU memory
-    # immediately after, rather than keeping it resident between
-    # queries. Matches the same "one model on the GPU at a time" intent
-    # as the runtime: block above, applied to a non-Ollama model. Set to
-    # false to keep the huggingface reranker warm/resident across
-    # queries instead (faster repeated queries, costs VRAM the whole
-    # time the process is up).
     huggingface_unload_after_use: true
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Answer generation (run_answer.py / webapp)
-# ──────────────────────────────────────────────────────────────────────────────
 generation:
-  temperature: 0.1     # low = stick close to retrieved context, not creative
+  temperature: 0.2
   timeout_seconds: 60
-
-  # Context window (tokens) for THIS step's calls only. null = fall
-  # back to ollama.num_ctx above.
   num_ctx: 129024
-
   context_builder:
     include_type_label: true
     include_source: true
     include_breadcrumb: true
-    max_chunks: 5              # cap on chunks placed into the LLM prompt
-    max_chars_per_chunk: 1500  # truncate any single chunk beyond this (null = no truncation)
-
-  n_results: 20   # how many chunks to retrieve/feed into the LLM's context (CLI: --n-results)
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# RAGAS evaluation (run_evaluation.py)
-# ──────────────────────────────────────────────────────────────────────────────
+    label_heading_levels: true
+    cite_document_location: true
+    max_chunks_per_section: 2
+    document_map: auto
+    document_map_max_chapters: 3
+    document_map_max_sections: 12
+    max_chunks: 5
+    max_chars_per_chunk: 1500
+  n_results: 15
 evaluation:
-  metrics: ["context_precision", "context_recall", "faithfulness", "answer_relevancy"]
+  metrics:
+  - context_precision
+  - context_recall
+  - faithfulness
+  - answer_relevancy
   context_recall_warning_threshold: 0.8
   faithfulness_warning_threshold: 0.85
-  judge_max_workers: 2         # local Ollama serializes requests — keep this low
+  judge_max_workers: 2
   judge_timeout_seconds: 300
-  questions_path: "./rag_pipeline/evaluation/sample_eval_questions.json"
-  save_results_path: null      # e.g. "./eval_results.json" to persist per-question results
-
-  # Context window (tokens) for the judge LLM's and the embedding
-  # model's calls in THIS step only. null = fall back to ollama.num_ctx
-  # above. Note: RAGAS's own library internally interleaves calls to
-  # the judge LLM and the embedding model while scoring a question (it
-  # doesn't expose stage boundaries this project can hook into), so
-  # sequential loading is best-effort here — see
-  # rag_pipeline/evaluation/ragas_evaluator.py's module docstring. If
-  # your GPU can't hold both at once, point judge and embedding at the
-  # same model, or run generation and evaluation as separate passes.
+  questions_path: ./rag_pipeline/evaluation/sample_eval_questions.json
+  save_results_path: null
   judge_num_ctx: null
   embedding_num_ctx: null
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Chat web UI (webapp/app.py)
-# ──────────────────────────────────────────────────────────────────────────────
 webapp:
-  host: "127.0.0.1"
+  host: 127.0.0.1
   port: 5000
   debug: false

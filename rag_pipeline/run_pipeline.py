@@ -1,16 +1,39 @@
 #!/usr/bin/env python3
 """
-run_pipeline.py — Entry point.
+run_pipeline.py — Entry point (step 1 of 3).
 
-Place this file alongside your  input/  (or outputs/) directory and run:
+    (venv) python rag_pipeline/run_pipeline.py
 
-    (venv) python run_pipeline.py
+What this command does, in one sentence: it reads your OCR markdown files and
+turns them into chunks — small, self-contained pieces of text that a search
+engine and a language model can actually work with — one JSON file per input
+document.
 
 All configuration lives in settings.yaml (the project's ONE file to
 edit — see its header comment) — edit there, not here.
 
 Optional CLI overrides (always win over settings.yaml, for one-off runs):
     python run_pipeline.py --input ./outputs --output ./chunks --verbose
+
+WHAT HAPPENED AND WHY (new)
+---------------------------
+Unless you pass --no-report, this command also writes a human-readable
+account of the run:
+
+    reports/run_<timestamp>/00_SUMMARY.md    one table: every step, in/out, time
+    reports/run_<timestamp>/01_*.md ...      one file per step: what it did,
+                                             why it matters, which source file
+                                             implements it, and a real excerpt
+                                             of YOUR data at that point
+    reports/run_<timestamp>/DATA_HEALTH.md   concrete problems found in the
+                                             chunks, each with a fix
+    reports/run_<timestamp>/RAW_TRACE.json   the same thing for machines
+
+Read 00_SUMMARY.md first. If a number looks wrong (1 document became 800
+chunks, or 3), the per-step file tells you which stage produced it.
+
+Before your first run, check the machine is ready:
+    python rag_pipeline/run_doctor.py
 """
 
 import argparse
@@ -24,6 +47,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from rag_pipeline.settings import load_settings
 from rag_pipeline.pipeline import MarkdownChunkingPipeline
+from rag_pipeline.observability import RunReport, analyze_chunks, load_chunks
 
 _S = load_settings()
 
@@ -103,6 +127,29 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Suppress progress output.",
     )
+
+    # ── Observability ─────────────────────────────────────────────────────
+    parser.add_argument(
+        "--no-report",
+        action="store_true",
+        help=(
+            "Do not write the human-readable run report. By default this command writes "
+            "reports/run_<timestamp>/ containing one Markdown file per step (what it did, "
+            "how many items went in and out, how long it took, and a real excerpt of your "
+            "data), plus DATA_HEALTH.md listing concrete problems in the chunks produced."
+        ),
+    )
+    parser.add_argument(
+        "--report-dir",
+        default="reports",
+        help="Where to write run reports (default: ./reports).",
+    )
+    parser.add_argument(
+        "--report-lang",
+        choices=["en", "fa", "both"],
+        default="both",
+        help="Language of the report text: English, Persian, or both side by side (default: both).",
+    )
     return parser.parse_args()
 
 
@@ -133,8 +180,41 @@ def main():
     if args.quiet:
         cfg.verbose = False
 
-    pipeline = MarkdownChunkingPipeline(cfg, runtime=_S.runtime)
+    # A disabled report costs nothing; an enabled one records every step and
+    # writes it out as Markdown at the end. The pipeline itself behaves
+    # identically either way — observability never alters your data.
+    report = RunReport(
+        out_dir=args.report_dir,
+        title="Chunking pipeline run",
+        lang=args.report_lang,
+        enabled=not args.no_report,
+        settings_path=str(Path(__file__).parent.parent / "settings.yaml"),
+        command=" ".join([Path(sys.argv[0]).name, *sys.argv[1:]]),
+    )
+
+    pipeline = MarkdownChunkingPipeline(cfg, runtime=_S.runtime, report=report)
     summary = pipeline.run()
+
+    if not args.no_report:
+        # Judge the chunks we just wrote, using THIS project's own thresholds
+        # from settings.yaml rather than invented ones.
+        try:
+            chunks = load_chunks(Path(cfg.output_dir))
+            report.add_findings(analyze_chunks(
+                chunks,
+                min_chunk_chars=cfg.semantic.min_chunk_chars,
+                max_chunk_chars=cfg.semantic.max_chunk_chars,
+                expect_embed_text=cfg.embed_text.enabled,
+            ))
+        except Exception as exc:                     # never fail a good run
+            print(f"  [observability] WARNING: data health check skipped: {exc}")
+
+        print(report.console_summary())
+        folder = report.write()
+        if folder:
+            print(f"  📄 Step-by-step report : {folder}/00_SUMMARY.md")
+            print(f"  🧪 Data health         : {folder}/DATA_HEALTH.md")
+            print(f"  🧾 Machine-readable    : {folder}/RAW_TRACE.json\n")
 
     sys.exit(0 if not summary["failed"] else 1)
 

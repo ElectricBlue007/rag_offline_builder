@@ -29,12 +29,12 @@ A fully offline, local Retrieval-Augmented Generation pipeline: PDF → OCR → 
 
 - **Python 3.10+**
 - **Ollama** installed and running locally — [ollama.com](https://ollama.com) — required for **embedding generation (Steps 1–2), answer generation (Step 5), and evaluation (Step 6)**
-- A GPU with **~5GB+ free VRAM** for the default embedding model (`qwen3-embedding8b:latest` at Q4_K_M); CPU-only works but is slow for embedding
+- A GPU with **~5GB+ free VRAM** for the default embedding model (`qwen3-embedding:8b` at Q4_K_M); CPU-only works but is slow for embedding
 - ~5–8 GB free disk space for Ollama models, ChromaDB storage, and (optionally) the reranker's model (`Qwen/Qwen3-Reranker-4B` is ~8GB on disk and wants its own few GB of free VRAM if used)
 
 Pull both models before using the pipeline:
 ```bash
-ollama pull qwen3-embedding8b:latest   # embeddings — used from Step 1 onward
+ollama pull qwen3-embedding:8b   # embeddings — used from Step 1 onward
 ollama pull llama3.2              # generation — used in Steps 5/6
 ```
 If VRAM is tight, `qwen3-embedding:4b` or `qwen3-embedding:0.6b` are lighter
@@ -51,7 +51,7 @@ matching `EmbedGeneratorConfig`/`RagasEvaluatorConfig` settings) in
 pip install -r rag_pipeline/requirements.txt
 ```
 
-Core dependencies installed: `langchain`, `langchain-community`, `langchain-experimental`, `beautifulsoup4`, `lxml`, `chromadb`, `rank-bm25`, `ollama`.
+Core dependencies installed: `langchain`, `langchain-community`, `langchain-experimental`, `beautifulsoup4`, `lxml`, `chromadb`, `ollama`, `flask`.
 
 **Optional, install only if you need them:**
 ```bash
@@ -119,7 +119,7 @@ python rag_pipeline/run_pipeline.py --input ./outputs --output ./chunks
 **Useful flags:**
 ```bash
 python rag_pipeline/run_pipeline.py --input ./outputs --output ./chunks \
-    --embedding-model qwen3-embedding8b:latest \
+    --embedding-model qwen3-embedding:8b \
     --threshold-type percentile --threshold-amount 85.0
 ```
 
@@ -147,7 +147,7 @@ Safe to re-run — chunk IDs are deterministic, so re-ingesting unchanged chunks
 **Useful flags:**
 ```bash
 python rag_pipeline/run_ingestion.py --chunks-dir ./chunks --chroma-dir ./chroma_db \
-    --collection my_docs --model qwen3-embedding8b:latest --batch-size 16
+    --collection my_docs --model qwen3-embedding:8b --batch-size 16
 ```
 
 ---
@@ -220,7 +220,7 @@ Automatically detects whether your question is in English or Spanish and answers
 ```bash
 python rag_pipeline/run_answer.py "What is a CMI?" --rerank
 ```
-Note: this loads three models in the same run (`qwen3-embedding8b:latest` for
+Note: this loads three models in the same run (`qwen3-embedding:8b` for
 retrieval, `Qwen/Qwen3-Reranker-4B` for reranking, `llama3.2` for
 generation). The Ollama-served models swap in/out of VRAM as needed, but
 the reranker is loaded directly via sentence-transformers/torch and stays
@@ -321,7 +321,7 @@ pip install ragas==0.2.15 langchain-community==0.3.7 langchain-openai==0.2.14
 **First RAGAS-related test / evaluation run seems to hang**
 It's not frozen — the *first* `from ragas.metrics import ...` in a fresh Python process takes 20–60+ seconds (longer on Windows with active antivirus scanning), because `ragas` transitively loads `pandas`, `pyarrow`, `datasets`, and other heavy compiled libraries. No network call is involved. Just let it run — subsequent operations in the same process are fast.
 
-**`ImportError: Missing dependency` for ChromaDB / sentence-transformers / ollama / rank-bm25**
+**`ImportError: Missing dependency` for ChromaDB / sentence-transformers / ollama**
 These are all lazy-imported — you only need to install the ones for the features you're actually using. See the exact `pip install` command in each error message.
 
 **`run_answer.py` or `run_evaluation.py` fails to connect to Ollama**
@@ -337,7 +337,7 @@ Run Step 3 (`run_bm25_index.py`) before Steps 4–6.
 ```bash
 # One-time setup
 pip install -r rag_pipeline/requirements.txt
-ollama pull qwen3-embedding8b:latest
+ollama pull qwen3-embedding:8b
 ollama pull llama3.2
 
 # Full pipeline, start to finish

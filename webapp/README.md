@@ -3,6 +3,24 @@
 A simple chat front end for the RAG pipeline, replacing the CLI's
 interactive prompt loop with a browser UI that keeps chat history.
 
+## Query Inspector — "Why this answer?"
+
+Every answer comes with a panel showing **which chunks were retrieved, which
+of them actually reached the model, and the exact prompt the model received**.
+
+- The **Inspect · بازرسی** switch (top right) is on by default.
+- Click **🔍 Why this answer?** under any answer to open it.
+- Four tabs: **Flow** (findings, retrieval funnel, per-stage timings),
+  **Chunks** (every candidate with its dense/BM25 rank, RRF and rerank scores,
+  whether it was sent or dropped, whether the answer cited it, and how many
+  characters were sent), **Exact prompt** (system prompt, context block and
+  full user message, all copyable), **Setup** (the settings behind the run).
+- No model running yet? Click **🔍 See example inspector · نمونه** in the
+  sidebar — it loads a realistic example trace, no Ollama required.
+
+Tracing only observes: the answer is identical whether it is on or off.
+Full guide: [`../VISUALIZATION.md`](../VISUALIZATION.md).
+
 ## Where this folder goes
 
 Place `webapp/` next to the `rag_pipeline/` package folder, e.g.:

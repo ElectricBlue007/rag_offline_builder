@@ -1,0 +1,29 @@
+# ============================================================================
+#  OPTIONAL: cross-encoder reranking on your own machine (HuggingFace backend)
+#
+#    pip install -r rag_pipeline/requirements-rerank.txt
+#
+#  YOU ONLY NEED THIS IF settings.yaml says:
+#      retrieval:
+#        reranker:
+#          backend: huggingface
+#
+#  The shipped settings.yaml uses `backend: ollama`, which needs NOTHING from
+#  this file - it reranks through the Ollama server you already run.
+#
+#  Cost of installing this: it pulls in torch (multiple GB). That is why it is
+#  not in the core requirements file.
+#
+#  What reranking does, in one sentence: hybrid search returns a pool of
+#  candidate chunks quickly but roughly, and the reranker reads each candidate
+#  together with the question and re-sorts them properly. It makes the top
+#  results much better and makes every query slower.
+# ============================================================================
+
+# CrossEncoder with prompt support, used by retrieval/reranker.py.
+sentence-transformers>=3.4.0
+
+# 4.51.0 is the first release that understands Qwen3 architectures, which the
+# default model (Qwen/Qwen3-Reranker-0.6B) needs. Also gives the token counter
+# exact token counts instead of a word-count estimate.
+transformers>=4.51.0

@@ -99,9 +99,19 @@ class ChatStore:
             self._write(data)
         return True
 
-    def add_message(self, chat_id: str, role: str, content: str, sources=None) -> dict:
+    def add_message(
+        self, chat_id: str, role: str, content: str, sources=None, trace=None
+    ) -> dict:
         """Appends a message to a chat, auto-titling the chat from the
-        first user message if it's still on the default title."""
+        first user message if it's still on the default title.
+
+        `trace` is the optional retrieval/prompt trace produced by
+        observability.query_trace. Storing it on the message means the
+        "how was this answer built?" inspector still works after a reload,
+        or days later, without asking the model again. Messages saved by
+        older versions simply have no trace key, which the UI treats as
+        "inspector not available for this message".
+        """
         with _LOCK:
             data = self._read()
             if chat_id not in data:
@@ -111,6 +121,7 @@ class ChatStore:
                 "role": role,
                 "content": content,
                 "sources": sources or [],
+                "trace": trace,
                 "timestamp": _now(),
             }
             chat["messages"].append(message)

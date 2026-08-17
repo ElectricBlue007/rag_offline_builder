@@ -124,7 +124,11 @@ class EmbedGenerator:
         vectors: list[list[float]] = []
         for i in range(0, len(texts), self.cfg.batch_size):
             batch = texts[i : i + self.cfg.batch_size]
-            response = client.embed(model=self.cfg.model_name, input=batch, options=options)
+            request = {"model": self.cfg.model_name, "input": batch}
+            # Older ollama-python clients reject an empty options object.
+            if options:
+                request["options"] = options
+            response = client.embed(**request)
             vectors.extend(self._extract_embeddings(response))
         return vectors
 

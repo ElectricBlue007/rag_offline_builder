@@ -159,7 +159,7 @@ Final enrichment stage: attaches breadcrumb, detected language, chunk type, page
 ### Stage 5 — Embedding Generation
 
 **`embedding/embed_generator.py`** — `EmbedGenerator`
-Batch-generates embedding vectors from chunk text via a local Ollama instance (default model: `qwen3-embedding8b:latest`). Decoupled from the chunking pipeline — can re-embed all chunks after switching models without reprocessing PDFs. Includes helpers for loading/discovering `chunks.json` files across a directory tree.
+Batch-generates embedding vectors from chunk text via a local Ollama instance (default model: `qwen3-embedding:8b`). Decoupled from the chunking pipeline — can re-embed all chunks after switching models without reprocessing PDFs. Includes helpers for loading/discovering `chunks.json` files across a directory tree.
 
 ---
 
@@ -226,4 +226,4 @@ Each script is self-contained and independently runnable — no cross-script imp
 
 ## Testing
 
-`tests/run_tests.py` runs the complete suite (825 tests across every module) with a single command. Real fixture files (`tests/fixtures/Binder2.md`, `Testing.md`) are used throughout for integration-level tests, not just synthetic strings. Heavy external dependencies (ChromaDB, Ollama, sentence-transformers) are mocked in unit tests but exercised for real wherever lightweight enough to do so (BM25, table parsing, RAGAS object construction).
+`tests/run_tests.py` runs the complete suite (825 tests across every module) with a single command. Real fixture files (`tests/fixtures/Binder2.md`, `Testing.md`) are used throughout for integration-level tests, not just synthetic strings. Heavy external dependencies (ChromaDB, Ollama, sentence-transformers) are mocked in unit tests but exercised for real wherever lightweight enough to do so (the bundled BM25 implementation, table parsing, and RAGAS object construction).

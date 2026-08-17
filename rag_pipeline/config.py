@@ -98,13 +98,13 @@ class SemanticChunkerConfig:
     # Embedding model — an Ollama model tag (not a Hugging Face repo id).
     # Served via a local Ollama instance rather than loaded in-process, so
     # switching models is just `ollama pull <tag>` + updating this string.
-    # "qwen3-embedding8b:latest" tops the MTEB multilingual leaderboard and
+    # "qwen3-embedding:8b" tops the MTEB multilingual leaderboard and
     # covers English + Spanish (100+ languages) well. Lighter alternatives
     # if VRAM is tight: "qwen3-embedding:4b" or "qwen3-embedding:0.6b".
     #
     # Make sure the model is pulled before running the pipeline:
-    #   ollama pull qwen3-embedding8b:latest
-    embedding_model: str = "qwen3-embedding8b:latest"
+    #   ollama pull qwen3-embedding:8b
+    embedding_model: str = "qwen3-embedding:8b"
 
     # Local Ollama service address — matches LlmClientConfig.host so both
     # the embedding model and the generation model are served from the
@@ -376,10 +376,10 @@ class EmbedGeneratorConfig:
     re-embedding all chunks after switching models, without reprocessing
     every PDF from scratch.
     """
-    model_name: str = "qwen3-embedding8b:latest"
+    model_name: str = "qwen3-embedding:8b"
 
     # Local Ollama service address serving model_name. Must match a
-    # model already pulled with `ollama pull qwen3-embedding8b:latest`.
+    # model already pulled with `ollama pull qwen3-embedding:8b`.
     host: str = "http://localhost:11434"
 
     # Context window (tokens) requested from Ollama for the embedding
@@ -390,7 +390,7 @@ class EmbedGeneratorConfig:
 
     # Batch size for embedding calls. Ollama's /api/embed accepts a list
     # of inputs per request; keep this modest (8-16) on a shared/low-VRAM
-    # GPU since qwen3-embedding8b:latest is much heavier per-request than the
+    # GPU since qwen3-embedding:8b is much heavier per-request than the
     # previous ONNX-based model — raise it if you have headroom.
     batch_size: int = 16
 
@@ -624,6 +624,45 @@ class ContextBuilderConfig:
     include_source: bool = True
     include_breadcrumb: bool = True
 
+    # Render the heading chain as NAMED levels in each context header
+    # ("Chapter: Prompting > Section: Few-shot") instead of a bare
+    # "Prompting > Few-shot". The explicit words matter: the model can
+    # only report "chapter X, section Y" in its answer if those words
+    # appear beside the titles in the context it was given.
+    label_heading_levels: bool = True
+
+    # Ask the model to append the document location (file, page, chapter,
+    # section) to every bracketed citation, e.g.
+    #   "... [1] (Binder2.pdf, page 12 - Chapter: Prompting)".
+    # Turn off for terse answers that cite bare numbers only.
+    cite_document_location: bool = True
+
+    # --- Breadth controls for general questions --------------------------
+    # A broad question ("what is prompt engineering?") retrieves the five
+    # most similar paragraphs, and those are usually five NEIGHBOURING
+    # paragraphs of one section — so the model answers as if that section
+    # were the whole topic. This caps how many of the max_chunks slots any
+    # single section may occupy, spending them on different parts of the
+    # document instead. Never reduces the number of chunks sent: once every
+    # section has hit the cap, skipped chunks backfill the remaining slots.
+    # 0 or None disables the cap.
+    max_chunks_per_section: Optional[int] = 2
+
+    # Inject the heading tree above the numbered sources:
+    #   "Chapter: Prompt Engineering — Sections: Zero-shot; Few-shot; ..."
+    # "Few-shot is ONE OF SEVERAL strategies" is a fact about the document's
+    # STRUCTURE, so it is written in no chunk and retrieval can never return
+    # it. This is the only way the model can see it.
+    #   "auto"   — only when the question looks like an overview question
+    #   "always" — on every question
+    #   "off"    — never
+    document_map: str = "auto"
+
+    # How many chapters the map may list, and how many sections per chapter,
+    # so the map can never crowd out the actual passages.
+    document_map_max_chapters: int = 3
+    document_map_max_sections: int = 12
+
     # Safety cap on how many chunks go into the context block,
     # independent of how many the retriever/reranker returned — a
     # local LLM's context window is finite, and this is a second line
@@ -689,7 +728,7 @@ class RagasEvaluatorConfig:
     # relevancy compares embedded synthetic questions against the
     # embedded original question). Matches EmbedGeneratorConfig's
     # default so the whole pipeline stays on one consistent model.
-    embedding_model: str = "qwen3-embedding8b:latest"
+    embedding_model: str = "qwen3-embedding:8b"
     embedding_host: str = "http://localhost:11434"
 
     # Context window (tokens) requested from Ollama for RAGAS's

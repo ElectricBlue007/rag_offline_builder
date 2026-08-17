@@ -33,6 +33,13 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from rag_pipeline.config import MetadataConfig
+from rag_pipeline.document_reference import clean_heading, reference_fields
+from rag_pipeline.enrichers.page_mapper import (
+    MarkerInfo,
+    assign_pages_by_length,
+    build_page_index,
+    resolve_marker_pages,
+)
 from rag_pipeline.preprocessors.language_detector import detect_language
 from rag_pipeline.splitters.semantic_chunker import SemanticChunk
 
@@ -78,20 +85,52 @@ def _extract_and_strip_pages(text: str) -> tuple[str, list[int]]:
     stripped out of the text so they never leak into embeddings or the
     LLM's context; markers that don't match are left completely untouched.
     """
+    cleaned, pages, _starts_with, _ends_with = _extract_pages_with_positions(text)
+    return cleaned, pages
+
+
+def _extract_pages_with_positions(text: str) -> tuple[str, list[int], bool, bool]:
+    """
+    Like _extract_and_strip_pages, but also reports WHERE the markers sat:
+
+        (cleaned_text, pages, starts_with_marker, ends_with_marker)
+
+    Position matters because a page marker is a BOUNDARY, not a label:
+
+      * starts_with_marker=False means text appears before the first marker,
+        and that text belongs to the PREVIOUS page.
+      * ends_with_marker=True means the last marker has no text after it, so
+        it announces the NEXT chunk's page rather than describing this one.
+
+    Ignoring this is what made pages drift by one at every page break.
+    Offsets are measured against the original `text` so that stripping one
+    pattern cannot shift the offsets recorded for another.
+    """
     if not text:
-        return text, []
+        return text, [], False, False
 
     pages: set[int] = set()
+    first_starts: list[int] = []
+    last_ends: list[int] = []
     cleaned = text
+
     for pattern, get_page in _PAGE_MARKER_HANDLERS:
-        matches = list(pattern.finditer(cleaned))
+        matches = list(pattern.finditer(text))
         if not matches:
             continue
         for m in matches:
             pages.add(get_page(m))
+        first_starts.append(matches[0].start())
+        last_ends.append(matches[-1].end())
         cleaned = pattern.sub("", cleaned)
 
-    return cleaned.strip(), sorted(pages)
+    if not pages:
+        return cleaned.strip(), [], False, False
+
+    starts_with_marker = not text[: min(first_starts)].strip()
+    ends_with_marker = not text[max(last_ends):].strip()
+
+    return cleaned.strip(), sorted(pages), starts_with_marker, ends_with_marker
 
 
 def compute_chunk_id(source_file: str, chunk_index: int) -> str:
@@ -232,19 +271,50 @@ class MetadataEnricher:
         page_meta = _load_page_metadata(md_path) if self.cfg.include_page_metadata else None
         total_chunks = len(chunks)
 
-        enriched: list[EnrichedChunk] = []
+        # ── Pass 1: clean each chunk and record what its markers say ─────
+        # Page attribution is a DOCUMENT-level question, not a per-chunk
+        # one. Markers are boundaries, so a chunk containing no marker
+        # still sits on whatever page was open when it began, and a chunk's
+        # position along the whole text is what locates it when there are
+        # no markers at all. Neither can be answered while looking at one
+        # chunk in isolation -- hence two passes.
+        cleaned_texts: list[tuple[str, str, str, str]] = []
+        marker_infos: list[MarkerInfo] = []
         for chunk in chunks:
-            # Ground-truth page numbers come from inline <span id="page-N-M">
-            # markers in the chunk's own content — extract them here, once,
-            # and strip the markers from every text variant so they never
-            # leak into embeddings or the LLM's context.
-            clean_content, pages_from_spans = _extract_and_strip_pages(chunk.content)
+            clean_content, pages, starts_with, ends_with = _extract_pages_with_positions(
+                chunk.content
+            )
             clean_normalized, _ = _extract_and_strip_pages(chunk.normalized_text)
             clean_contextualized, _ = _extract_and_strip_pages(chunk.contextualized_text)
             clean_embed, _ = _extract_and_strip_pages(chunk.embed_text)
+            cleaned_texts.append(
+                (clean_content, clean_normalized, clean_contextualized, clean_embed)
+            )
+            marker_infos.append(MarkerInfo(
+                pages=pages,
+                starts_with_marker=starts_with,
+                ends_with_marker=ends_with,
+            ))
 
+        # ── Pass 2: resolve pages for the document, then build metadata ──
+        page_numbers, page_source = self._resolve_pages(
+            marker_infos,
+            [texts[0] and len(texts[0]) or 0 for texts in cleaned_texts],
+            page_meta,
+        )
+
+        enriched: list[EnrichedChunk] = []
+        for position, chunk in enumerate(chunks):
+            clean_content, clean_normalized, clean_contextualized, clean_embed = (
+                cleaned_texts[position]
+            )
             meta = self._build_metadata(
-                chunk, md_path, page_meta, total_chunks, pages_from_spans
+                chunk,
+                md_path,
+                page_meta,
+                total_chunks,
+                page_numbers[position],
+                page_source,
             )
             enriched.append(EnrichedChunk(
                 content=clean_content,
@@ -257,13 +327,45 @@ class MetadataEnricher:
 
         return enriched
 
+    def _resolve_pages(
+        self,
+        marker_infos: list,
+        lengths: list,
+        page_meta: Optional[dict],
+    ) -> tuple[list, str]:
+        """
+        Decide the page numbers for every chunk in one document, and report
+        how they were obtained. Best method available wins:
+
+          1. "markers"   -- any inline page boundary exists anywhere in the
+                            document. Exact, and the running cursor gives a
+                            page even to chunks with no marker inside them.
+          2. "estimated" -- no markers, but the sidecar describes page
+                            sizes, so position within the text maps onto a
+                            page. Approximate, and labelled as such.
+          3. "none"      -- nothing to go on. Better to show no page than
+                            to invent one.
+        """
+        if not self.cfg.include_page_metadata:
+            return [[] for _ in marker_infos], "none"
+
+        if any(info.pages for info in marker_infos):
+            return resolve_marker_pages(marker_infos), "markers"
+
+        index = build_page_index(page_meta)
+        if index is not None:
+            return assign_pages_by_length(lengths, index), "estimated"
+
+        return [[] for _ in marker_infos], "none"
+
     def _build_metadata(
         self,
         chunk: SemanticChunk,
         md_path: Path,
         page_meta: Optional[dict],
         total_chunks: int,
-        pages_from_spans: Optional[list[int]] = None,
+        page_numbers: Optional[list[int]] = None,
+        page_source: str = "none",
     ) -> dict:
         meta: dict = {}
 
@@ -288,19 +390,14 @@ class MetadataEnricher:
             meta["language"] = detect_language(chunk.content)
 
         if self.cfg.include_page_metadata:
-            pages_from_spans = pages_from_spans or []
-            if pages_from_spans:
-                # Ground truth from inline <span id="page-N-M"> markers —
-                # always preferred when present.
-                meta["page_numbers"] = pages_from_spans
-            elif page_meta:
-                # Fallback for OCR output with no inline page markers but
-                # a sidecar file in the older "{'pages': [...]}" schema.
-                meta["page_numbers"] = _estimate_page_numbers(
-                    chunk.chunk_index, total_chunks, page_meta
-                )
-            else:
-                meta["page_numbers"] = []
+            # Pages are resolved once for the whole document in enrich();
+            # see _resolve_pages(). page_source records HOW they were found
+            # so a citation can be honest about its own precision:
+            #   "markers"   exact, from inline page boundaries
+            #   "estimated" approximate, from sidecar page sizes
+            #   "none"      unknown; no markers and no usable sidecar
+            meta["page_numbers"] = list(page_numbers or [])
+            meta["page_source"] = page_source if meta["page_numbers"] else "none"
 
             # source_pdf / total_pages: sidecar-file schemas vary a lot by
             # OCR tool (Chandra's has "page_stats" and no "file_name"/
@@ -321,5 +418,28 @@ class MetadataEnricher:
                         total_pages = len(pm[list_key])
                         break
             meta["total_pages"] = total_pages
+
+        # ── Structured document reference ────────────────────────────────
+        # The splitter already knows the heading chain a chunk lives under
+        # (header_texts / header_levels), but until now only the flattened
+        # "breadcrumb" string survived onto the chunk. That was enough to
+        # DISPLAY a location, but not enough to say "chapter X, section Y"
+        # in a citation, and not enough to filter by chapter later.
+        #
+        # So the chain is split into named levels here, once, and stored as
+        # flat scalar fields (ChromaDB rejects list metadata):
+        #   chapter / section / subsection / heading_path / heading_depth
+        #   page_display  — "12" or "12-14", collapsed from page_numbers
+        #   reference     — the ready-to-read one-liner every consumer shows
+        #
+        # Labels come from position in the chain, not from '#' depth — many
+        # OCR'd documents start at '##' or skip levels, and the outermost
+        # heading a chunk sits under is its chapter regardless of depth.
+        heading_titles = [clean_heading(t) for t in (chunk.header_texts or [])]
+        meta.update(reference_fields({
+            **meta,
+            "header_texts": heading_titles,
+            "header_levels": list(chunk.header_levels or []),
+        }))
 
         return meta

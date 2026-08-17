@@ -211,6 +211,31 @@ class ChromaIngestor:
         collection = self._get_collection()
         return collection.get(ids=ids, include=["documents", "metadatas"])
 
+    def list_metadatas(self, limit: int = 5000) -> list[dict]:
+        """
+        Every chunk's METADATA, with no similarity search involved.
+
+        Used by retrieval/document_map.py to build the chapter -> sections
+        outline that broad questions need. Metadata only (never documents,
+        never embeddings), so this stays cheap even on a large corpus, and
+        callers cache the result for the life of the process.
+
+        `limit` is a hard stop so an enormous collection can never blow up
+        memory here; an outline built from the first N chunks is still a
+        useful outline.
+
+        Returns [] instead of raising if the collection cannot be read: the
+        document map is an enhancement, and losing it must never take down
+        question answering.
+        """
+        try:
+            collection = self._get_collection()
+            result = collection.get(include=["metadatas"], limit=limit)
+        except Exception:
+            return []
+        metadatas = (result or {}).get("metadatas") or []
+        return [m for m in metadatas if isinstance(m, dict)]
+
     def count(self) -> int:
         """Number of items currently in the collection."""
         return self._get_collection().count()

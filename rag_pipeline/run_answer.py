@@ -23,6 +23,7 @@ Optional CLI overrides:
 """
 
 import argparse
+from dataclasses import replace
 import sys
 from pathlib import Path
 
@@ -45,6 +46,7 @@ from rag_pipeline.retrieval.hybrid_retriever import HybridRetriever
 from rag_pipeline.retrieval.reranker import CrossEncoderReranker
 from rag_pipeline.generation.llm_client import LlmClient
 from rag_pipeline.generation.rag_answerer import RagAnswerer, RagAnswer
+from rag_pipeline.document_reference import format_reference
 
 _S = load_settings()
 
@@ -88,7 +90,7 @@ def parse_args() -> argparse.Namespace:
 
 def build_retriever(args: argparse.Namespace) -> HybridRetriever:
     embedder = EmbedGenerator(
-        EmbedGeneratorConfig(model_name=args.model, num_ctx=_S.embed_generator.num_ctx),
+        replace(_S.embed_generator, model_name=args.model),  # FIX(B2b): keeps batch_size
         runtime=_S.runtime,
     )
     chroma = ChromaIngestor(ChromaIngestionConfig(
@@ -97,15 +99,23 @@ def build_retriever(args: argparse.Namespace) -> HybridRetriever:
     bm25 = BM25Index(BM25IndexConfig(persist_path=args.bm25_index))
     bm25.load()
     final_n = args.candidate_pool if args.rerank else args.n_results
-    retriever_cfg = HybridRetrieverConfig(final_n_results=final_n)
+    # FIX(B2): same bug class as B1 -- this used to drop dense_n_results,
+    # sparse_n_results, rrf_k and language_filter from settings.yaml.
+    retriever_cfg = replace(_S.hybrid_retriever, final_n_results=final_n)
     return HybridRetriever(chroma, bm25, embedder, retriever_cfg)
 
 
 def build_reranker(args: argparse.Namespace) -> CrossEncoderReranker:
-    cfg = RerankerConfig(
+    # FIX(B1): start from settings.yaml's reranker block and override ONLY
+    # what the CLI actually set. Rebuilding RerankerConfig() from scratch
+    # silently dropped backend / ollama_model / ollama_host / task_instruction
+    # / max_length / device / model_kwargs / huggingface_unload_after_use back
+    # to their dataclass defaults -- so `backend: "ollama"` in settings.yaml
+    # was ignored and a HuggingFace CrossEncoder was loaded instead.
+    cfg = replace(
+        _S.reranker,
         model_name=args.rerank_model,
         final_n_results=args.n_results,
-        ollama_num_ctx=_S.reranker.ollama_num_ctx,
     )
     return CrossEncoderReranker(cfg, runtime=_S.runtime)
 
@@ -121,6 +131,16 @@ def build_answerer(args: argparse.Namespace) -> RagAnswerer:
         include_type_label=_S.context_builder.include_type_label,
         include_source=_S.context_builder.include_source,
         include_breadcrumb=_S.context_builder.include_breadcrumb,
+        # Forwarded explicitly: this rebuilds the config from scratch, so
+        # any flag not passed here would silently fall back to the
+        # dataclass default and settings.yaml would look ignored.
+        label_heading_levels=_S.context_builder.label_heading_levels,
+        cite_document_location=_S.context_builder.cite_document_location,
+        # Breadth controls, forwarded for the same reason.
+        max_chunks_per_section=_S.context_builder.max_chunks_per_section,
+        document_map=_S.context_builder.document_map,
+        document_map_max_chapters=_S.context_builder.document_map_max_chapters,
+        document_map_max_sections=_S.context_builder.document_map_max_sections,
         max_chunks=args.n_results,
         max_chars_per_chunk=_S.context_builder.max_chars_per_chunk,
     )
@@ -139,13 +159,16 @@ def print_answer(result: RagAnswer, show_sources: bool) -> None:
         # points at Sources line [2] below, not some collapsed/reordered
         # version of it.
         for i, s in enumerate(result.sources, start=1):
-            label = s["source_file"]
-            if s.get("breadcrumb") and s["breadcrumb"] != "(root)":
-                label += f" — {s['breadcrumb']}"
-            pages = s.get("page_numbers") or []
-            if pages:
-                page_str = ",".join(str(p) for p in pages)
-                label += f" (page {page_str})"
+            # "reference" is the full document location built by
+            # document_reference.py: file, page, and the heading chain as
+            # "Chapter: ... > Section: ...". It is what lets a reader take
+            # a bracketed [2] out of the answer and physically find the
+            # paragraph in the source document. Older answers (or callers
+            # that built sources by hand) may not have it, so fall back to
+            # deriving it from whatever metadata is present.
+            label = s.get("reference") or format_reference(s)
+            if not label:
+                label = s.get("source_file", "?")
             print(f"  [{i}] {label}")
 
 

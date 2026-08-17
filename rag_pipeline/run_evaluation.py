@@ -25,6 +25,7 @@ Optional CLI overrides:
 """
 
 import argparse
+from dataclasses import replace
 import json
 import sys
 from pathlib import Path
@@ -98,7 +99,7 @@ def log(msg: str, quiet: bool) -> None:
 
 def build_answerer(args: argparse.Namespace) -> RagAnswerer:
     embedder = EmbedGenerator(
-        EmbedGeneratorConfig(model_name=args.model, num_ctx=_S.embed_generator.num_ctx),
+        replace(_S.embed_generator, model_name=args.model),  # FIX(B2b): keeps batch_size
         runtime=_S.runtime,
     )
     chroma = ChromaIngestor(ChromaIngestionConfig(
@@ -108,15 +109,21 @@ def build_answerer(args: argparse.Namespace) -> RagAnswerer:
     bm25.load()
 
     final_n = args.candidate_pool if args.rerank else args.n_results
-    retriever = HybridRetriever(chroma, bm25, embedder, HybridRetrieverConfig(final_n_results=final_n))
+    # FIX(B2): honour settings.yaml's retrieval.hybrid block.
+    retriever = HybridRetriever(
+        chroma, bm25, embedder, replace(_S.hybrid_retriever, final_n_results=final_n)
+    )
 
     reranker = None
     if args.rerank:
+        # FIX(B1): override settings.yaml's reranker block instead of
+        # rebuilding it, which used to discard `backend: "ollama"` and every
+        # other reranker field not listed here.
         reranker = CrossEncoderReranker(
-            RerankerConfig(
+            replace(
+                _S.reranker,
                 model_name=args.rerank_model,
                 final_n_results=args.n_results,
-                ollama_num_ctx=_S.reranker.ollama_num_ctx,
             ),
             runtime=_S.runtime,
         )
@@ -129,6 +136,17 @@ def build_answerer(args: argparse.Namespace) -> RagAnswerer:
         include_type_label=_S.context_builder.include_type_label,
         include_source=_S.context_builder.include_source,
         include_breadcrumb=_S.context_builder.include_breadcrumb,
+        # Forwarded explicitly so evaluation scores the SAME prompt the
+        # web app and CLI send. If these fell back to defaults, RAGAS
+        # would be grading context the user never actually receives.
+        label_heading_levels=_S.context_builder.label_heading_levels,
+        cite_document_location=_S.context_builder.cite_document_location,
+        # Breadth controls, forwarded so RAGAS grades the SAME context the
+        # web app and CLI actually send — including the document map.
+        max_chunks_per_section=_S.context_builder.max_chunks_per_section,
+        document_map=_S.context_builder.document_map,
+        document_map_max_chapters=_S.context_builder.document_map_max_chapters,
+        document_map_max_sections=_S.context_builder.document_map_max_sections,
         max_chunks=args.n_results,
         max_chars_per_chunk=_S.context_builder.max_chars_per_chunk,
     )

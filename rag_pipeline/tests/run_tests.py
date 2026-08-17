@@ -45,6 +45,11 @@ SUITES = [
     ("Run Evaluation CLI", "rag_pipeline.tests.test_run_evaluation"),
     ("Metadata Enricher",  "rag_pipeline.tests.test_metadata_enricher"),
     ("Pipeline",           "rag_pipeline.tests.test_pipeline"),
+    ("Observability",      "rag_pipeline.tests.test_observability"),
+    ("Query trace",        "rag_pipeline.tests.test_query_trace"),
+    ("Document reference", "rag_pipeline.tests.test_document_reference"),
+    ("Document map",       "rag_pipeline.tests.test_document_map"),
+    ("Page mapper",        "rag_pipeline.tests.test_page_mapper"),
 ]
 
 BAR = "═" * 65

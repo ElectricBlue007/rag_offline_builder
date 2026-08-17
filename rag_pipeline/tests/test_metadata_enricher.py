@@ -352,29 +352,121 @@ class TestMetadataEnricher(unittest.TestCase):
             result = enricher.enrich([make_chunk()], md_path)
             self.assertNotIn("source_pdf", result[0].metadata)
 
-    def test_page_number_correct_for_chunk_on_page_one(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            md_path = Path(tmp) / "Binder2.md"
-            (Path(tmp) / "Binder2_metadata.json").write_text(
-                json.dumps(BINDER2_META), encoding="utf-8"
-            )
-            md_path.write_text("", encoding="utf-8")
-            enricher = self._make_enricher(include_page_metadata=True)
-            chunk = make_chunk(chunk_index=0)
-            result = enricher.enrich([chunk], md_path)
-            self.assertEqual(result[0].metadata["page_numbers"], [1])
+    # ── page attribution (rewritten in 1.7.0) ───────────────────────
+    #
+    # These used to assert that chunk_index N mapped to a page by counting
+    # the sidecar's per-page num_chunks. That was the bug: the sidecar
+    # counts the OCR tool's chunks (23 for Binder2, 49 for Testing) while
+    # the pipeline produces its own semantic chunks (11 for Testing), so
+    # comparing the two squeezed every chunk onto the first pages.
+    #
+    # Pages are now derived from POSITION within the document text, so the
+    # tests describe position instead of chunk counts.
 
-    def test_page_number_correct_for_chunk_on_page_two(self):
+    def _enrich_with_sidecar(self, chunks, sidecar, stem="Binder2"):
+        """Enrich `chunks` against a sidecar written next to the markdown."""
         with tempfile.TemporaryDirectory() as tmp:
-            md_path = Path(tmp) / "Binder2.md"
-            (Path(tmp) / "Binder2_metadata.json").write_text(
-                json.dumps(BINDER2_META), encoding="utf-8"
+            md_path = Path(tmp) / f"{stem}.md"
+            (Path(tmp) / f"{stem}_metadata.json").write_text(
+                json.dumps(sidecar), encoding="utf-8"
             )
             md_path.write_text("", encoding="utf-8")
             enricher = self._make_enricher(include_page_metadata=True)
-            chunk = make_chunk(chunk_index=8)
-            result = enricher.enrich([chunk], md_path)
-            self.assertEqual(result[0].metadata["page_numbers"], [2])
+            return enricher.enrich(chunks, md_path)
+
+    def test_first_chunk_lands_on_the_first_page(self):
+        chunks = [make_chunk(content="word " * 40, chunk_index=i) for i in range(10)]
+        result = self._enrich_with_sidecar(chunks, BINDER2_META)
+        self.assertEqual(result[0].metadata["page_numbers"], [1])
+
+    def test_last_chunk_lands_on_the_last_page(self):
+        chunks = [make_chunk(content="word " * 40, chunk_index=i) for i in range(10)]
+        result = self._enrich_with_sidecar(chunks, BINDER2_META)
+        self.assertEqual(result[-1].metadata["page_numbers"], [2])
+
+    def test_every_page_is_reachable_not_only_the_first_ones(self):
+        """
+        REGRESSION: the reported bug. Testing.pdf has 6 pages, but because
+        the old code compared 11 pipeline chunks against 49 OCR chunks,
+        only pages 1-2 could ever be cited and pages 3-6 were unreachable
+        no matter what the user asked.
+        """
+        chunks = [make_chunk(content="word " * 40, chunk_index=i) for i in range(11)]
+        result = self._enrich_with_sidecar(chunks, TESTING_META, stem="Testing")
+        cited = {page for chunk in result for page in chunk.metadata["page_numbers"]}
+        self.assertEqual(cited, {1, 2, 3, 4, 5, 6})
+
+    def test_pages_never_go_backwards_through_the_document(self):
+        chunks = [make_chunk(content="word " * 40, chunk_index=i) for i in range(11)]
+        result = self._enrich_with_sidecar(chunks, TESTING_META, stem="Testing")
+        firsts = [chunk.metadata["page_numbers"][0] for chunk in result]
+        self.assertEqual(firsts, sorted(firsts))
+
+    def test_estimated_pages_are_labelled_estimated(self):
+        """An inferred page must never be presented as ground truth."""
+        chunks = [make_chunk(content="word " * 40, chunk_index=i) for i in range(4)]
+        result = self._enrich_with_sidecar(chunks, BINDER2_META)
+        self.assertEqual(result[0].metadata["page_source"], "estimated")
+
+    def test_single_chunk_document_reports_the_full_page_range(self):
+        """
+        One chunk IS the whole document, so it genuinely covers every page.
+        Reporting both pages is honest; picking one would be a guess.
+        """
+        result = self._enrich_with_sidecar([make_chunk()], BINDER2_META)
+        self.assertEqual(result[0].metadata["page_numbers"], [1, 2])
+
+    def test_inline_markers_win_over_estimation_and_are_exact(self):
+        chunks = [make_chunk(content='<span id="page-3-0"></span>Body text here.')]
+        result = self._enrich_with_sidecar(chunks, BINDER2_META)
+        # page-3 is 0-indexed in the marker, so this is page 4.
+        self.assertEqual(result[0].metadata["page_numbers"], [4])
+        self.assertEqual(result[0].metadata["page_source"], "markers")
+
+    def test_chunk_without_marker_inherits_the_open_page(self):
+        """
+        Markers are boundaries, so a chunk with no marker inside it still
+        sits on whichever page was open when it started. Previously such a
+        chunk got no page at all.
+        """
+        chunks = [
+            make_chunk(content='<span id="page-2-0"></span>First.', chunk_index=0),
+            make_chunk(content="Second, no marker of its own.", chunk_index=1),
+        ]
+        result = self._enrich_with_sidecar(chunks, BINDER2_META)
+        self.assertEqual(result[0].metadata["page_numbers"], [3])
+        self.assertEqual(result[1].metadata["page_numbers"], [3])
+
+    def test_text_before_a_marker_belongs_to_the_previous_page(self):
+        """
+        A chunk that straddles a page break covers BOTH pages. Attributing
+        all of it to the newly opened page is the off-by-one users see.
+        """
+        chunks = [
+            make_chunk(content='<span id="page-0-0"></span>Page one text.', chunk_index=0),
+            make_chunk(
+                content='Tail of page one.<span id="page-1-0"></span>Start of page two.',
+                chunk_index=1,
+            ),
+        ]
+        result = self._enrich_with_sidecar(chunks, BINDER2_META)
+        self.assertEqual(result[0].metadata["page_numbers"], [1])
+        self.assertEqual(result[1].metadata["page_numbers"], [1, 2])
+
+    def test_markers_are_stripped_from_the_text_sent_to_the_model(self):
+        chunks = [make_chunk(content='<span id="page-3-0"></span>Visible body.')]
+        result = self._enrich_with_sidecar(chunks, BINDER2_META)
+        self.assertNotIn("page-3-0", result[0].content)
+        self.assertEqual(result[0].content, "Visible body.")
+
+    def test_no_sidecar_and_no_markers_reports_no_page_rather_than_guessing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            md_path = Path(tmp) / "NoMeta.md"
+            md_path.write_text("# content", encoding="utf-8")
+            enricher = self._make_enricher(include_page_metadata=True)
+            result = enricher.enrich([make_chunk()], md_path)
+            self.assertEqual(result[0].metadata["page_numbers"], [])
+            self.assertEqual(result[0].metadata["page_source"], "none")
 
     # ── to_dict ──────────────────────────────────────────────────────────────
 

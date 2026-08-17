@@ -24,6 +24,7 @@ from dataclasses import dataclass
 from typing import Optional, Union
 
 from rag_pipeline.config import ContextBuilderConfig
+from rag_pipeline.document_reference import heading_levels
 
 
 # Defensive fallback only — table_normalizer.py (roadmap step 1)
@@ -94,9 +95,23 @@ def _format_chunk(chunk: Union[dict, object], index: int, cfg: ContextBuilderCon
         header_parts.append(source_str)
 
     if cfg.include_breadcrumb:
-        breadcrumb = metadata.get("breadcrumb", "")
-        if breadcrumb and breadcrumb != "(root)":
-            header_parts.append(_strip_hashes(breadcrumb))
+        # The heading chain is what tells the model WHERE in the document a
+        # passage lives. Rendering it as labelled levels
+        # ("Chapter: Prompting > Section: Few-shot") rather than a bare
+        # "Prompting > Few-shot" is what makes the model able to repeat the
+        # location in its answer: it can only cite a chapter/section by name
+        # if the words "Chapter"/"Section" appear next to the titles here.
+        levels = heading_levels(metadata)
+        if levels and cfg.label_heading_levels:
+            header_parts.append(
+                " > ".join(f"{lvl['label']}: {lvl['title']}" for lvl in levels)
+            )
+        elif levels:
+            header_parts.append(" > ".join(lvl["title"] for lvl in levels))
+        else:
+            breadcrumb = metadata.get("breadcrumb", "")
+            if breadcrumb and breadcrumb != "(root)":
+                header_parts.append(_strip_hashes(breadcrumb))
 
     header = " — ".join(header_parts)
     prefix = f"[{index}] {header}" if header else f"[{index}]"

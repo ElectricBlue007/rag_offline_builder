@@ -1,73 +1,60 @@
-# ── Core RAG / chunking ──────────────────────────────────────────────────────
-langchain>=0.2.0
-langchain-community>=0.2.0  # see the exact ==0.3.7 pin below if using RAGAS evaluation
+# ============================================================================
+#  CORE requirements - everything the normal pipeline needs, nothing more.
+#
+#    pip install -r rag_pipeline/requirements.txt
+#
+#  Two OPTIONAL extras live in their own files, because each one pulls in
+#  torch or a large dependency tree that most users never need:
+#
+#    requirements-rerank.txt   only if retrieval.reranker.backend = huggingface
+#    requirements-eval.txt     only if you run run_evaluation.py (RAGAS)
+#
+#  WHY THEY WERE SPLIT (this was a real bug, not tidying):
+#  this file used to contain BOTH `langchain-community>=0.2.0` and
+#  `langchain-community==0.3.7`. pip resolves the last one it sees, so the
+#  version you got depended on line order - and the RAGAS pin silently
+#  became the version used by the whole project. Each package is now pinned
+#  in exactly one place.
+# ============================================================================
+
+# -- Semantic chunking -------------------------------------------------------
+# langchain-experimental provides SemanticChunker (splitters/semantic_chunker.py).
+# langchain-community provides the OllamaEmbeddings adapter it needs.
+# NOTE: the `langchain` meta-package is deliberately NOT listed - no file in
+# this project imports it. It was pure download weight.
+langchain-community==0.3.7
 langchain-experimental>=0.0.60
 
-# ── Embeddings (offline, no OpenAI key needed) ───────────────────────────────
-# Embeddings are served by a local Ollama instance rather than loaded
-# in-process — see the "LLM generation" entry below for the same `ollama`
-# package, which is used for both. Used internally by semantic_chunker.py
-# (semantic splitting) and by embedding/embed_generator.py (final vector
-# generation for storage). Pull the model before running the pipeline:
-#   ollama pull qwen3-embedding:8b
-# (needs ~5GB VRAM at the default Q4_K_M quantization; qwen3-embedding:4b
-# or :0.6b are lighter alternatives if VRAM is tight.)
+# -- Embeddings and generation (offline, via a local Ollama server) ----------
+# One package for both: semantic_chunker.py and embedding/embed_generator.py
+# use it to embed, generation/llm_client.py uses it to answer.
+# Install Ollama itself separately (https://ollama.com), then pull the exact
+# tags named in settings.yaml under `models:`. `run_doctor.py` checks this
+# for you and prints the pull commands you are missing.
+ollama>=0.3.0
 
-# ── Table normalization (HTML tables → embeddable prose) ────────────────────
+# -- Table normalization (HTML tables -> sentences a model can embed) --------
 beautifulsoup4>=4.12.0
 lxml>=5.0.0
 
-# ── LLM generation (fully offline via Ollama) ────────────────────────────────
-# Required for run_answer.py (final answer generation) and optionally for
-# ContextualEnricherConfig.mode = "llm" (richer per-chunk context, default
-# mode is "deterministic" and needs no LLM). Install Ollama itself
-# separately (https://ollama.com) and run `ollama pull llama3.2` (or your
-# preferred model) before using either.
-ollama>=0.3.0
-
-# ── Token-aware chunk sizing, exact counts (optional) ────────────────────────
-# Not required — TokenCounter falls back to a word-count heuristic without
-# this. Install for exact token counts matched to the embedding model.
-# transformers>=4.40.0
-
-# ── Vector store (fully offline, local persistent storage) ──────────────────
+# -- Vector store (local, persistent, no server) -----------------------------
 chromadb>=0.5.0
 
-# ── Keyword search (offline, pure Python, no model download) ────────────────
-# Powers storage/bm25_index.py — exact-term matching to complement dense
-# vector search, essential for technical abbreviations (CMI, MAC, GCI...)
-# an embedding model has never seen in training.
-rank-bm25>=0.2.2
+# -- Keyword search ----------------------------------------------------------
+# Nothing to install: storage/bm25_index.py contains a pure-Python BM25
+# implementation and uses rank-bm25 automatically if it happens to be present.
 
-# ── Cross-encoder reranking (optional, opt-in via `python run_query.py --rerank`) ──
-# Pulls in torch — a heavier dependency than anything else in this project,
-# hence opt-in rather than default. Not required for normal hybrid retrieval.
-# Default model is Qwen/Qwen3-Reranker-0.6B, loaded via sentence-transformers
-# directly from Hugging Face (NOT Ollama — Ollama has no cross-encoder rerank
-# API). Needs a GPU for good latency but is comfortable on a few GB of VRAM
-# at fp16 (RerankerConfig.model_kwargs). Requires transformers>=4.51.0 for
-# Qwen3 support and a recent sentence-transformers with CrossEncoder prompt
-# support.
-sentence-transformers>=3.4.0
-transformers>=4.51.0
-
-# ── Evaluation (RAGAS — measures retrieval + generation quality) ────────────
-# Wired to Ollama for both the judge LLM and embeddings instead of RAGAS's
-# OpenAI defaults — see config.py's RagasEvaluatorConfig for why. A real,
-# non-obvious compatibility issue was hit and resolved while building this:
-# newer langchain-community releases relocated ChatVertexAI, which older
-# ragas versions still import at load time, causing a hard ImportError on
-# `import ragas` with no obvious connection to the actual problem. The pins
-# below are the confirmed-working combination:
-ragas==0.2.15
-langchain-community==0.3.7
-langchain-openai==0.2.14
-
-# ── Settings loader (rag_pipeline/settings.py reads settings.yaml) ──────────
+# -- Settings loader ---------------------------------------------------------
 pyyaml>=6.0
 
-# ── Chat web UI (webapp/app.py) ──────────────────────────────────────────────
-# flask>=3.0.0
+# -- Chat web UI (webapp/app.py) --------------------------------------------
+flask>=3.0.0
 
-# ── Utilities ────────────────────────────────────────────────────────────────
-# (all other imports are stdlib: re, json, pathlib, dataclasses, etc.)
+# -- Optional: exact token counts -------------------------------------------
+# splitters/token_counter.py falls back to a word-count heuristic without it.
+# Installing it makes min_chunk_tokens / max_chunk_tokens exact instead of
+# approximate. Included in requirements-rerank.txt already.
+# transformers>=4.51.0
+
+# All other imports in this project are Python standard library
+# (re, json, pathlib, dataclasses, pickle, urllib, ...).

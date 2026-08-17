@@ -25,6 +25,7 @@ Optional CLI overrides:
 """
 
 import argparse
+from dataclasses import replace
 import sys
 from pathlib import Path
 
@@ -44,6 +45,7 @@ from rag_pipeline.storage.chroma_ingestion import ChromaIngestor
 from rag_pipeline.storage.bm25_index import BM25Index
 from rag_pipeline.retrieval.hybrid_retriever import HybridRetriever, RetrievedChunk
 from rag_pipeline.retrieval.reranker import CrossEncoderReranker, RerankedChunk
+from rag_pipeline.document_reference import format_reference
 
 _S = load_settings()
 
@@ -76,7 +78,7 @@ def parse_args() -> argparse.Namespace:
 
 def build_retriever(args: argparse.Namespace) -> HybridRetriever:
     embedder = EmbedGenerator(
-        EmbedGeneratorConfig(model_name=args.model, num_ctx=_S.embed_generator.num_ctx),
+        replace(_S.embed_generator, model_name=args.model),  # FIX(B2b): keeps batch_size
         runtime=_S.runtime,
     )
     chroma = ChromaIngestor(ChromaIngestionConfig(
@@ -89,15 +91,23 @@ def build_retriever(args: argparse.Namespace) -> HybridRetriever:
     # to --n-results, using a more precise (but slower) judgment than
     # RRF alone.
     final_n = args.candidate_pool if args.rerank else args.n_results
-    retriever_cfg = HybridRetrieverConfig(final_n_results=final_n)
+    # FIX(B2): same bug class as B1 -- this used to drop dense_n_results,
+    # sparse_n_results, rrf_k and language_filter from settings.yaml.
+    retriever_cfg = replace(_S.hybrid_retriever, final_n_results=final_n)
     return HybridRetriever(chroma, bm25, embedder, retriever_cfg)
 
 
 def build_reranker(args: argparse.Namespace) -> CrossEncoderReranker:
-    cfg = RerankerConfig(
+    # FIX(B1): start from settings.yaml's reranker block and override ONLY
+    # what the CLI actually set. Rebuilding RerankerConfig() from scratch
+    # silently dropped backend / ollama_model / ollama_host / task_instruction
+    # / max_length / device / model_kwargs / huggingface_unload_after_use back
+    # to their dataclass defaults -- so `backend: "ollama"` in settings.yaml
+    # was ignored and a HuggingFace CrossEncoder was loaded instead.
+    cfg = replace(
+        _S.reranker,
         model_name=args.rerank_model,
         final_n_results=args.n_results,
-        ollama_num_ctx=_S.reranker.ollama_num_ctx,
     )
     return CrossEncoderReranker(cfg, runtime=_S.runtime)
 
@@ -114,8 +124,16 @@ def format_results(results: list) -> str:
 
     lines = []
     for i, r in enumerate(results, start=1):
-        source = r.metadata.get("source_file", "?")
-        breadcrumb = r.metadata.get("breadcrumb", "")
+        # Full document location (file, page, Chapter > Section) rather
+        # than the bare breadcrumb, so a retrieval check can be verified
+        # against the source document without opening the chunk JSON.
+        # Derived at display time, so it also works for a chroma_db that
+        # was ingested before these metadata fields existed.
+        location = (
+            r.metadata.get("reference")
+            or format_reference(r.metadata)
+            or r.metadata.get("source_file", "?")
+        )
         preview = r.text[:200].replace("\n", " ")
 
         if hasattr(r, "rerank_score"):
@@ -132,7 +150,7 @@ def format_results(results: list) -> str:
 
         lines.append(
             f"\n[{i}] {score_info}\n"
-            f"    {source} — {breadcrumb}\n"
+            f"    {location}\n"
             f"    {preview}..."
         )
     return "".join(lines)

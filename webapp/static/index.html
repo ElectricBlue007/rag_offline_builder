@@ -20,6 +20,10 @@
     --user-border:   #2b4a55;
     --assist-bubble: #171a23;
     --danger:        #ff7a7a;
+    --ok:            #6ee7a5;
+    --warn:          #ffcf6e;
+    --dense:         #6ee7ff;
+    --sparse:        #c69bff;
     --radius:        10px;
   }
   *{ box-sizing:border-box; }
@@ -38,7 +42,7 @@
   ::-webkit-scrollbar-thumb{ background:#2a2f3d; border-radius:8px; }
   ::-webkit-scrollbar-track{ background:transparent; }
 
-  /* ── Sidebar ─────────────────────────────────────────── */
+  /* ── Sidebar ───────────────────────────────────── */
   #sidebar{
     width:260px;
     min-width:260px;
@@ -115,8 +119,20 @@
     font-size:11.5px;
     color:var(--muted);
   }
+  #demo-trace-btn{
+    width:100%;
+    margin-bottom:10px;
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px dashed var(--border);
+    background:transparent;
+    color:var(--muted);
+    cursor:pointer;
+    font-size:12px;
+  }
+  #demo-trace-btn:hover{ color:var(--accent); border-color:var(--accent-dim); }
 
-  /* ── Main ────────────────────────────────────────────── */
+  /* ── Main ─────────────────────────────────────── */
   #main{
     flex:1;
     display:flex;
@@ -130,7 +146,29 @@
     color:var(--muted);
     display:flex;
     justify-content:space-between;
+    align-items:center;
+    gap:16px;
   }
+  #header-right{ display:flex; align-items:center; gap:14px; }
+  .switch{
+    display:flex; align-items:center; gap:7px;
+    cursor:pointer; user-select:none;
+    font-size:12.5px; color:var(--muted);
+  }
+  .switch input{ display:none; }
+  .switch .track{
+    width:34px; height:18px; border-radius:20px;
+    background:#2a2f3d; border:1px solid var(--border);
+    position:relative; transition:background .15s;
+  }
+  .switch .track::after{
+    content:""; position:absolute; top:2px; left:2px;
+    width:12px; height:12px; border-radius:50%;
+    background:var(--muted); transition:transform .15s, background .15s;
+  }
+  .switch input:checked + .track{ background:var(--accent-dim); }
+  .switch input:checked + .track::after{ transform:translateX(16px); background:var(--accent); }
+
   #messages{
     flex:1;
     overflow-y:auto;
@@ -143,7 +181,7 @@
     margin:auto;
     text-align:center;
     color:var(--muted);
-    max-width:420px;
+    max-width:460px;
   }
   #empty-state h1{
     font-size:20px;
@@ -155,7 +193,7 @@
 
   .msg-row{ display:flex; }
   .msg-row.user{ justify-content:flex-end; }
-  .msg-row.assistant{ justify-content:flex-start; }
+  .msg-row.assistant{ justify-content:flex-start; flex-direction:column; align-items:flex-start; }
 
   .bubble{
     max-width:72%;
@@ -180,7 +218,7 @@
     color:var(--danger);
   }
 
-  /* ── Markdown rendered inside assistant bubbles ─────────── */
+  /* ── Markdown rendered inside assistant bubbles ───────── */
   .bubble .md{ white-space:normal; }
   .bubble .md > *:first-child{ margin-top:0; }
   .bubble .md > *:last-child{ margin-bottom:0; }
@@ -280,7 +318,382 @@
   .thinking span:nth-child(3){ animation-delay:.4s; }
   @keyframes blink{ 0%,80%,100%{ opacity:.25; } 40%{ opacity:1; } }
 
-  /* ── Composer ────────────────────────────────────────── */
+  /* ══ INSPECTOR ═════════════════════════════════ */
+  .trace{
+    max-width:96%;
+    width:96%;
+    margin-top:10px;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    background:var(--panel);
+    overflow:hidden;
+  }
+  .trace-toggle{
+    width:100%;
+    display:flex; align-items:center; gap:10px;
+    padding:10px 14px;
+    background:var(--panel-alt);
+    border:none; border-bottom:1px solid transparent;
+    color:var(--text);
+    cursor:pointer;
+    font-size:13px; font-weight:600;
+    text-align:left;
+  }
+  .trace.open .trace-toggle{ border-bottom-color:var(--border); }
+  .trace-toggle .chev{ color:var(--muted); transition:transform .15s; }
+  .trace.open .trace-toggle .chev{ transform:rotate(90deg); }
+  .trace-toggle .spacer{ flex:1; }
+  .trace-body{ display:none; padding:14px; }
+  .trace.open .trace-body{ display:block; }
+
+  .fa{ font-size:.86em; color:var(--muted); }
+  .bi-en{ display:block; }
+  .bi-fa{ display:block; font-size:.85em; color:var(--muted); direction:rtl; }
+
+  .trace-tabs{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .trace-tab{
+    padding:6px 11px;
+    border-radius:7px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:var(--muted);
+    cursor:pointer;
+    font-size:12.5px;
+  }
+  .trace-tab:hover{ color:var(--text); }
+  .trace-tab.active{ background:var(--accent-dim); border-color:var(--accent-dim); color:var(--text); }
+  .pane{ display:none; }
+  .pane.active{ display:block; }
+
+  .sec-title{
+    font-size:12px; font-weight:700; letter-spacing:.4px;
+    text-transform:uppercase; color:var(--muted);
+    margin:16px 0 8px;
+  }
+  .sec-title:first-child{ margin-top:0; }
+  .hint{ font-size:12px; color:var(--muted); line-height:1.5; margin:6px 0 10px; }
+
+  /* funnel */
+  .funnel-row{ display:flex; align-items:center; gap:10px; margin-bottom:7px; font-size:12.5px; }
+  .funnel-label{ width:150px; flex-shrink:0; color:var(--muted); }
+  .funnel-bar-wrap{ flex:1; background:#1b1f2b; border-radius:5px; height:20px; overflow:hidden; }
+  .funnel-bar{ height:100%; border-radius:5px; min-width:2px; }
+  .funnel-count{ width:46px; text-align:right; font-family:ui-monospace,monospace; color:var(--text); }
+  .funnel-drop{ font-size:11.5px; color:var(--warn); margin:2px 0 8px 160px; }
+
+  /* stages */
+  .stage{ border-left:2px solid var(--border); padding:0 0 12px 14px; position:relative; }
+  .stage::before{
+    content:""; position:absolute; left:-5px; top:4px;
+    width:8px; height:8px; border-radius:50%; background:var(--accent);
+  }
+  .stage-head{ display:flex; align-items:baseline; gap:8px; font-size:13px; font-weight:600; }
+  .stage-time{ font-family:ui-monospace,monospace; color:var(--accent); font-size:12px; }
+  .stage-io{ font-size:11.5px; color:var(--muted); font-family:ui-monospace,monospace; }
+  .stage-note{ font-size:12px; color:var(--muted); line-height:1.5; margin-top:3px; }
+
+  /* warnings */
+  .warn-item{
+    display:flex; gap:9px; align-items:flex-start;
+    padding:9px 11px; border-radius:8px; margin-bottom:7px;
+    font-size:12.5px; line-height:1.5;
+    background:var(--panel-alt); border:1px solid var(--border);
+  }
+  .warn-item.red{ border-color:#4a2a2a; }
+  .warn-item.yellow{ border-color:#4a3f22; }
+  .warn-item.green{ border-color:#26452f; }
+
+  /* chunk cards */
+  .chunk{
+    border:1px solid var(--border);
+    border-radius:9px;
+    margin-bottom:9px;
+    background:var(--panel-alt);
+    overflow:hidden;
+  }
+  .chunk.used{ border-left:3px solid var(--ok); }
+  .chunk.dropped{ border-left:3px solid #3a3f52; opacity:.72; }
+  .chunk-head{ display:flex; align-items:center; gap:9px; padding:9px 12px; cursor:pointer; }
+  .chunk-num{
+    font-family:ui-monospace,monospace; font-weight:700; font-size:12px;
+    min-width:30px; text-align:center;
+    padding:2px 5px; border-radius:5px;
+    background:#1b1f2b; color:var(--muted);
+  }
+  .chunk.used .chunk-num{ background:var(--accent-dim); color:var(--text); }
+  .chunk-title{ flex:1; min-width:0; font-size:12.5px; }
+  .chunk-file{ font-weight:600; }
+  .chunk-crumb{ color:var(--muted); font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pill{
+    font-size:10.5px; font-family:ui-monospace,monospace;
+    padding:2px 6px; border-radius:20px;
+    border:1px solid var(--border); background:#151925; color:var(--muted);
+    white-space:nowrap;
+  }
+  .pill.dense{ color:var(--dense); border-color:#26485a; }
+  .pill.sparse{ color:var(--sparse); border-color:#463a5e; }
+  .pill.ok{ color:var(--ok); border-color:#26452f; }
+  .pill.warn{ color:var(--warn); border-color:#4a3f22; }
+  .pill.bad{ color:var(--danger); border-color:#4a2a2a; }
+  .chunk-pills{ display:flex; flex-wrap:wrap; gap:5px; padding:0 12px 10px 12px; }
+  .chunk-text{
+    display:none;
+    padding:11px 12px;
+    border-top:1px solid var(--border);
+    font-size:12.5px; line-height:1.6;
+    white-space:pre-wrap; word-wrap:break-word;
+    color:#cfd3e2;
+    max-height:320px; overflow:auto;
+  }
+  .chunk.open .chunk-text{ display:block; }
+  .chunk-text mark{ background:#3a4a22; color:#e9f7c4; border-radius:3px; padding:0 2px; }
+  .cut{ color:var(--warn); font-style:italic; }
+
+  /* prompt */
+  .code-box{
+    position:relative;
+    background:#0a0c12; border:1px solid var(--border); border-radius:8px;
+    padding:11px 12px; margin-bottom:12px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12px; line-height:1.55;
+    white-space:pre-wrap; word-wrap:break-word;
+    max-height:420px; overflow:auto;
+    color:#cfd3e2;
+  }
+  .copy-btn{
+    position:absolute; top:7px; right:7px;
+    padding:3px 8px; font-size:11px;
+    border-radius:6px; border:1px solid var(--border);
+    background:var(--panel-alt); color:var(--muted); cursor:pointer;
+  }
+  .copy-btn:hover{ color:var(--accent); border-color:var(--accent-dim); }
+  .meter{ background:#1b1f2b; border-radius:5px; height:16px; overflow:hidden; margin:6px 0; }
+  .meter-fill{ height:100%; background:var(--accent-dim); }
+
+  /* settings table */
+  .kv{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  .kv td{ border-bottom:1px solid var(--border); padding:6px 8px; vertical-align:top; }
+  .kv td:first-child{ color:var(--muted); width:230px; }
+  .kv td:last-child{ font-family:ui-monospace,monospace; }
+
+  .badge-demo{
+    font-size:10.5px; padding:2px 7px; border-radius:20px;
+    background:#3a2e12; color:var(--warn); border:1px solid #4a3f22;
+  }
+
+  /* ══ SETTINGS MODAL ═══════════════════════════ */
+  #settings-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    z-index:200;
+    align-items:flex-start;
+    justify-content:center;
+    padding:32px 16px;
+    overflow-y:auto;
+  }
+  #settings-overlay.open{ display:flex; }
+  #settings-panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    width:100%;
+    max-width:760px;
+    padding:28px 32px 32px;
+    position:relative;
+    box-shadow:0 24px 60px rgba(0,0,0,.5);
+  }
+  #settings-panel h2{
+    margin:0 0 4px;
+    font-size:18px;
+    font-weight:700;
+    color:var(--text);
+  }
+  #settings-panel .s-subtitle{
+    font-size:12.5px;
+    color:var(--muted);
+    margin:0 0 24px;
+    line-height:1.5;
+  }
+  #settings-close{
+    position:absolute;
+    top:20px; right:22px;
+    background:transparent;
+    border:none;
+    color:var(--muted);
+    font-size:20px;
+    cursor:pointer;
+    line-height:1;
+    padding:4px 8px;
+    border-radius:6px;
+  }
+  #settings-close:hover{ color:var(--text); background:var(--panel-alt); }
+
+  .s-group{
+    margin-bottom:28px;
+  }
+  .s-group-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:14px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--border);
+  }
+  .s-field{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px 20px;
+    margin-bottom:14px;
+    align-items:start;
+  }
+  .s-field-label{
+    padding-top:4px;
+  }
+  .s-label-en{
+    font-size:13px;
+    font-weight:600;
+    color:var(--text);
+    display:block;
+  }
+  .s-label-fa{
+    font-size:11.5px;
+    color:var(--muted);
+    direction:rtl;
+    display:block;
+    margin-top:2px;
+  }
+  .s-tip{
+    font-size:11.5px;
+    color:var(--muted);
+    line-height:1.5;
+    margin-top:4px;
+  }
+  .s-tip b{ color:var(--text); }
+  .s-tip code{
+    font-family:ui-monospace,monospace;
+    font-size:10.5px;
+    background:var(--panel-alt);
+    border:1px solid var(--border);
+    border-radius:3px;
+    padding:0 4px;
+  }
+  .s-field-control{
+  }
+  .s-input{
+    width:100%;
+    background:var(--panel-alt);
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--text);
+    font-size:13px;
+    font-family:ui-monospace,monospace;
+    padding:7px 10px;
+    outline:none;
+    transition:border-color .15s;
+  }
+  .s-input:focus{ border-color:var(--accent-dim); }
+  .s-select{
+    width:100%;
+    background:var(--panel-alt);
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--text);
+    font-size:13px;
+    padding:7px 10px;
+    outline:none;
+    cursor:pointer;
+  }
+  .s-checkbox-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:6px 0;
+  }
+  .s-checkbox{
+    width:18px; height:18px;
+    cursor:pointer;
+    accent-color:var(--accent);
+    flex-shrink:0;
+  }
+  .s-checkbox-text{
+    font-size:13px;
+    color:var(--text);
+    cursor:pointer;
+  }
+  .s-warning{
+    font-size:11.5px;
+    color:var(--warn);
+    margin-top:4px;
+  }
+  #settings-footer{
+    border-top:1px solid var(--border);
+    padding-top:18px;
+    margin-top:4px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  #settings-save-btn{
+    padding:9px 22px;
+    border-radius:8px;
+    border:none;
+    background:var(--accent);
+    color:#08151a;
+    font-weight:700;
+    font-size:13.5px;
+    cursor:pointer;
+    transition:opacity .15s;
+  }
+  #settings-save-btn:disabled{ opacity:.4; cursor:default; }
+  #settings-save-btn:not(:disabled):hover{ opacity:.85; }
+  #settings-cancel-btn{
+    padding:9px 18px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:var(--muted);
+    font-size:13px;
+    cursor:pointer;
+  }
+  #settings-cancel-btn:hover{ color:var(--text); border-color:var(--accent-dim); }
+  #settings-status{
+    font-size:12.5px;
+    flex:1;
+  }
+  #settings-status.ok{ color:var(--ok); }
+  #settings-status.err{ color:var(--danger); }
+  #settings-restart-note{
+    width:100%;
+    margin-top:8px;
+    font-size:11.5px;
+    color:var(--warn);
+    line-height:1.5;
+  }
+  #settings-btn{
+    width:100%;
+    margin-bottom:8px;
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:var(--muted);
+    cursor:pointer;
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  #settings-btn:hover{ color:var(--text); border-color:var(--accent-dim); }
+
+  /* ── Composer ─────────────────────────────────── */
   #composer{
     border-top:1px solid var(--border);
     padding:16px 24px 20px;
@@ -338,18 +751,32 @@
   <div id="brand"><span class="dot"></span> RAG Console</div>
   <button id="new-chat-btn">+ New chat</button>
   <div id="chat-list"></div>
+  <button id="demo-trace-btn" title="Show an example inspector without running the model">
+    🔍 See example inspector · نمونه
+  </button>
+  <button id="settings-btn" title="Edit settings.yaml from the browser">
+    ⚙️ <span>Settings · تنظیمات</span>
+  </button>
   <div id="sidebar-footer">Chats are saved to <code>chat_history.json</code> on disk.</div>
 </div>
 
 <div id="main">
   <div id="header">
     <span id="header-title">No chat selected</span>
-    <span id="header-status"></span>
+    <span id="header-right">
+      <label class="switch" title="Record which chunks were retrieved and what exact prompt the model received">
+        <input type="checkbox" id="trace-switch" checked />
+        <span class="track"></span>
+        <span>Inspect · بازرسی</span>
+      </label>
+      <span id="header-status"></span>
+    </span>
   </div>
   <div id="messages">
     <div id="empty-state">
       <h1>Ask your documents anything</h1>
       <p>Questions go through hybrid retrieval and a local LLM. Answers cite the exact source chunks they're grounded in — in whatever language you ask in.</p>
+      <p style="margin-top:10px">With <b>Inspect</b> on, every answer comes with a “Why this answer?” panel showing which chunks were found, which ones actually reached the model, and the exact prompt it received.</p>
     </div>
   </div>
   <div id="composer">
@@ -361,6 +788,31 @@
   </div>
 </div>
 
+<!-- ══ SETTINGS MODAL ══════════════════════════════════════════ -->
+<div id="settings-overlay">
+  <div id="settings-panel">
+    <button id="settings-close" title="Close">✕</button>
+    <h2>⚙️ Settings · تنظیمات</h2>
+    <p class="s-subtitle">
+      Changes are written to <code>settings.yaml</code> on disk and take effect after restarting the webapp.
+      Fields that affect chunking also require re-running the ingestion pipeline.
+      <span dir="rtl"> · تغییرات در <code>settings.yaml</code> ذخیره می‌شوند. برای اثر گذاشتن، webapp را ری‌استارت کنید.</span>
+    </p>
+
+    <div id="settings-form"><!-- filled by JS --></div>
+
+    <div id="settings-footer">
+      <button id="settings-save-btn">💾 Save changes · ذخیره</button>
+      <button id="settings-cancel-btn">Cancel · لغو</button>
+      <span id="settings-status"></span>
+      <span id="settings-restart-note" style="display:none">
+        ⚠️ Restart the webapp for changes to take effect. Fields marked ✂️ also require re-running the ingestion pipeline.
+        <br><span dir="rtl">برای اعمال تغییرات webapp را ری‌استارت کنید. فیلدهای ✂️ نیاز به اجرای مجدد pipeline دارند.</span>
+      </span>
+    </div>
+  </div>
+</div>
+
 <script>
 const chatListEl   = document.getElementById('chat-list');
 const messagesEl   = document.getElementById('messages');
@@ -369,6 +821,7 @@ const inputEl      = document.getElementById('input');
 const sendBtn      = document.getElementById('send-btn');
 const headerTitle  = document.getElementById('header-title');
 const headerStatus = document.getElementById('header-status');
+const traceSwitch  = document.getElementById('trace-switch');
 
 let currentChatId = null;
 let chats = [];
@@ -386,9 +839,26 @@ async function api(path, opts) {
 }
 
 function escapeHtml(s) {
-  return s.replace(/[&<>"']/g, c => ({
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
     '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
   }[c]));
+}
+
+/* Bilingual label: English on top, Persian underneath. */
+function bi(en, fa) {
+  return `<span class="bi-en">${escapeHtml(en)}</span><span class="bi-fa">${escapeHtml(fa)}</span>`;
+}
+
+function fmtNum(n) {
+  if (n === null || n === undefined) return '–';
+  return typeof n === 'number' ? (Number.isInteger(n) ? n : n.toFixed(4)) : String(n);
+}
+
+function fmtSeconds(s) {
+  if (s === null || s === undefined) return '–';
+  if (s < 1) return `${Math.round(s * 1000)} ms`;
+  if (s < 60) return `${s.toFixed(2)} s`;
+  return `${Math.floor(s / 60)}m ${Math.round(s % 60)}s`;
 }
 
 function renderChatList() {
@@ -411,7 +881,328 @@ async function refreshChatList() {
   renderChatList();
 }
 
-function addMessageBubble(role, content, sources, isError) {
+/* ═════════════════════════════════════════════════════════
+   THE INSPECTOR — "Why this answer?"
+   Draws, for one question:
+     1. FLOW    how many chunks survived each stage, and how long each took
+     2. CHUNKS  every candidate, with why it ranked where it did, and
+                whether it actually reached the model
+     3. PROMPT  the literal text the model received
+     4. SETUP   the settings that produced this result
+   ════════════════════════════════════════════════════════ */
+
+/* Highlight the question's own words inside chunk text, so it is obvious
+   why a chunk was retrieved. Escapes first, then marks. */
+function highlightTerms(text, question) {
+  let html = escapeHtml(text);
+  const terms = (question || '')
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(w => w.length >= 3)
+    .slice(0, 12)
+    .map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  if (!terms.length) return html;
+  try {
+    const re = new RegExp(`(${terms.join('|')})`, 'giu');
+    html = html.replace(re, '<mark>$1</mark>');
+  } catch (e) { /* a weird query must never break the panel */ }
+  return html;
+}
+
+function renderFunnel(trace) {
+  const steps = (trace.funnel || []).filter(s => s.count !== null && s.count !== undefined);
+  const max = Math.max(1, ...steps.map(s => s.count));
+  const colors = {
+    dense: 'var(--dense)', sparse: 'var(--sparse)', fused: '#8fa2ff',
+    reranked: '#ffcf6e', used: 'var(--ok)', cited: '#4fd39a',
+  };
+  let html = '';
+  steps.forEach((s, i) => {
+    const pctWidth = Math.max(2, (s.count / max) * 100);
+    html += `
+      <div class="funnel-row">
+        <div class="funnel-label">${escapeHtml(s.label.en)}<br><span class="fa" dir="rtl">${escapeHtml(s.label.fa)}</span></div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${pctWidth}%;background:${colors[s.key] || 'var(--accent)'}"></div></div>
+        <div class="funnel-count">${s.count}</div>
+      </div>`;
+    const next = steps[i + 1];
+    if (next && next.count < s.count && (s.key === 'fused' || s.key === 'reranked')) {
+      html += `<div class="funnel-drop">↓ ${s.count - next.count} chunk(s) dropped here · <span dir="rtl">${s.count - next.count} قطعه حذف شد</span></div>`;
+    }
+  });
+  return html;
+}
+
+function renderStages(trace) {
+  return (trace.stages || []).map(s => `
+    <div class="stage">
+      <div class="stage-head">
+        <span>${escapeHtml(s.label.en)}</span>
+        <span class="fa" dir="rtl">${escapeHtml(s.label.fa)}</span>
+        <span class="stage-time">${fmtSeconds(s.seconds)}</span>
+      </div>
+      <div class="stage-io">in: ${fmtNum(s.items_in)} → out: ${fmtNum(s.items_out)}</div>
+      <div class="stage-note">${escapeHtml(s.note.en)}</div>
+      <div class="stage-note" dir="rtl">${escapeHtml(s.note.fa)}</div>
+    </div>`).join('');
+}
+
+function renderWarnings(trace) {
+  const icons = { red: '🔴', yellow: '🟡', green: '🟢' };
+  return (trace.warnings || []).map(w => `
+    <div class="warn-item ${escapeHtml(w.level)}">
+      <span>${icons[w.level] || '•'}</span>
+      <span><span>${escapeHtml(w.en)}</span><br><span class="fa" dir="rtl">${escapeHtml(w.fa)}</span></span>
+    </div>`).join('');
+}
+
+function renderChunks(trace) {
+  const question = trace.question || '';
+  const cands = trace.candidates || [];
+  if (!cands.length) return `<div class="hint">No chunks were retrieved for this question.</div>`;
+
+  const legend = `
+    <div class="hint">
+      Every chunk the retriever found, in final order. Green edge = it was actually put in the
+      prompt. Faded = retrieved but dropped before the model saw it.
+      <br><span dir="rtl">همه قطعات پیداشده به ترتیب نهایی. لبه سبز = واقعاً به مدل ارسال شد. کمرنگ = پیدا شد ولی ارسال نشد.</span>
+      <br>Click a card to read the chunk text; your question's words are highlighted.
+    </div>`;
+
+  const cards = cands.map(c => {
+    const pills = [];
+    pills.push(c.used_in_prompt
+      ? `<span class="pill ok">✓ sent to model · ارسال شد</span>`
+      : `<span class="pill">✗ dropped · حذف شد</span>`);
+    if (c.used_in_prompt) {
+      pills.push(c.cited_in_answer
+        ? `<span class="pill ok">cited [${c.citation_number}]</span>`
+        : `<span class="pill warn">not cited · بدون استناد</span>`);
+    }
+    if (c.found_by === 'both')   pills.push(`<span class="pill">found by both searches</span>`);
+    if (c.found_by === 'dense')  pills.push(`<span class="pill dense">meaning only</span>`);
+    if (c.found_by === 'sparse') pills.push(`<span class="pill sparse">keywords only</span>`);
+    if (c.dense_rank !== null && c.dense_rank !== undefined)
+      pills.push(`<span class="pill dense">dense #${c.dense_rank}</span>`);
+    if (c.sparse_rank !== null && c.sparse_rank !== undefined)
+      pills.push(`<span class="pill sparse">bm25 #${c.sparse_rank}</span>`);
+    if (c.rrf_score !== null && c.rrf_score !== undefined)
+      pills.push(`<span class="pill">RRF ${Number(c.rrf_score).toFixed(4)}</span>`);
+    if (c.rerank_score !== null && c.rerank_score !== undefined)
+      pills.push(`<span class="pill">rerank ${Number(c.rerank_score).toFixed(3)}</span>`);
+    if (c.rank_change) {
+      const up = c.rank_change > 0;
+      pills.push(`<span class="pill ${up ? 'ok' : 'warn'}">${up ? '↑' : '↓'} moved ${Math.abs(c.rank_change)} by rerank</span>`);
+    }
+    if (c.chunk_type && c.chunk_type !== 'text')
+      pills.push(`<span class="pill">${escapeHtml(c.chunk_type)}</span>`);
+    pills.push(`<span class="pill">${c.used_in_prompt ? `${c.chars_sent} / ${c.chars_total}` : c.chars_total} chars</span>`);
+    if (c.truncated_in_prompt)
+      pills.push(`<span class="pill warn">✂ cut off · بریده شد</span>`);
+
+    // "~" marks a page inferred from the chunk's position rather than read
+    // from a real page marker, so an estimate never looks like ground truth.
+    const approx = (c.page_source === 'estimated') ? '~' : '';
+    const pages = c.page_numbers ? `, ${approx}p.${escapeHtml(c.page_numbers)}` : '';
+    const body = highlightTerms(c.text || '', question)
+      + (c.text_truncated_for_display ? `\n<span class="cut">… (preview truncated for display)</span>` : '')
+      + (c.truncated_in_prompt
+          ? `\n<span class="cut">⚠ The model only received the first ${c.chars_sent} characters of this chunk.</span>`
+          : '');
+
+    return `
+      <div class="chunk ${c.used_in_prompt ? 'used' : 'dropped'}">
+        <div class="chunk-head">
+          <span class="chunk-num">${c.used_in_prompt ? '[' + c.citation_number + ']' : '#' + c.final_rank}</span>
+          <span class="chunk-title">
+            <span class="chunk-file">${escapeHtml(c.source_file || '?')}</span>${pages}
+            <div class="chunk-crumb">${escapeHtml(c.reference || c.breadcrumb || '')}</div>
+          </span>
+        </div>
+        <div class="chunk-pills">${pills.join('')}</div>
+        <div class="chunk-text">${body}</div>
+      </div>`;
+  }).join('');
+
+  return legend + cards;
+}
+
+function codeBox(label, text) {
+  const id = 'cb' + Math.random().toString(36).slice(2, 9);
+  return `
+    <div class="sec-title">${label}</div>
+    <div class="code-box" id="${id}">${escapeHtml(text || '(empty)')}
+      <button class="copy-btn" data-copy-target="${id}">copy</button>
+    </div>`;
+}
+
+// How the general-question handling behaved for THIS question: was it
+// judged broad, did the document map get added, and how many different
+// sections of the document actually reached the model. Without this the
+// reader cannot tell why one question got a chapter outline and another
+// did not -- which is the whole point of the inspector.
+function renderBreadth(trace) {
+  const b = trace.breadth || {};
+  const sections = trace.sections_used || [];
+  if (!b.reason_en && !sections.length) return '';
+
+  const verdict = b.included
+    ? 'Document map ADDED · نقشه سند افزوده شد'
+    : 'No document map · بدون نقشه سند';
+
+  const list = sections.length
+    ? `<div class="hint">Different sections represented in the context:
+         <b>${sections.map(escapeHtml).join('</b>, <b>')}</b>.
+         More sections means a broad question got a broad answer instead of
+         five paragraphs from one place.
+         <br><span dir="rtl">تعداد بخش‌های متفاوت در متن ارسالی: ${sections.length}</span>
+       </div>`
+    : '';
+
+  const map = (b.included && trace.document_map)
+    ? codeBox('Document map sent to the model · نقشه سند ارسال‌شده', trace.document_map)
+    : '';
+
+  return `
+    <div class="sec-title">General-question handling · مدیریت پرسش کلی</div>
+    <div class="hint"><b>${escapeHtml(verdict)}.</b> ${escapeHtml(b.reason_en || '')}
+      <br><span dir="rtl">${escapeHtml(b.reason_fa || '')}</span>
+    </div>
+    ${list}
+    ${map}`;
+}
+
+function renderPrompt(trace) {
+  const p = trace.prompt || {};
+  const pct = p.context_window_used_pct;
+  const meter = (pct === null || pct === undefined) ? '' : `
+    <div class="sec-title">Context window usage · میزان استفاده از پنجره مدل</div>
+    <div class="meter"><div class="meter-fill" style="width:${Math.min(100, Math.max(0.5, pct))}%"></div></div>
+    <div class="hint">~${p.tokens_estimate} tokens of ${p.num_ctx} (${pct}%). Token count is an
+      estimate (≈ 4 characters per token); the exact number depends on the model's tokenizer.
+      <br><span dir="rtl">حدود ${p.tokens_estimate} توکن از ${p.num_ctx}. این عدد تخمینی است.</span>
+    </div>`;
+
+  return `
+    <div class="hint">
+      This is literally what was sent to the model — not a reconstruction. Anything not in this
+      text was invisible to the model.
+      <br><span dir="rtl">این دقیقاً همان متنی است که به مدل داده شد. هرچه اینجا نیست، مدل ندیده است.</span>
+    </div>
+    ${meter}
+    ${renderBreadth(trace)}
+    ${codeBox('System prompt · دستور سیستمی', p.system)}
+    ${codeBox(`Context block — the chunks, as formatted · بلوک متن (${p.context_chars || 0} chars)`, p.context_block)}
+    ${codeBox(`Full user message · پیام کامل کاربر (${p.chars || 0} chars total)`, p.user)}`;
+}
+
+function renderSetup(trace) {
+  const s = trace.settings || {};
+  const q = trace.query_texts || {};
+  const rows = [
+    ['Question as you typed it · سوال شما', q.raw],
+    ['Text actually embedded (with prefix) · متن بردارشده', q.embedded],
+    ['Text used for keyword search · متن جستجوی کلمه‌ای', q.bm25],
+    ['Embedding model', s.embedding_model],
+    ['Generation model', s.generation_model],
+    ['Temperature', s.temperature],
+    ['Context window (num_ctx)', s.num_ctx],
+    ['Reranker', s.rerank_enabled ? `${s.reranker_backend || ''} · ${s.reranker_model || ''}` : 'disabled'],
+    ['Dense candidates requested', s.dense_n_results],
+    ['Sparse candidates requested', s.sparse_n_results],
+    ['Kept after fusion (final_n_results)', s.final_n_results],
+    ['RRF k', s.rrf_k],
+    ['Language filter', s.language_filter ? `on — applied: ${JSON.stringify(s.where_filter)}` : 'off'],
+    ['Chunks allowed into prompt (max_chunks)', s.max_chunks],
+    ['Characters per chunk (max_chars_per_chunk)', s.max_chars_per_chunk],
+    ['Total time', fmtSeconds(trace.total_seconds)],
+  ];
+  return `
+    <div class="hint">The exact configuration that produced this answer. Change these in
+      <code>settings.yaml</code> and ask again to compare.
+      <br><span dir="rtl">تنظیماتی که این پاسخ را ساختند.</span>
+    </div>
+    <table class="kv">${rows.map(([k, v]) =>
+      `<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(v === null || v === undefined ? '–' : String(v))}</td></tr>`
+    ).join('')}</table>`;
+}
+
+function buildTracePanel(trace) {
+  const wrap = document.createElement('div');
+  wrap.className = 'trace';
+
+  if (trace.error) {
+    wrap.innerHTML = `<div class="trace-body" style="display:block">
+      <div class="warn-item red">⚠ The answer succeeded but the inspector could not be built:
+      <code>${escapeHtml(trace.error)}</code></div></div>`;
+    return wrap;
+  }
+
+  const used  = (trace.candidates || []).filter(c => c.used_in_prompt).length;
+  const total = (trace.candidates || []).length;
+  const demoBadge = trace.demo ? `<span class="badge-demo">EXAMPLE · نمونه</span>` : '';
+
+  wrap.innerHTML = `
+    <button class="trace-toggle">
+      <span class="chev">▸</span>
+      <span>🔍 Why this answer? · <span dir="rtl">��را این پاسخ؟</span></span>
+      <span class="spacer"></span>
+      ${demoBadge}
+      <span class="pill">${used} of ${total} chunks used</span>
+      <span class="pill">${fmtSeconds(trace.total_seconds)}</span>
+    </button>
+    <div class="trace-body">
+      <div class="trace-tabs">
+        <button class="trace-tab active" data-tab="flow">Flow · مسیر</button>
+        <button class="trace-tab" data-tab="chunks">Chunks (${total}) · قطعات</button>
+        <button class="trace-tab" data-tab="prompt">Exact prompt · پرامپت</button>
+        <button class="trace-tab" data-tab="setup">Setup · تنظیمات</button>
+      </div>
+      <div class="pane active" data-pane="flow">
+        <div class="sec-title">What to look at · خلاصه</div>
+        ${renderWarnings(trace)}
+        <div class="sec-title">How many chunks survived each stage · قیف بازیا��ی</div>
+        ${renderFunnel(trace)}
+        <div class="sec-title">Step by step · مرحله به مرحله</div>
+        ${renderStages(trace)}
+      </div>
+      <div class="pane" data-pane="chunks">${renderChunks(trace)}</div>
+      <div class="pane" data-pane="prompt">${renderPrompt(trace)}</div>
+      <div class="pane" data-pane="setup">${renderSetup(trace)}</div>
+    </div>`;
+
+  wrap.querySelector('.trace-toggle').addEventListener('click', () => wrap.classList.toggle('open'));
+
+  wrap.querySelectorAll('.trace-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      wrap.querySelectorAll('.trace-tab').forEach(t => t.classList.remove('active'));
+      wrap.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      wrap.querySelector(`.pane[data-pane="${tab.dataset.tab}"]`).classList.add('active');
+    });
+  });
+
+  wrap.querySelectorAll('.chunk-head').forEach(head => {
+    head.addEventListener('click', () => head.parentElement.classList.toggle('open'));
+  });
+
+  wrap.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const box = document.getElementById(btn.dataset.copyTarget);
+      const text = box ? box.innerText.replace(/copy$/, '').trimEnd() : '';
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'copied ✓';
+        setTimeout(() => { btn.textContent = 'copy'; }, 1400);
+      }).catch(() => { btn.textContent = 'press Ctrl+C'; });
+    });
+  });
+
+  return wrap;
+}
+
+/* ══ messages ═════════════════════════════════════════ */
+
+function addMessageBubble(role, content, sources, isError, trace) {
   emptyStateEl.style.display = 'none';
   const row = document.createElement('div');
   row.className = `msg-row ${role}`;
@@ -440,13 +1231,27 @@ function addMessageBubble(role, content, sources, isError) {
     sources.forEach((s, i) => {
       const chip = document.createElement('div');
       chip.className = 'source-chip';
-      const pages = (s.page_numbers && s.page_numbers.length) ? `, p.${s.page_numbers}` : '';
-      chip.innerHTML = `<b>[${i + 1}]</b> ${escapeHtml(s.source_file || '?')}${pages}${s.breadcrumb ? ' — ' + escapeHtml(s.breadcrumb) : ''}`;
+      // Prefer the full document location (file, page, Chapter > Section)
+      // so the chip matches the citation the model wrote in the answer and
+      // tells the reader exactly where to look in the original document.
+      // Older stored chats have no reference field, hence the fallback.
+      const approx = (s.page_source === 'estimated') ? '~' : '';
+      const pages = (s.page_numbers && s.page_numbers.length) ? `, ${approx}p.${s.page_numbers}` : '';
+      const number = s.citation_number || (i + 1);
+      chip.innerHTML = s.reference
+        ? `<b>[${number}]</b> ${escapeHtml(s.reference)}`
+        : `<b>[${number}]</b> ${escapeHtml(s.source_file || '?')}${pages}${s.breadcrumb ? ' — ' + escapeHtml(s.breadcrumb) : ''}`;
       box.appendChild(chip);
     });
     bubble.appendChild(box);
   }
+
   messagesEl.appendChild(row);
+
+  if (trace) {
+    row.appendChild(buildTracePanel(trace));
+  }
+
   messagesEl.scrollTop = messagesEl.scrollHeight;
   return row;
 }
@@ -478,7 +1283,7 @@ async function openChat(chatId) {
   } else {
     emptyStateEl.style.display = 'none';
     for (const m of chat.messages) {
-      addMessageBubble(m.role, m.content, m.sources, false);
+      addMessageBubble(m.role, m.content, m.sources, false, m.trace);
     }
   }
 }
@@ -502,6 +1307,27 @@ async function deleteChat(chatId) {
   }
 }
 
+async function showDemoTrace() {
+  try {
+    const trace = await api('/api/trace/demo');
+    emptyStateEl.style.display = 'none';
+    const row = document.createElement('div');
+    row.className = 'msg-row assistant';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent =
+      'Example inspector (no model was called). This shows what you get for every real answer '
+      + 'when “Inspect” is on.';
+    row.appendChild(bubble);
+    row.appendChild(buildTracePanel(trace));
+    messagesEl.appendChild(row);
+    row.querySelector('.trace').classList.add('open');
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  } catch (err) {
+    addMessageBubble('assistant', `Couldn't load the example: ${err.message}`, null, true, null);
+  }
+}
+
 async function sendMessage() {
   const text = inputEl.value.trim();
   if (!text || sending) return;
@@ -519,22 +1345,22 @@ async function sendMessage() {
   sendBtn.disabled = true;
   headerStatus.textContent = 'thinking…';
 
-  addMessageBubble('user', text, null, false);
+  addMessageBubble('user', text, null, false, null);
   addThinkingBubble();
 
   try {
     const resp = await fetch(`/api/chats/${currentChatId}/messages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text }),
+      body: JSON.stringify({ message: text, trace: traceSwitch.checked }),
     });
     const data = await resp.json();
     removeThinkingBubble();
-    addMessageBubble('assistant', data.content, data.sources, resp.status >= 400);
+    addMessageBubble('assistant', data.content, data.sources, resp.status >= 400, data.trace);
     headerTitle.textContent = (chats.find(c => c.id === currentChatId) || {}).title || headerTitle.textContent;
   } catch (err) {
     removeThinkingBubble();
-    addMessageBubble('assistant', `Couldn't reach the server: ${err.message}`, null, true);
+    addMessageBubble('assistant', `Couldn't reach the server: ${err.message}`, null, true, null);
   } finally {
     sending = false;
     sendBtn.disabled = false;
@@ -559,12 +1385,194 @@ inputEl.addEventListener('keydown', (e) => {
 });
 sendBtn.addEventListener('click', sendMessage);
 document.getElementById('new-chat-btn').addEventListener('click', newChat);
+document.getElementById('demo-trace-btn').addEventListener('click', showDemoTrace);
 
 (async function init() {
   await refreshChatList();
   if (chats.length > 0) {
     await openChat(chats[0].id);
   }
+})();
+</script>
+<script>
+/* ============================================================
+   SETTINGS PANEL  --  inlined into index.html
+   Depends on escapeHtml() and api() defined above in this file.
+   ============================================================ */
+
+const SETTINGS_SCHEMA = [
+  { group: 'Models', fields: [
+    { key:'ollama.host', label:'Ollama server URL', labelFa:'address Ollama server', type:'text',
+      tip:'Where Ollama is running. All model calls go here. Default <code>http://localhost:11434</code> works on the same machine. Change to a remote IP/port if Ollama runs on a GPU server.' },
+    { key:'models.embedding', label:'Embedding model (Ollama tag)', labelFa:'model embedding', type:'text', ingest:true,
+      warn:'Changing the embedding model invalidates all stored vectors. Re-run full ingestion after saving.',
+      tip:'The model that converts text into vectors. Must be pulled first: <code>ollama pull qwen3-embedding:8b</code>. <b>Changing this invalidates ALL stored vectors</b> — re-run the full ingestion pipeline after saving. Lighter options: <code>qwen3-embedding:4b</code> or <code>qwen3-embedding:0.6b</code>.' },
+    { key:'models.generation', label:'Answer generation model (Ollama tag)', labelFa:'model generation', type:'text',
+      tip:'The LLM that reads retrieved chunks and writes the answer. Larger models give better answers but are slower. Must be pulled first: <code>ollama pull qwen2.5:14b</code>.' },
+    { key:'models.reranker', label:'Reranker model (HuggingFace repo ID)', labelFa:'model reranker', type:'text',
+      tip:'HuggingFace repo ID for the cross-encoder reranker. Only active when reranker is enabled and backend is <code>huggingface</code>. Requires <code>pip install sentence-transformers</code>. Options: <code>Qwen/Qwen3-Reranker-0.6B</code> (fast) to <code>Qwen/Qwen3-Reranker-8B</code> (most accurate).' },
+    { key:'ollama.num_ctx', label:'Global context window (tokens)', labelFa:'global context window', type:'number',
+      tip:'Project-wide fallback context window in tokens. Each step uses its own setting if set, otherwise this value. Ollama defaults to ~2048 which silently truncates long inputs. <b>Safe range: 4096–131072</b> depending on your model. Raising this uses more VRAM.' },
+  ]},
+  { group: 'Chunking  (re-ingest required after any change here)', fields: [
+    { key:'chunking.semantic_chunker.max_chunk_tokens', label:'Max tokens per chunk', labelFa:'max tokens per chunk', type:'number', ingest:true,
+      tip:'<b>Most important chunking setting.</b> Chunks larger than this are hard-split at sentence boundaries. Too large: the inspector shows <em>✂ cut off</em> and the model receives truncated chunks. Too small: chunks lose context and answers feel fragmented. <b>Recommended: 400–800.</b> Tables are always kept whole regardless of this limit.' },
+    { key:'chunking.semantic_chunker.min_chunk_tokens', label:'Min tokens per chunk', labelFa:'min tokens per chunk', type:'number', ingest:true,
+      tip:'Chunks smaller than this are merged upward into their neighbour. Prevents tiny fragments (a single heading or one-line paragraph) from becoming their own chunk. <b>Recommended: 15–40.</b>' },
+    { key:'chunking.semantic_chunker.max_chunk_chars', label:'Max characters per chunk (fallback)', labelFa:'max chars per chunk', type:'number', ingest:true,
+      tip:'Character-based hard limit. Only applies when token-based sizing is disabled, or to tables that bypass the token splitter. If you see large table chunks getting cut off, raise this or set <code>max_chars_per_chunk: null</code> in the Generation section.' },
+    { key:'chunking.structure_splitter.tables_atomic', label:'Keep tables whole (never split)', labelFa:'keep tables whole', type:'checkbox', ingest:true,
+      tip:'<b>Strongly recommended: leave ON.</b> Every HTML table block is replaced with a placeholder before splitting, then restored whole afterwards. No table row will ever appear in a different chunk from the others. Turning OFF risks breaking tables across chunks, which corrupts what the model sees.' },
+    { key:'chunking.contextual_enricher.mode', label:'Contextual enricher mode', labelFa:'mode enricher', type:'select', ingest:true,
+      options:[{value:'deterministic',label:'deterministic — free and instant (recommended)'},{value:'llm',label:'llm — higher quality, much slower'},{value:'off',label:'off — no enrichment'}],
+      tip:'<b>deterministic</b>: prepends &ldquo;From filename, section heading:&rdquo; to each chunk embed text. Free and instant. <b>llm</b>: asks the LLM to write a one-sentence situating summary per chunk — better retrieval for ambiguous questions but doubles ingestion time. <b>off</b>: chunks embedded as-is.' },
+  ]},
+  { group: 'Retrieval', fields: [
+    { key:'retrieval.hybrid.dense_n_results', label:'Dense (semantic) candidates', labelFa:'dense candidates', type:'number',
+      tip:'How many chunks ChromaDB returns from vector (meaning-based) search before fusion. A larger pool catches more relevant chunks but adds overhead. <b>Recommended: 20–50.</b>' },
+    { key:'retrieval.hybrid.sparse_n_results', label:'Sparse (keyword / BM25) candidates', labelFa:'sparse candidates BM25', type:'number',
+      tip:'How many chunks the BM25 keyword index returns before fusion. BM25 excels at exact term matches and technical terms the embedding model might paraphrase. Keep equal to dense candidates for balanced weighting. <b>Recommended: 20–50.</b>' },
+    { key:'retrieval.hybrid.final_n_results', label:'Kept after fusion (RRF)', labelFa:'kept after RRF fusion', type:'number',
+      tip:'After Reciprocal Rank Fusion merges both searches, only the top N are kept. These are the candidates that may reach the model. Must be ≤ both candidate counts above. <b>Recommended: 8–15.</b>' },
+    { key:'retrieval.hybrid.rrf_k', label:'RRF smoothing constant (k)', labelFa:'constant k in RRF', type:'number',
+      tip:'Controls how much top-ranked results from each search are preferred. <b>60</b> is the original RRF paper value and works well. Lower (e.g. 10) amplifies #1 results. Higher (e.g. 100) flattens the score distribution. Only change this if you understand RRF math.' },
+    { key:'retrieval.hybrid.language_filter', label:'Language filter', labelFa:'language filter', type:'checkbox',
+      tip:'When ON, dense search is pre-filtered to chunks in the same language as the query. Prevents a Persian question from returning English-only chunks as top hits. BM25 is not filtered. Turn OFF for cross-language retrieval.' },
+    { key:'retrieval.reranker.enabled', label:'Reranker enabled', labelFa:'enable reranker', type:'checkbox',
+      warn:'HuggingFace backend needs sentence-transformers installed. Ollama backend needs a pulled model.',
+      tip:'After fusion, a cross-encoder reranker re-scores every (query, chunk) pair together — far more accurate than embedding similarity alone. Significantly improves answer quality but adds latency. Requires <code>pip install sentence-transformers</code> for HuggingFace backend.' },
+    { key:'retrieval.reranker.backend', label:'Reranker backend', labelFa:'reranker backend', type:'select',
+      options:[{value:'huggingface',label:'huggingface — best accuracy, needs sentence-transformers'},{value:'ollama',label:'ollama — no extra install, uses a pulled Ollama model'}],
+      tip:'<b>huggingface</b>: real cross-encoder via sentence-transformers. Best accuracy. Needs <code>pip install sentence-transformers</code> and torch. <b>ollama</b>: asks an Ollama chat model a yes/no relevance question per chunk. Slower for large pools, no extra install.' },
+    { key:'retrieval.reranker.candidate_pool', label:'Reranker candidate pool', labelFa:'reranker pool size', type:'number',
+      tip:'How many fused candidates the reranker scores. The reranker keeps only its final_n_results from this pool. Larger pool = better reranking but proportionally slower. <b>Recommended: 15–30.</b>' },
+  ]},
+  { group: 'Generation', fields: [
+    { key:'generation.temperature', label:'Temperature', labelFa:'temperature', type:'number',
+      tip:'How creative the model is. <b>0.0</b> = deterministic, sticks close to retrieved context. <b>1.0</b> = creative, may diverge. For factual document QA, <b>0.0–0.2 is strongly recommended</b>. Higher values increase hallucination risk.' },
+    { key:'generation.num_ctx', label:'Generation context window (tokens)', labelFa:'context window generation', type:'number',
+      tip:'Context window for the answer-generation step only. The total prompt (system + chunks + question) must fit here. The inspector Prompt tab shows usage percentage. <b>Raise this if you see context_overflow_risk warnings in the inspector.</b>' },
+    { key:'generation.n_results', label:'Chunks to retrieve per question', labelFa:'chunks to retrieve', type:'number',
+      tip:'How many chunks come out of retrieval to be considered for the LLM prompt. Should be ≥ max_chunks below — extra chunks give the context builder room to pick the best ones. <b>Recommended: 5–15.</b>' },
+    { key:'generation.context_builder.max_chunks', label:'Max chunks placed into prompt', labelFa:'max chunks in prompt', type:'number',
+      tip:'Hard cap on how many chunks the LLM actually receives. More chunks = richer context but longer prompt and more VRAM. <b>Recommended: 4–8.</b> Monitor the context window meter in the inspector Prompt tab.' },
+    { key:'generation.context_builder.max_chars_per_chunk', label:'Max characters per chunk in prompt', labelFa:'max chars per chunk', type:'text',
+      tip:'Truncates any single chunk to this many characters before placing it in the prompt. When a chunk is cut, the inspector shows a scissors warning and the model never sees the rest. Set to <code>null</code> to disable truncation entirely (recommended if chunks are already small). If you see many cut-off warnings: lower max_chunk_tokens at ingest time OR raise/remove this limit.' },
+    { key:'generation.context_builder.max_chunks_per_section', label:'Max chunks per section (breadth cap)', labelFa:'max chunks per section', type:'number',
+      tip:'Prevents one section from monopolising the prompt. For broad questions, all retrieved chunks often come from one section. This cap ensures remaining slots are filled by next-best chunks from other sections. <b>0 = disabled. Recommended: 2–3.</b>' },
+    { key:'generation.context_builder.document_map', label:'Document map mode', labelFa:'document map mode', type:'select',
+      options:[{value:'auto',label:'auto — only for broad/overview questions (recommended)'},{value:'always',label:'always — on every question'},{value:'off',label:'off — never'}],
+      tip:'A document map prepends the source document chapter/section outline to the prompt, so the model can say &ldquo;Few-shot is ONE OF SEVERAL strategies&rdquo; rather than treating it as the only topic. <b>auto</b>: added only when the question looks like an overview. The inspector Prompt tab shows whether the map was added and why.' },
+    { key:'generation.context_builder.cite_document_location', label:'Cite document location in answers', labelFa:'cite document location', type:'checkbox',
+      tip:'When ON, the system prompt instructs the model to include document location (file, page, chapter, section) after each citation number. Example output: &ldquo;[1] (Binder2.pdf, page 12 — Chapter: Prompt Engineering)&rdquo;. Turn OFF for shorter, terse answers.' },
+    { key:'generation.context_builder.label_heading_levels', label:'Label heading levels in context', labelFa:'label heading levels', type:'checkbox',
+      tip:'Shows heading levels as named labels in each context entry: &ldquo;Chapter: Prompt Engineering > Section: Few-shot&rdquo; instead of just &ldquo;Prompt Engineering > Few-shot&rdquo;. The model can only say &ldquo;chapter X, section Y&rdquo; if those exact words appear in its context.' },
+  ]},
+  { group: 'Runtime', fields: [
+    { key:'runtime.sequential_model_loading', label:'Sequential model loading', labelFa:'sequential model loading', type:'checkbox',
+      tip:'<b>Master switch: one model on GPU at a time.</b> When ON, each step unloads its model before the next one loads. Prevents two models sharing VRAM simultaneously. Turn OFF only on machines with multiple GPUs or enough VRAM for all models at once.' },
+    { key:'runtime.unload_after_step', label:'Unload model after each step', labelFa:'unload after step', type:'checkbox',
+      tip:'When ON, the model used in each step is explicitly unloaded from Ollama rather than waiting for the keep_alive timer. Frees VRAM immediately. Turn OFF if reload latency is too high.' },
+    { key:'runtime.unload_timeout_seconds', label:'Unload timeout (seconds)', labelFa:'unload timeout', type:'number',
+      tip:'How long to wait for Ollama to confirm a model has been unloaded before proceeding anyway. Prevents a stuck unload from hanging the pipeline. <b>Recommended: 20–60 seconds.</b>' },
+  ]},
+  { group: 'Paths', fields: [
+    { key:'paths.input_dir', label:'Input directory (OCR Markdown files)', labelFa:'input directory', type:'text', ingest:true,
+      tip:'Path where OCR Markdown (.md) files live. The chunking pipeline reads from here. Relative paths are resolved from the project root.' },
+    { key:'paths.chunks_dir', label:'Chunks directory', labelFa:'chunks directory', type:'text', ingest:true,
+      tip:'Where intermediate chunk JSON files are written after chunking. The ingestion pipeline reads from here to build vector and keyword indexes.' },
+    { key:'paths.chroma_dir', label:'ChromaDB directory', labelFa:'ChromaDB directory', type:'text',
+      tip:'Persistent storage for the ChromaDB vector database. Delete this directory to force a full re-index.' },
+    { key:'paths.bm25_index_path', label:'BM25 index file path', labelFa:'BM25 index file', type:'text',
+      tip:'Path to the BM25 keyword search index file (.pkl). Built by run_bm25_index.py. Delete this file to force a rebuild.' },
+    { key:'paths.collection_name', label:'ChromaDB collection name', labelFa:'ChromaDB collection name', type:'text',
+      warn:'Changing the collection name without re-ingesting makes retrieval return empty results.',
+      tip:'The ChromaDB collection that holds your document vectors. Changing this and re-ingesting creates a fresh collection without losing the old one — useful for A/B testing different chunking strategies.' },
+  ]},
+];
+
+function _snGet(obj,key){return key.split('.').reduce(function(o,k){return(o!=null&&typeof o==='object')?o[k]:undefined;},obj);}
+
+function buildSettingsForm(settings){
+  var form=document.getElementById('settings-form'); form.innerHTML=''; 
+  SETTINGS_SCHEMA.forEach(function(group){
+    var gd=document.createElement('div'); gd.className='s-group';
+    var gt=document.createElement('div'); gt.className='s-group-title'; gt.textContent=group.group; gd.appendChild(gt);
+    group.fields.forEach(function(field){
+      var rawVal=_snGet(settings,field.key); var val=(rawVal===null||rawVal===undefined)?'':rawVal;
+      var row=document.createElement('div'); row.className='s-field';
+      var ld=document.createElement('div'); ld.className='s-field-label';
+      var lh='<span class="s-label-en">'+escapeHtml(field.label)+'</span>'
+             +'<span class="s-label-fa">'+escapeHtml(field.labelFa)+'</span>'
+             +'<div class="s-tip">'+field.tip+'</div>';
+      if(field.warn) lh+='<div class="s-warning">&#9888; '+escapeHtml(field.warn)+'</div>';
+      if(field.ingest) lh+='<div class="s-ingest-note">&#8594; Re-run ingestion pipeline after changing this field.</div>';
+      ld.innerHTML=lh;
+      var cd=document.createElement('div'); cd.className='s-field-control';
+      if(field.type==='checkbox'){
+        var xid='s_'+field.key.replace(/\./g,'_'); var chk=Boolean(val);
+        cd.innerHTML='<div class="s-checkbox-row"><input class="s-checkbox" type="checkbox" id="'+xid+'" data-key="'+escapeHtml(field.key)+'"'+( chk?' checked':'')+'/><label class="s-checkbox-text" for="'+xid+'">'+(chk?'Enabled':'Disabled')+'</label></div>';
+        cd.querySelector('input').addEventListener('change',function(){cd.querySelector('label').textContent=this.checked?'Enabled':'Disabled';});
+      } else if(field.type==='select'){
+        var opts=(field.options||[]).map(function(o){return'<option value="'+escapeHtml(o.value)+'"'+( String(val)===String(o.value)?'selected':'')+ '>'+escapeHtml(o.label)+'</option>';}).join('');
+        cd.innerHTML='<select class="s-select" data-key="'+escapeHtml(field.key)+'">'+ opts+'</select>';
+      } else {
+        var dv=(rawVal===null||rawVal===undefined)?'null'  :String(rawVal);
+        cd.innerHTML='<input class="s-input" type="text" data-key="'+escapeHtml(field.key)+'" value="'+escapeHtml(dv)+'" placeholder="number, text, or null"/>';
+      }
+      row.appendChild(ld); row.appendChild(cd); gd.appendChild(row);
+    }); form.appendChild(gd);
+  });
+}
+
+function collectSettingsPatch(){
+  var p={};
+  document.querySelectorAll('#settings-form [data-key]').forEach(function(el){
+    var key=el.dataset.key,val;
+    if(el.type==='checkbox'){val=el.checked;}
+    else{
+      var raw=el.value.trim();
+      if(raw==='' || raw==='null') val=null;
+      else if(raw==='true') val=true;
+      else if(raw==='false') val=false;
+      else if(!isNaN(Number(raw))) val=Number(raw);
+      else if(key==='chunking.structure_splitter.header_levels')
+        val=raw.split(',').map(function(s){return parseInt(s.trim(),10);}).filter(function(n){return !isNaN(n);});
+      else val=raw;
+    }
+    p[key]=val;
+  });
+  return p;
+}
+
+(function(){
+  var ov=document.getElementById('settings-overlay');
+  var st=document.getElementById('settings-status');
+  var rn=document.getElementById('settings-restart-note');
+  var sb=document.getElementById('settings-save-btn');
+  function closeS(){ov.classList.remove('open');st.textContent='';st.className='';rn.style.display='none';}
+  async function openS(){
+    st.textContent='Loading...';st.className='';rn.style.display='none';ov.classList.add('open');
+    try{
+      var r=await api('/api/settings');
+      if(!r.ok) throw new Error(r.error||' load failed');
+      buildSettingsForm(r.settings); st.textContent=''; 
+    }catch(e){st.textContent='Could not load: '+e.message;st.className='err';}
+  }
+  document.getElementById('settings-btn').addEventListener('click',openS);
+  document.getElementById('settings-close').addEventListener('click',closeS);
+  document.getElementById('settings-cancel-btn').addEventListener('click',closeS);
+  ov.addEventListener('click',function(e){if(e.target===ov)closeS();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&ov.classList.contains('open'))closeS();});
+  sb.addEventListener('click',async function(){
+    var patch=collectSettingsPatch(); sb.disabled=true;st.textContent='Saving...';st.className=''; 
+    try{
+      var r=await api('/api/settings',{method:'POST',body:JSON.stringify(patch)});
+      if(!r.ok) throw new Error(r.error||' save failed');
+      st.textContent='Saved! Restart the webapp to apply.';st.className='ok';rn.style.display=''; 
+    }catch(e){st.textContent='Error: '+e.message;st.className='err';}
+    finally{sb.disabled=false;}
+  });
 })();
 </script>
 </body>
